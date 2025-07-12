@@ -2139,8 +2139,8 @@ database.ref('professores').once('value', (snapshot) => {
     snapshot.forEach((childSnapshot) => {
         const professor = childSnapshot.val();
         const option = document.createElement('option');
-        option.value = professor.nome;
-        option.textContent = professor.nome;
+            option.value = professor.id; 
+            option.textContent = professor.nome;
         teacherSelect.appendChild(option);
     });
 });
