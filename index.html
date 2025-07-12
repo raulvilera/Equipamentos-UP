@@ -2499,39 +2499,46 @@ const salasPorTurmaPeriodo = {
             clearForm();
         }
 
-        function loadRegistrationTable() {
-            const tableBody = document.getElementById('registrationTable');
-            tableBody.innerHTML = "";
-            
-            registros.forEach(reg => {
-                // Para cada equipamento no registro, criar uma linha na tabela
-                reg.equipment.forEach((eq, index) => {
-                    const row = document.createElement('tr');
-                    
-                    // Mostrar informações do professor apenas na primeira linha do registro
-                    const teacherInfo = index === 0 ? `
-                        <td rowspan="${reg.equipment.length}">${reg.teacherName}</td>
-                    ` : '';
-                    
-                    row.innerHTML = `
-                        ${teacherInfo}
-                        <td>${eq.type}</td>
-                        <td>${eq.id}</td>
-                        <td>${eq.serial}</td>
-                        <td>${eq.quantity}</td>
-                        <td>${formatDate(reg.withdrawalDate)} ${reg.withdrawalTime}</td>
-                        <td>${formatDate(reg.returnDate)} ${reg.returnTime}</td>
-                        <td>
-                            <span class="badge ${getStatusBadgeClass(eq.status)}">
-                                <span class="status-indicator ${getStatusIndicatorClass(eq.status)}"></span>
-                                ${eq.status}
-                            </span>
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
-                });
+       function loadRegistrationTable() {
+    const tableBody = document.getElementById('registrationTable');
+    tableBody.innerHTML = "";
+
+    // 🔄 Pega os dados do Firebase
+    database.ref("registros").once("value").then((snapshot) => {
+        const data = snapshot.val();
+        if (!data) return;
+
+        Object.values(data).forEach((reg) => {
+            if (!reg.equipamentos) return;
+
+            reg.equipamentos.forEach((eq, index) => {
+                const row = document.createElement("tr");
+
+                const teacherInfo = index === 0 ? `
+                    <td rowspan="${reg.equipamentos.length}">${reg.professor || reg.teacherName}</td>
+                ` : "";
+
+                row.innerHTML = `
+                    ${teacherInfo}
+                    <td>${eq.tipo || eq.type}</td>
+                    <td>${eq.numeroIdentificacao || eq.id}</td>
+                    <td>${eq.numeroSerie || eq.serial}</td>
+                    <td>${eq.quantidade || eq.quantity}</td>
+                    <td>${formatDate(reg.dataRetirada || reg.withdrawalDate)} ${reg.horaRetirada || reg.withdrawalTime}</td>
+                    <td>${formatDate(reg.dataEntrega || reg.returnDate)} ${reg.horaEntrega || reg.returnTime}</td>
+                    <td>
+                        <span class="badge ${getStatusBadgeClass(eq.status)}">
+                            <span class="status-indicator ${getStatusIndicatorClass(eq.status)}"></span>
+                            ${eq.status || "Retirado"}
+                        </span>
+                    </td>
+                `;
+                tableBody.appendChild(row);
             });
-        }
+        });
+    });
+}
+
 
         function getStatusIndicatorClass(status) {
             switch (status) {
