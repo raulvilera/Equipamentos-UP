@@ -1923,14 +1923,14 @@
         // Configuração do Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBOoXyjLQPfgzQM06LVy-TRSPdSM_8CjcE",
-  authDomain: "gerenciamentoaparelho.firebaseapp.com",
-  databaseURL: "https://gerenciamentoaparelho-default-rtdb.firebaseio.com",
-  projectId: "gerenciamentoaparelho",
-  storageBucket: "gerenciamentoaparelho.firebasestorage.app",
-  messagingSenderId: "751628186418",
-  appId: "1:751628186418:web:dd68af74d9e3723c179d2b",
-  measurementId: "G-K02ZZQ4JBK"
-};
+            authDomain: "gerenciamentoaparelho.firebaseapp.com",
+            databaseURL: "https://gerenciamentoaparelho-default-rtdb.firebaseio.com",
+            projectId: "gerenciamentoaparelho",
+            storageBucket: "gerenciamentoaparelho.firebasestorage.app",
+            messagingSenderId: "751628186418",
+            appId: "1:751628186418:web:dd68af74d9e3723c179d2b",
+            measurementId: "G-K02ZZQ4JBK"
+        };
 
         // Inicializa o Firebase
         const app = firebase.initializeApp(firebaseConfig); 
@@ -1946,143 +1946,143 @@
 
         // Dados de exemplo
         const professores = {
-    "ALEX LUTH PEREIRA MARANHAO": "luth@prof.educacao.sp.gov.br",
-    "ALEXSANDRA PAULA VARELLA DE SOUZA": "avarella@prof.educacao.sp.gov.br",
-    "ALINE CARDOSO": "aline.cardoso@servidor.educacao.sp.gov.br",
-    "ALISON VASCONCELOS BESERRA": "alisonv@prof.educacao.sp.gov.br",
-    "AMAURI TEODORO DE OLIVEIRA": "amaurit@prof.educacao.sp.gov.br",
-    "ANA PAULA DE OLIVEIRA SOUZA": "ana.souza59@servidor.educacao.sp.gov.br",
-    "ANA PAULA DOS SANTOS": "paulasantosa@prof.educacao.sp.gov.br",
-    "ANDREIA DOS SANTOS FREITAS": "sanfreitas@prof.educacao.sp.gov.br",
-    "ANDREIA MADUREIRA REIS": "andreiamadureira@prof.educacao.sp.gov.br",
-    "ANTONIO CARLOS DE OLIVEIRA": "antoniocarloso@prof.educacao.sp.gov.br",
-    "ANTONIO RAMOS DE ARAUJO": "antonioramosaraujo@prof.educacao.sp.gov.br",
-    "ANTONIO WILTON WANDERLEY CABRAL": "antoniowilton@prof.educacao.sp.gov.br",
-    "AUGUSTO LINO PESSOA NETO": "augustolino@prof.educacao.sp.gov.br",
-    "AUREA MARIA DE JESUS MARQUES": "aureamaria@prof.educacao.sp.gov.br",
-    "CAROLINA PERNOMIAN PARUSSOLO": "carolinapernomian@prof.educacao.sp.gov.br",
-    "CASSIA OLIVEIRA ANTONIAZI": "cassiaosilva@prof.educacao.sp.gov.br",
-    "CICERO FERREIRA": "cicero.ferreira@servidor.educacao.sp.gov.br",
-    "CLAUDINEIA DE AGUIAR LIMA": "aguiarl@prof.educacao.sp.gov.br",
-    "DANIEL DE FREITAS ALMEIDA": "danielalmeida@prof.educacao.sp.gov.br",
-    "DANIEL LOPES BARBOSA": "daniellopesbarbosa@prof.educacao.sp.gov.br",
-    "DANIELA FERREIRA LIMA": "danielaflima@prof.educacao.sp.gov.br",
-    "DANIELLE LUCIA BATISTA DE ALMEIDA": "danielelucia@prof.educacao.sp.gov.br",
-    "EDIANE VIEIRA DA SILVA": "ediane@prof.educacao.sp.gov.br",
-    "EDILEUSA NUNES PEREIRA": "edileusa@prof.educacao.sp.gov.br",
-    "EDUARDO HENRIQUE DA FONSECA": "henriquefonseca@prof.educacao.sp.gov.br",
-    "ELIANE SANTOS SILVA": "essantos@prof.educacao.sp.gov.br",
-    "ELIAS MONTEIRO DA SILVA": "elias1@prof.educacao.sp.gov.br",
-    "ELISABETE APARECIDA PIRES": "elisabetepires@prof.educacao.sp.gov.br",
-    "ELZA DE FARIA PEREIRA": "elzafariapereira@prof.educacao.sp.gov.br",
-    "EMERSON GABLER DE ALMEIDA": "egabler@prof.educacao.sp.gov.br",
-    "ERINEIDE LEITE ARAGAO NERY": "erineidearagao@prof.educacao.sp.gov.br",
-    "EUZELI ARAUJO DE OLIVEIRA": "euzeli@prof.educacao.sp.gov.br",
-    "FABIANO AUGUSTO PIEDADE": "fabianoaugusto@prof.educacao.sp.gov.br",
-    "FABIO CAMILO": "camilof@prof.educacao.sp.gov.br",
-    "FERNANDO JOSE DA SILVA FILHO": "fernandojs@prof.educacao.sp.gov.br",
-    "FLAVIA CRISTINA APARECIDA BICHLER": "flaviacri@prof.educacao.sp.gov.br",
-    "FLAVIO CARDOSO FLEURY": "flaviofleury@prof.educacao.sp.gov.br",
-    "FRANCISCA EDIVANIA DE MORAIS COSTA": "fedivania@prof.educacao.sp.gov.br",
-    "GABRIELA SERIGHELLI DE MELO": "gabrielaserighelli@prof.educacao.sp.gov.br",
-    "GELSON DE ALMEIDA BATISTA": "gelsonalmeida@prof.educacao.sp.gov.br",
-    "GENILTON DE OLIVEIRA SILVA": "genilton@prof.educacao.sp.gov.br",
-    "GIANI CRISTINA DO PRADO": "gianiprado@prof.educacao.sp.gov.br",
-    "INGRYD CAROLINA SUGUIMOTO VIEIRA": "ingryd@prof.educacao.sp.gov.br",
-    "IVANILDES DOS SANTOS OSHIKAWA": "oshikawa@prof.educacao.sp.gov.br",
-    "JANINA DOS PASSOS BRAGA DE ALMEIDA": "janinabraga@prof.educacao.sp.gov.br",
-    "JOSE APARECIDO DA SILVA": "joseaparecidosilva@prof.educacao.sp.gov.br",
-    "JUAREZ GOMES DE MAGALHAES FILHO": "juarezgomes@prof.educacao.sp.gov.br",
-    "JUREMA SOLEDADE FURINI SANTOS": "juremas@prof.educacao.sp.gov.br",
-    "KATIUSCIA ALVES BOMFIM": "katiusciabomfim@prof.educacao.sp.gov.br",
-    "KETHY REGINA DA SILVA DOMINGOS COSTA": "kethy@prof.educacao.sp.gov.br",
-    "LUANA CAROLINE ALVES LIMA": "luanalima01@prof.educacao.sp.gov.br",
-    "LUANA DE FREITAS SILVA": "luanafreitas@prof.educacao.sp.gov.br",
-    "LUCIANA NOVAIS CORREIA SANTOS": "novaiscorreia@prof.educacao.sp.gov.br",
-    "LUCIANO MOREIRA DE AZEVEDO": "lucianomoreira@prof.educacao.sp.gov.br",
-    "MARCIEL DA SILVA": "marcielsilva@prof.educacao.sp.gov.br",
-    "MARIA HELENA CUNHA MORO": "marcunha@prof.educacao.sp.gov.br",
-    "MARIA QUITÉRIA FERREIRA DOS SANTOS": "quiteriasantos@prof.educacao.sp.gov.br",
-    "MARINA DA CONCEICAO FRANCISCO SILVA": "marinafrancisco@prof.educacao.sp.gov.br",
-    "MAURICIO DE BARROS SANTOS": "mauriciobsantos@prof.educacao.sp.gov.br",
-    "MICHELE DE PINHO MORAES": "michelepinho@prof.educacao.sp.gov.br",
-    "MOISES ANTONIO DE BARROS": "moisesbarros@prof.educacao.sp.gov.br",
-    "PAULA ARMANI VILA": "paulaarmani@prof.educacao.sp.gov.br",
-    "PAULO ROBERTO DA SILVA ITO": "pauloito@prof.educacao.sp.gov.br",
-    "PEDRO ZANOTTI FILHO": "pedrozanotti@prof.educacao.sp.gov.br",
-    "RAUL PEREIRA VILERA JUNIOR": "vilera@prof.educacao.sp.gov.br",
-    "REGIANE CURTI DE SOUZA OLIVEIRA": "regianecurti@prof.educacao.sp.gov.br",
-    "REGINA DA SILVA CASTRO": "reginasilvacastro@prof.educacao.sp.gov.br",
-    "RICARDO AMERICO DA SILVA": "ricardoamerico@prof.educacao.sp.gov.br",
-    "ROBERTO SALGADO": "robertosalgado@prof.educacao.sp.gov.br",
-    "RODRIGO VIEIRA": "rodrigovieira1@prof.educacao.sp.gov.br",
-    "ROSANGELA CAFASSO MOREIRA": "cafasso@prof.educacao.sp.gov.br",
-    "ROSIMERY DE SOUZA PESSOA": "rosimerypessoa@prof.educacao.sp.gov.br",
-    "ROSMARA DA SILVA CARDOSO": "rosmaracardoso@prof.educacao.sp.gov.br",
-    "SANDRA CRISTINA MACEDO MORAES": "sandracristinamacedo@prof.educacao.sp.gov.br",
-    "SELMA GOMES DA SILVA": "selmagomess@prof.educacao.sp.gov.br",
-    "SERGIO AGRIPINO VILLA NOVA": "sergioagripino@prof.educacao.sp.gov.br",
-    "SOLANGE ALMEIDA DA SILVA": "almeidafazio@prof.educacao.sp.gov.br",
-    "SUELI SILVE PEREIRA": "suelisilve@prof.educacao.sp.gov.br",
-    "SUZINEIDE SILVA DE FREITAS": "suzineidefreitas@prof.educacao.sp.gov.br",
-    "THIAGO FABIANO BRITO": "thiagofabiano@prof.educacao.sp.gov.br",
-    "TITTO AUGUSTO NASCIMENTO SILVA": "titto@prof.educacao.sp.gov.br",
-    "VANDERSON HYPPOLITO": "vhypolito@prof.educacao.sp.gov.br",
-    "VANESSA IVETE GOMES DOS SANTOS": "vanessaivete@prof.educacao.sp.gov.br",
-    "VANIA PENHA DE BARROS": "vaniapenha@prof.educacao.sp.gov.br",
-    "VIVIANE LEAL CAMERA DE MORAES": "camera@prof.educacao.sp.gov.br",
-    "WILSON LUIZ DE SOUZA COSTA": "wilsonluizsouza@prof.educacao.sp.gov.br",
-    "WILSON RODRIGUES MOTA": "wmota@prof.educacao.sp.gov.br"
-};
+            "ALEX LUTH PEREIRA MARANHAO": "luth@prof.educacao.sp.gov.br",
+            "ALEXSANDRA PAULA VARELLA DE SOUZA": "avarella@prof.educacao.sp.gov.br",
+            "ALINE CARDOSO": "aline.cardoso@servidor.educacao.sp.gov.br",
+            "ALISON VASCONCELOS BESERRA": "alisonv@prof.educacao.sp.gov.br",
+            "AMAURI TEODORO DE OLIVEIRA": "amaurit@prof.educacao.sp.gov.br",
+            "ANA PAULA DE OLIVEIRA SOUZA": "ana.souza59@servidor.educacao.sp.gov.br",
+            "ANA PAULA DOS SANTOS": "paulasantosa@prof.educacao.sp.gov.br",
+            "ANDREIA DOS SANTOS FREITAS": "sanfreitas@prof.educacao.sp.gov.br",
+            "ANDREIA MADUREIRA REIS": "andreiamadureira@prof.educacao.sp.gov.br",
+            "ANTONIO CARLOS DE OLIVEIRA": "antoniocarloso@prof.educacao.sp.gov.br",
+            "ANTONIO RAMOS DE ARAUJO": "antonioramosaraujo@prof.educacao.sp.gov.br",
+            "ANTONIO WILTON WANDERLEY CABRAL": "antoniowilton@prof.educacao.sp.gov.br",
+            "AUGUSTO LINO PESSOA NETO": "augustolino@prof.educacao.sp.gov.br",
+            "AUREA MARIA DE JESUS MARQUES": "aureamaria@prof.educacao.sp.gov.br",
+            "CAROLINA PERNOMIAN PARUSSOLO": "carolinapernomian@prof.educacao.sp.gov.br",
+            "CASSIA OLIVEIRA ANTONIAZI": "cassiaosilva@prof.educacao.sp.gov.br",
+            "CICERO FERREIRA": "cicero.ferreira@servidor.educacao.sp.gov.br",
+            "CLAUDINEIA DE AGUIAR LIMA": "aguiarl@prof.educacao.sp.gov.br",
+            "DANIEL DE FREITAS ALMEIDA": "danielalmeida@prof.educacao.sp.gov.br",
+            "DANIEL LOPES BARBOSA": "daniellopesbarbosa@prof.educacao.sp.gov.br",
+            "DANIELA FERREIRA LIMA": "danielaflima@prof.educacao.sp.gov.br",
+            "DANIELLE LUCIA BATISTA DE ALMEIDA": "danielelucia@prof.educacao.sp.gov.br",
+            "EDIANE VIEIRA DA SILVA": "ediane@prof.educacao.sp.gov.br",
+            "EDILEUSA NUNES PEREIRA": "edileusa@prof.educacao.sp.gov.br",
+            "EDUARDO HENRIQUE DA FONSECA": "henriquefonseca@prof.educacao.sp.gov.br",
+            "ELIANE SANTOS SILVA": "essantos@prof.educacao.sp.gov.br",
+            "ELIAS MONTEIRO DA SILVA": "elias1@prof.educacao.sp.gov.br",
+            "ELISABETE APARECIDA PIRES": "elisabetepires@prof.educacao.sp.gov.br",
+            "ELZA DE FARIA PEREIRA": "elzafariapereira@prof.educacao.sp.gov.br",
+            "EMERSON GABLER DE ALMEIDA": "egabler@prof.educacao.sp.gov.br",
+            "ERINEIDE LEITE ARAGAO NERY": "erineidearagao@prof.educacao.sp.gov.br",
+            "EUZELI ARAUJO DE OLIVEIRA": "euzeli@prof.educacao.sp.gov.br",
+            "FABIANO AUGUSTO PIEDADE": "fabianoaugusto@prof.educacao.sp.gov.br",
+            "FABIO CAMILO": "camilof@prof.educacao.sp.gov.br",
+            "FERNANDO JOSE DA SILVA FILHO": "fernandojs@prof.educacao.sp.gov.br",
+            "FLAVIA CRISTINA APARECIDA BICHLER": "flaviacri@prof.educacao.sp.gov.br",
+            "FLAVIO CARDOSO FLEURY": "flaviofleury@prof.educacao.sp.gov.br",
+            "FRANCISCA EDIVANIA DE MORAIS COSTA": "fedivania@prof.educacao.sp.gov.br",
+            "GABRIELA SERIGHELLI DE MELO": "gabrielaserighelli@prof.educacao.sp.gov.br",
+            "GELSON DE ALMEIDA BATISTA": "gelsonalmeida@prof.educacao.sp.gov.br",
+            "GENILTON DE OLIVEIRA SILVA": "genilton@prof.educacao.sp.gov.br",
+            "GIANI CRISTINA DO PRADO": "gianiprado@prof.educacao.sp.gov.br",
+            "INGRYD CAROLINA SUGUIMOTO VIEIRA": "ingryd@prof.educacao.sp.gov.br",
+            "IVANILDES DOS SANTOS OSHIKAWA": "oshikawa@prof.educacao.sp.gov.br",
+            "JANINA DOS PASSOS BRAGA DE ALMEIDA": "janinabraga@prof.educacao.sp.gov.br",
+            "JOSE APARECIDO DA SILVA": "joseaparecidosilva@prof.educacao.sp.gov.br",
+            "JUAREZ GOMES DE MAGALHAES FILHO": "juarezgomes@prof.educacao.sp.gov.br",
+            "JUREMA SOLEDADE FURINI SANTOS": "juremas@prof.educacao.sp.gov.br",
+            "KATIUSCIA ALVES BOMFIM": "katiusciabomfim@prof.educacao.sp.gov.br",
+            "KETHY REGINA DA SILVA DOMINGOS COSTA": "kethy@prof.educacao.sp.gov.br",
+            "LUANA CAROLINE ALVES LIMA": "luanalima01@prof.educacao.sp.gov.br",
+            "LUANA DE FREITAS SILVA": "luanafreitas@prof.educacao.sp.gov.br",
+            "LUCIANA NOVAIS CORREIA SANTOS": "novaiscorreia@prof.educacao.sp.gov.br",
+            "LUCIANO MOREIRA DE AZEVEDO": "lucianomoreira@prof.educacao.sp.gov.br",
+            "MARCIEL DA SILVA": "marcielsilva@prof.educacao.sp.gov.br",
+            "MARIA HELENA CUNHA MORO": "marcunha@prof.educacao.sp.gov.br",
+            "MARIA QUITÉRIA FERREIRA DOS SANTOS": "quiteriasantos@prof.educacao.sp.gov.br",
+            "MARINA DA CONCEICAO FRANCISCO SILVA": "marinafrancisco@prof.educacao.sp.gov.br",
+            "MAURICIO DE BARROS SANTOS": "mauriciobsantos@prof.educacao.sp.gov.br",
+            "MICHELE DE PINHO MORAES": "michelepinho@prof.educacao.sp.gov.br",
+            "MOISES ANTONIO DE BARROS": "moisesbarros@prof.educacao.sp.gov.br",
+            "PAULA ARMANI VILA": "paulaarmani@prof.educacao.sp.gov.br",
+            "PAULO ROBERTO DA SILVA ITO": "pauloito@prof.educacao.sp.gov.br",
+            "PEDRO ZANOTTI FILHO": "pedrozanotti@prof.educacao.sp.gov.br",
+            "RAUL PEREIRA VILERA JUNIOR": "vilera@prof.educacao.sp.gov.br",
+            "REGIANE CURTI DE SOUZA OLIVEIRA": "regianecurti@prof.educacao.sp.gov.br",
+            "REGINA DA SILVA CASTRO": "reginasilvacastro@prof.educacao.sp.gov.br",
+            "RICARDO AMERICO DA SILVA": "ricardoamerico@prof.educacao.sp.gov.br",
+            "ROBERTO SALGADO": "robertosalgado@prof.educacao.sp.gov.br",
+            "RODRIGO VIEIRA": "rodrigovieira1@prof.educacao.sp.gov.br",
+            "ROSANGELA CAFASSO MOREIRA": "cafasso@prof.educacao.sp.gov.br",
+            "ROSIMERY DE SOUZA PESSOA": "rosimerypessoa@prof.educacao.sp.gov.br",
+            "ROSMARA DA SILVA CARDOSO": "rosmaracardoso@prof.educacao.sp.gov.br",
+            "SANDRA CRISTINA MACEDO MORAES": "sandracristinamacedo@prof.educacao.sp.gov.br",
+            "SELMA GOMES DA SILVA": "selmagomess@prof.educacao.sp.gov.br",
+            "SERGIO AGRIPINO VILLA NOVA": "sergioagripino@prof.educacao.sp.gov.br",
+            "SOLANGE ALMEIDA DA SILVA": "almeidafazio@prof.educacao.sp.gov.br",
+            "SUELI SILVE PEREIRA": "suelisilve@prof.educacao.sp.gov.br",
+            "SUZINEIDE SILVA DE FREITAS": "suzineidefreitas@prof.educacao.sp.gov.br",
+            "THIAGO FABIANO BRITO": "thiagofabiano@prof.educacao.sp.gov.br",
+            "TITTO AUGUSTO NASCIMENTO SILVA": "titto@prof.educacao.sp.gov.br",
+            "VANDERSON HYPPOLITO": "vhypolito@prof.educacao.sp.gov.br",
+            "VANESSA IVETE GOMES DOS SANTOS": "vanessaivete@prof.educacao.sp.gov.br",
+            "VANIA PENHA DE BARROS": "vaniapenha@prof.educacao.sp.gov.br",
+            "VIVIANE LEAL CAMERA DE MORAES": "camera@prof.educacao.sp.gov.br",
+            "WILSON LUIZ DE SOUZA COSTA": "wilsonluizsouza@prof.educacao.sp.gov.br",
+            "WILSON RODRIGUES MOTA": "wmota@prof.educacao.sp.gov.br"
+        };
 
-const salasPorTurmaPeriodo = {
-    "6° ANO A MANHA": "Sala 1",
-    "6° ANO B MANHA": "Sala 2",
-    "6° ANO C MANHA": "Sala 3",
-    "6° ANO D MANHA": "Sala 4",
-    "2° ANO A MANHA": "Sala 5",
-    "2° ANO B MANHA": "Sala 6",
-    "2° ANO C MANHA": "Sala 7",
-    "2° ANO D MANHA": "Sala 8",
-    "2° ANO E MANHA": "Sala 9",
-    "2° ANO ADM MANHA": "Antiga Sala de Leitura",
-    "1° ANO A MANHA": "Sala 10",
-    "1° ANO B MANHA": "Sala 11",
-    "1° ANO C MANHA": "Sala 12",
-    "1° ANO D MANHA": "Sala 13",
-    "1° ANO E MANHA": "Sala 14",
-    "1° ANO F MANHA": "Sala 15",
-    "3° ANO A MANHA": "Sala 16",
-    "3° ANO B MANHA": "Sala 17",
-    "3° ANO C MANHA": "Sala 18",
-    "6° ANO E TARDE": "Sala 1",
-    "6° ANO F TARDE": "Sala 2",
-    "7° ANO A TARDE": "Sala 3",
-    "7° ANO B TARDE": "Sala 4",
-    "7° ANO C TARDE": "Sala 5",
-    "7° ANO D TARDE": "Sala 6",
-    "7° ANO E TARDE": "Sala 7",
-    "7° ANO F TARDE": "Sala 8",
-    "1° ANO G TARDE": "Sala 1",
-    "8° ANO A TARDE": "Sala 10",
-    "8° ANO B TARDE": "Sala 11",
-    "8° ANO C TARDE": "Sala 12",
-    "8° ANO D TARDE": "Sala 13",
-    "8° ANO E TARDE": "Sala 14",
-    "9° ANO A TARDE": "Sala 15",
-    "9° ANO B TARDE": "Sala 16",
-    "9° ANO C TARDE": "Sala 17",
-    "9° ANO D TARDE": "Sala 18",
-    "1° ANO H NOITE": "Sala 9",
-    "2° ANO F NOITE": "Sala 1",
-    "2° ANO G NOITE": "Sala 2",
-    "2° ANO H NOITE": "Sala 3",
-    "2° ANO I NOITE": "Sala 4",
-    "3° ANO D NOITE": "Sala 5",
-    "3° ANO E NOITE": "Sala 6",
-    "3° ANO F NOITE": "Sala 7",
-    "3° ANO G NOITE": "Sala 8"
-};
+        const salasPorTurmaPeriodo = {
+            "6° ANO A MANHA": "Sala 1",
+            "6° ANO B MANHA": "Sala 2",
+            "6° ANO C MANHA": "Sala 3",
+            "6° ANO D MANHA": "Sala 4",
+            "2° ANO A MANHA": "Sala 5",
+            "2° ANO B MANHA": "Sala 6",
+            "2° ANO C MANHA": "Sala 7",
+            "2° ANO D MANHA": "Sala 8",
+            "2° ANO E MANHA": "Sala 9",
+            "2° ANO ADM MANHA": "Antiga Sala de Leitura",
+            "1° ANO A MANHA": "Sala 10",
+            "1° ANO B MANHA": "Sala 11",
+            "1° ANO C MANHA": "Sala 12",
+            "1° ANO D MANHA": "Sala 13",
+            "1° ANO E MANHA": "Sala 14",
+            "1° ANO F MANHA": "Sala 15",
+            "3° ANO A MANHA": "Sala 16",
+            "3° ANO B MANHA": "Sala 17",
+            "3° ANO C MANHA": "Sala 18",
+            "6° ANO E TARDE": "Sala 1",
+            "6° ANO F TARDE": "Sala 2",
+            "7° ANO A TARDE": "Sala 3",
+            "7° ANO B TARDE": "Sala 4",
+            "7° ANO C TARDE": "Sala 5",
+            "7° ANO D TARDE": "Sala 6",
+            "7° ANO E TARDE": "Sala 7",
+            "7° ANO F TARDE": "Sala 8",
+            "1° ANO G TARDE": "Sala 1",
+            "8° ANO A TARDE": "Sala 10",
+            "8° ANO B TARDE": "Sala 11",
+            "8° ANO C TARDE": "Sala 12",
+            "8° ANO D TARDE": "Sala 13",
+            "8° ANO E TARDE": "Sala 14",
+            "9° ANO A TARDE": "Sala 15",
+            "9° ANO B TARDE": "Sala 16",
+            "9° ANO C TARDE": "Sala 17",
+            "9° ANO D TARDE": "Sala 18",
+            "1° ANO H NOITE": "Sala 9",
+            "2° ANO F NOITE": "Sala 1",
+            "2° ANO G NOITE": "Sala 2",
+            "2° ANO H NOITE": "Sala 3",
+            "2° ANO I NOITE": "Sala 4",
+            "3° ANO D NOITE": "Sala 5",
+            "3° ANO E NOITE": "Sala 6",
+            "3° ANO F NOITE": "Sala 7",
+            "3° ANO G NOITE": "Sala 8"
+        };
 
         const equipamentos = {
             "NOTEBOOK": [
@@ -2135,17 +2135,16 @@ const salasPorTurmaPeriodo = {
             loadRegistrationTable();
             
             // Preenche dropdown de professores
-           const teacherSelect = document.getElementById('teacherName');
-database.ref('professores').once('value', (snapshot) => {
-    snapshot.forEach((childSnapshot) => {
-        const professor = childSnapshot.val();
-        const option = document.createElement('option');
-            option.value = professor.id; 
-            option.textContent = professor.nome;
-        teacherSelect.appendChild(option);
-    });
-});
-
+            const teacherSelect = document.getElementById('teacherName');
+            database.ref('professores').once('value', (snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                    const professor = childSnapshot.val();
+                    const option = document.createElement('option');
+                    option.value = professor.id; 
+                    option.textContent = professor.nome;
+                    teacherSelect.appendChild(option);
+                });
+            });
             
             // Configura evento para mostrar intervalo de datas personalizado
             document.getElementById('reportDate').addEventListener('change', function() {
@@ -2469,7 +2468,6 @@ database.ref('professores').once('value', (snapshot) => {
 
             // Criar registro
             const registro = {
-                id: Date.now(),
                 teacherName,
                 teacherEmail,
                 studentClass,
@@ -2489,66 +2487,86 @@ database.ref('professores').once('value', (snapshot) => {
                 status: "Ativo"
             };
 
-            // Adicionar ao array de registros
-            registros.push(registro);
-
-            // Atualizar a tabela de registros
-            loadRegistrationTable();
-
-            alert('Registro realizado com sucesso!');
-
-            // Limpar o formulário
-            clearForm();
+            // Salvar no Firebase
+            database.ref('registros').push(registro)
+                .then(() => {
+                    alert('Registro realizado com sucesso!');
+                    clearForm();
+                    loadRegistrationTable(); // Recarrega a tabela
+                })
+                .catch(error => {
+                    alert('Erro ao salvar registro: ' + error.message);
+                });
         }
 
-       function loadRegistrationTable() {
-    const tableBody = document.getElementById('registrationTable');
-    tableBody.innerHTML = "";
+        function loadRegistrationTable() {
+            const tableBody = document.getElementById('registrationTable');
+            tableBody.innerHTML = "";
 
-    // 🔄 Pega os dados do Firebase
-    database.ref("registros").once("value").then((snapshot) => {
-        const data = snapshot.val();
-        if (!data) return;
-
-        Object.values(data).forEach((reg) => {
-            if (!reg.equipamentos) return;
-
-            reg.equipamentos.forEach((eq, index) => {
-                const row = document.createElement("tr");
-
-                const teacherInfo = index === 0 ? `
-                    <td rowspan="${reg.equipamentos.length}">${reg.professor || reg.teacherName}</td>
-                ` : "";
-
-                row.innerHTML = `
-                    ${teacherInfo}
-                    <td>${eq.tipo || eq.type}</td>
-                    <td>${eq.numeroIdentificacao || eq.id}</td>
-                    <td>${eq.numeroSerie || eq.serial}</td>
-                    <td>${eq.quantidade || eq.quantity}</td>
-                    <td>${formatDate(reg.dataRetirada || reg.withdrawalDate)} ${reg.horaRetirada || reg.withdrawalTime}</td>
-                    <td>${formatDate(reg.dataEntrega || reg.returnDate)} ${reg.horaEntrega || reg.returnTime}</td>
-                    <td>
-                        <span class="badge ${getStatusBadgeClass(eq.status)}">
-                            <span class="status-indicator ${getStatusIndicatorClass(eq.status)}"></span>
-                            ${eq.status || "Retirado"}
-                        </span>
-                    </td>
-                `;
-                tableBody.appendChild(row);
+            database.ref("registros").once("value").then((snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                    const reg = childSnapshot.val();
+                    
+                    // Verifica se existem equipamentos
+                    if (!reg.equipment) {
+                        console.warn("Registro sem equipamentos:", reg);
+                        return;
+                    }
+                    
+                    reg.equipment.forEach((eq, index) => {
+                        const row = document.createElement("tr");
+                        
+                        // Só mostra o nome do professor na primeira linha
+                        const teacherCell = index === 0 
+                            ? `<td rowspan="${reg.equipment.length}">${reg.teacherName}</td>`
+                            : "";
+                        
+                        row.innerHTML = `
+                            ${teacherCell}
+                            <td>${eq.type}</td>
+                            <td>${eq.id}</td>
+                            <td>${eq.serial}</td>
+                            <td>${eq.quantity}</td>
+                            <td>${formatDate(reg.withdrawalDate)} ${reg.withdrawalTime}</td>
+                            <td>${formatDate(reg.returnDate)} ${reg.returnTime}</td>
+                            <td>
+                                <span class="badge ${getStatusBadgeClass(eq.status)}">
+                                    <span class="status-indicator ${getStatusIndicatorClass(eq.status)}"></span>
+                                    ${eq.status}
+                                </span>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                });
+            }).catch((error) => {
+                console.error("Erro ao carregar registros:", error);
+                alert("Erro ao carregar registros. Verifique o console para detalhes.");
             });
-        });
-    });
-}
+        }
 
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            // Formata a data como DD/MM/AAAA
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        function getStatusBadgeClass(status) {
+            switch (status) {
+                case "Retirado": return "badge-primary";
+                case "Devolvido": return "badge-success";
+                case "Com avarias": return "badge-danger";
+                default: return "badge-secondary";
+            }
+        }
 
         function getStatusIndicatorClass(status) {
             switch (status) {
                 case "Retirado": return "status-inuse";
-                case "Devolvido": return "status-returned";
+                case "Devolvido": return "status-available";
                 case "Com avarias": return "status-damaged";
-                case "Em manutenção": return "status-damaged";
-                default: return "status-available";
+                default: return "status-unused";
             }
         }
 
@@ -2698,9 +2716,8 @@ database.ref('professores').once('value', (snapshot) => {
         // FUNÇÕES COMUNS (DASHBOARD, CADASTRO, RESERVAS, ETC)
         // ==============================
         
-        // ... (As funções restantes do sistema permanecem inalteradas) ...
-        // [Todas as outras funções JavaScript do sistema original]
-
+        // ... (outras funções do sistema) ...
+        
     </script>
 </body>
 </html>
