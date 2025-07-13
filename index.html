@@ -2136,15 +2136,12 @@
             
             // Preenche dropdown de professores
             const teacherSelect = document.getElementById('teacherName');
-            database.ref('professores').once('value', (snapshot) => {
-                snapshot.forEach((childSnapshot) => {
-                    const professor = childSnapshot.val();
-                    const option = document.createElement('option');
-                    option.value = professor.id; 
-                    option.textContent = professor.nome;
-                    teacherSelect.appendChild(option);
-                });
-            });
+            for (const [nome, email] of Object.entries(professores)) {
+                const option = document.createElement('option');
+                option.value = nome;
+                option.textContent = nome;
+                teacherSelect.appendChild(option);
+            }
             
             // Configura evento para mostrar intervalo de datas personalizado
             document.getElementById('reportDate').addEventListener('change', function() {
@@ -2716,8 +2713,300 @@
         // FUNÇÕES COMUNS (DASHBOARD, CADASTRO, RESERVAS, ETC)
         // ==============================
         
-        // ... (outras funções do sistema) ...
+        function updateDashboard() {
+            // Atualiza os contadores com dados fictícios
+            document.getElementById('inUseCount').textContent = '12';
+            document.getElementById('availableCount').textContent = '45';
+            document.getElementById('maintenanceCount').textContent = '8';
+            document.getElementById('damagedCount').textContent = '5';
+            
+            // Atualiza o gráfico
+            updateChart();
+            
+            // Carrega atividades recentes
+            loadRecentActivities();
+        }
         
+        function updateChart() {
+            const ctx = document.getElementById('equipmentStatusChart').getContext('2d');
+            
+            if (equipmentChart) {
+                equipmentChart.destroy();
+            }
+            
+            equipmentChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Em uso', 'Disponíveis', 'Manutenção', 'Com avarias'],
+                    datasets: [{
+                        data: [12, 45, 8, 5],
+                        backgroundColor: [
+                            '#3498db',
+                            '#27ae60',
+                            '#f39c12',
+                            '#e74c3c'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribuição de Status de Equipamentos'
+                        }
+                    }
+                }
+            });
+        }
+        
+        function loadRecentActivities() {
+            const tableBody = document.getElementById('recentActivitiesTable');
+            tableBody.innerHTML = '';
+            
+            // Dados fictícios para demonstração
+            const activities = [
+                { data: '2023-07-15', equipamento: 'Notebook Ultra', serie: 'SN2023-001', local: 'Sala dos professores', status: 'Em uso' },
+                { data: '2023-07-14', equipamento: 'Chromebook', serie: 'SN2023-045', local: 'Sala de informática', status: 'Disponível' },
+                { data: '2023-07-13', equipamento: 'Tablet', serie: 'SN2023-102', local: 'Coordenação', status: 'Manutenção' },
+                { data: '2023-07-12', equipamento: 'Smartphone', serie: 'SN2023-205', local: 'Direção', status: 'Com avarias' },
+                { data: '2023-07-11', equipamento: 'Notebook do aluno', serie: 'SN2023-078', local: 'Sala dos professores', status: 'Disponível' }
+            ];
+            
+            activities.forEach(activity => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${activity.data}</td>
+                    <td>${activity.equipamento}</td>
+                    <td>${activity.serie}</td>
+                    <td>${activity.local}</td>
+                    <td>
+                        <span class="badge ${getStatusBadgeClass(activity.status)}">
+                            ${activity.status}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function showAddEquipmentModal() {
+            document.getElementById('equipmentModal').style.display = 'flex';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        function saveEquipment() {
+            // Obter dados do formulário
+            const formData = {
+                registrationDate: document.getElementById('registrationDate').value,
+                serialNumber: document.getElementById('serialNumber').value,
+                registerNumber: document.getElementById('registerNumber').value,
+                equipmentType: document.getElementById('equipmentType').value,
+                equipmentLocation: document.getElementById('equipmentLocation').value,
+                equipmentQuantity: document.getElementById('equipmentQuantity').value,
+                equipmentCondition: document.getElementById('equipmentCondition').value,
+                equipmentNotes: document.getElementById('equipmentNotes').value
+            };
+            
+            // Aqui você salvaria os dados no Firebase
+            console.log('Equipamento salvo:', formData);
+            alert('Equipamento cadastrado com sucesso!');
+            closeModal('equipmentModal');
+            loadEquipmentTable();
+        }
+        
+        function loadEquipmentTable() {
+            const tableBody = document.getElementById('equipmentTable');
+            tableBody.innerHTML = '';
+            
+            // Dados fictícios para demonstração
+            const equipmentList = [
+                { data: '2023-07-10', serie: 'SN2023-001', registro: 'REG001', tipo: 'Notebook Ultra', local: 'Sala dos professores', quantidade: 1, status: 'Em uso' },
+                { data: '2023-07-09', serie: 'SN2023-045', registro: 'REG045', tipo: 'Chromebook', local: 'Sala de informática', quantidade: 5, status: 'Disponível' },
+                { data: '2023-07-08', serie: 'SN2023-102', registro: 'REG102', tipo: 'Tablet', local: 'Coordenação', quantidade: 3, status: 'Manutenção' },
+                { data: '2023-07-07', serie: 'SN2023-205', registro: 'REG205', tipo: 'Smartphone', local: 'Direção', quantidade: 2, status: 'Com avarias' },
+                { data: '2023-07-06', serie: 'SN2023-078', registro: 'REG078', tipo: 'Notebook do aluno', local: 'Sala dos professores', quantidade: 10, status: 'Disponível' }
+            ];
+            
+            equipmentList.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.data}</td>
+                    <td>${item.serie}</td>
+                    <td>${item.registro}</td>
+                    <td>${item.tipo}</td>
+                    <td>${item.local}</td>
+                    <td>${item.quantidade}</td>
+                    <td>
+                        <span class="badge ${getStatusBadgeClass(item.status)}">
+                            ${item.status}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function showNewReservationModal() {
+            // Preencher lista de professores
+            const teacherSelect = document.getElementById('reservationTeacher');
+            teacherSelect.innerHTML = '<option value="">Selecione...</option>';
+            
+            for (const [nome, email] of Object.entries(professores)) {
+                const option = document.createElement('option');
+                option.value = nome;
+                option.textContent = nome;
+                teacherSelect.appendChild(option);
+            }
+            
+            document.getElementById('reservationModal').style.display = 'flex';
+        }
+        
+        function loadReservationsTable() {
+            const tableBody = document.getElementById('reservationsTable');
+            tableBody.innerHTML = '';
+            
+            // Dados fictícios para demonstração
+            const reservations = [
+                { data: '2023-07-18', professor: 'Ana Paula de Oliveira Souza', equipamento: 'Notebook do aluno', quantidade: 15, local: 'Sala de aula', status: 'Confirmada' },
+                { data: '2023-07-17', professor: 'Rodrigo Vieira', equipamento: 'Tablets', quantidade: 10, local: 'Sala de informática', status: 'Pendente' },
+                { data: '2023-07-16', professor: 'Wilson Rodrigues Mota', equipamento: 'Chromebooks', quantidade: 8, local: 'Anfiteatro', status: 'Concluída' },
+                { data: '2023-07-15', professor: 'Vanessa Ivete Gomes dos Santos', equipamento: 'Smartphone', quantidade: 5, local: 'Quadra', status: 'Cancelada' }
+            ];
+            
+            reservations.forEach(reservation => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${reservation.data}</td>
+                    <td>${reservation.professor}</td>
+                    <td>${reservation.equipamento}</td>
+                    <td>${reservation.quantidade}</td>
+                    <td>${reservation.local}</td>
+                    <td>
+                        <span class="badge ${getReservationStatusBadge(reservation.status)}">
+                            ${reservation.status}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function getReservationStatusBadge(status) {
+            switch (status) {
+                case 'Confirmada': return 'badge-success';
+                case 'Pendente': return 'badge-warning';
+                case 'Concluída': return 'badge-primary';
+                case 'Cancelada': return 'badge-danger';
+                default: return 'badge-secondary';
+            }
+        }
+        
+        function loadMaintenanceTable() {
+            const tableBody = document.getElementById('maintenanceTable');
+            tableBody.innerHTML = '';
+            
+            // Dados fictícios para demonstração
+            const maintenanceList = [
+                { data: '2023-07-18', equipamento: 'Notebook Ultra', serie: 'SN2023-001', problema: 'Tela quebrada', tecnico: 'Técnico Raul', status: 'Pendente' },
+                { data: '2023-07-17', equipamento: 'Tablet', serie: 'SN2023-102', problema: 'Bateria não carrega', tecnico: 'Técnico Juarez', status: 'Em andamento' },
+                { data: '2023-07-16', equipamento: 'Smartphone', serie: 'SN2023-205', problema: 'Câmera traseira não funciona', tecnico: 'Técnico Júlio', status: 'Concluído' }
+            ];
+            
+            maintenanceList.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.data}</td>
+                    <td>${item.equipamento}</td>
+                    <td>${item.serie}</td>
+                    <td>${item.problema}</td>
+                    <td>${item.tecnico}</td>
+                    <td>
+                        <span class="badge ${getMaintenanceStatusBadge(item.status)}">
+                            ${item.status}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function getMaintenanceStatusBadge(status) {
+            switch (status) {
+                case 'Pendente': return 'badge-danger';
+                case 'Em andamento': return 'badge-warning';
+                case 'Concluído': return 'badge-success';
+                default: return 'badge-secondary';
+            }
+        }
+        
+        function showMaintenanceModal() {
+            // Preencher lista de equipamentos
+            const equipmentSelect = document.getElementById('maintenanceEquipment');
+            equipmentSelect.innerHTML = '<option value="">Selecione...</option>';
+            
+            const equipmentOptions = [
+                'Notebook do aluno', 'Chromebooks', 'Smartphone', 
+                'Tablets', 'Notebook Ultra', 'Datashow', 'Desktop Lenovo'
+            ];
+            
+            equipmentOptions.forEach(eq => {
+                const option = document.createElement('option');
+                option.value = eq;
+                option.textContent = eq;
+                equipmentSelect.appendChild(option);
+            });
+            
+            document.getElementById('maintenanceModal').style.display = 'flex';
+        }
+        
+        function generateReport() {
+            // Implementar lógica de geração de relatório
+            alert('Relatório gerado com sucesso!');
+        }
+        
+        function exportReport() {
+            alert('Relatório exportado com sucesso!');
+        }
+        
+        function printReport() {
+            window.print();
+        }
+        
+        // Inicializa o dashboard quando a página carrega
+        window.onload = function() {
+            updateDashboard();
+        };
     </script>
 </body>
 </html>
