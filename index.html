@@ -752,7 +752,6 @@
 
         .form-row .form-group {
             flex: 1;
-            margin-bottom: 0;
         }
 
         .file-upload-container {
@@ -1922,28 +1921,21 @@
     <script>
         // Configuração do Firebase
         const firebaseConfig = {
-             // Configuração do Firebase 
-        const firebaseConfig = { 
-            apiKey: "AIzaSyBOoXyjLQPfgzQM06LVy-TRSPdSM_8CjcE", 
-            authDomain: "gerenciamentoaparelho.firebaseapp.com", 
-            projectId: "gerenciamentoaparelho", 
-            storageBucket: "gerenciamentoaparelho.appspot.com", 
-            messagingSenderId: "751628186418", 
-            appId: "1:751628186418:web:dd68af74d9e3723c179d2b", 
-            measurementId: "G-K02ZZQ4JBK" 
-        }; 
- 
-        // Inicializa o Firebase 
-        const app = firebase.initializeApp(firebaseConfig); 
-        const database = firebase.database(); 
-        const auth = firebase.auth(); 
- 
+            apiKey: "AIzaSyBOoXyjLQPfgzQM06LVy-TRSPdSM_8CjcE",
+            authDomain: "gerenciamentoaparelho.firebaseapp.com",
+            projectId: "gerenciamentoaparelho",
+            storageBucket: "gerenciamentoaparelho.appspot.com",
+            messagingSenderId: "751628186418",
+            appId: "1:751628186418:web:dd68af74d9e3723c179d2b",
+            measurementId: "G-K02ZZQ4JBK"
+        };
+
+        // Inicializa o Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const auth = firebase.auth();
+
         // Variáveis globais 
-        let currentUser = null; 
-let equipmentChart = null; 
-let equipmentCounter = 1; 
-let registros = []; 
-let uploadedFiles = [];        // Variáveis globais
         let currentUser = null;
         let equipmentChart = null;
         let equipmentCounter = 1;
@@ -2179,6 +2171,7 @@ let uploadedFiles = [];        // Variáveis globais
                     loadEquipmentTable();
                     loadReservationsTable();
                     loadMaintenanceTable();
+                    loadRegistrationTable();
                 })
                 .catch((error) => {
                     alert('Erro ao fazer login: ' + error.message);
@@ -2213,6 +2206,7 @@ let uploadedFiles = [];        // Variáveis globais
                 loadEquipmentTable();
                 loadReservationsTable();
                 loadMaintenanceTable();
+                loadRegistrationTable();
             } else {
                 // Restaura os valores padrão ao deslogar
                 document.getElementById('loginEmail').value = 'professor@escola.gov.br';
