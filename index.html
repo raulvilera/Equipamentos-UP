@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -2505,7 +2505,7 @@
                     const reg = childSnapshot.val();
                     
                     // Verifica se existem equipamentos
-                    if (!reg.equipment) {
+                    if (!reg.equipment || !Array.isArray(reg.equipment)) {
                         console.warn("Registro sem equipamentos:", reg);
                         return;
                     }
@@ -2579,8 +2579,11 @@
             const registrationCode = document.getElementById('registrationCode').value;
             const observationPeriod = document.getElementById('observationPeriod').value;
 
-            if (!teacherName || !studentClass || !registrationCode) {
-                alert('Preencha os campos obrigatórios antes de gerar o termo.');
+            // Verificar campos obrigatórios
+            if (!teacherName || !studentClass || !registrationCode || 
+                !withdrawalDate || !returnDate || !withdrawalTime || !returnTime || 
+                !withdrawalPeriod || !returnPeriod || !observationPeriod) {
+                alert('Preencha todos os campos obrigatórios antes de gerar o termo.');
                 return;
             }
 
