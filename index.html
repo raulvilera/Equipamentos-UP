@@ -827,6 +827,117 @@
         .dropdown-container .form-group {
             flex: 1;
         }
+        
+        /* ===== ESTILOS PARA AGENDAMENTO ===== */
+        .calendar-container {
+            margin-top: 20px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        
+        .calendar-day-header {
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 4px;
+        }
+        
+        .calendar-day {
+            padding: 10px;
+            min-height: 100px;
+            border: 1px solid var(--gray-light);
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .calendar-day:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        .calendar-day.empty {
+            background-color: #f9f9f9;
+            cursor: default;
+        }
+        
+        .day-number {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .event-indicator {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+        }
+        
+        .event-list {
+            margin-top: 10px;
+            font-size: 12px;
+        }
+        
+        .event-item {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* ===== ESTILOS PARA O MODAL DE AGENDAMENTO ===== */
+        .schedule-modal .modal-content {
+            max-width: 600px;
+        }
+        
+        .schedule-conflict {
+            background-color: #ffebee;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .conflict-item {
+            padding: 5px;
+            border-bottom: 1px solid #ffcdd2;
+        }
+        
+        .conflict-item:last-child {
+            border-bottom: none;
+        }
     </style>
 </head>
 <body>
@@ -1037,6 +1148,39 @@
                     <button class="btn btn-secondary" onclick="refreshReservations()">
                         <i class="fas fa-sync-alt"></i> Atualizar
                     </button>
+                </div>
+                
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <h3 id="currentMonthYear">Julho 2023</h3>
+                        <div class="calendar-nav">
+                            <button class="btn btn-secondary btn-sm" onclick="prevMonth()">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="btn btn-primary btn-sm" onclick="today()">
+                                Hoje
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="nextMonth()">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-grid">
+                        <!-- Dias da semana -->
+                        <div class="calendar-day-header">Dom</div>
+                        <div class="calendar-day-header">Seg</div>
+                        <div class="calendar-day-header">Ter</div>
+                        <div class="calendar-day-header">Qua</div>
+                        <div class="calendar-day-header">Qui</div>
+                        <div class="calendar-day-header">Sex</div>
+                        <div class="calendar-day-header">Sáb</div>
+                        
+                        <!-- Dias do mês -->
+                        <div id="calendarDays" class="calendar-grid" style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px;">
+                            <!-- Preenchido dinamicamente -->
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="table-responsive" style="margin-top: 20px;">
@@ -1583,28 +1727,28 @@
 
                         <div class="termo-info">
                             <div class="termo-info-item"> 
-                                <p>Data da Retirada: <span id="termoWithdrawalDate">//________</span></p> 
+                                <p>Data da Retirada: <span id="termoWithdrawalDate">_____</span></p> 
                             </div> 
                             <div class="termo-info-item"> 
-                                <p>Horário da Retirada: <span id="termoWithdrawalTime">____________</span></p> 
-                            </div> 
-                        </div> 
-                        
-                        <div class="termo-info"> 
-                            <div class="termo-info-item"> 
-                                <p>Data da Devolução: <span id="termoReturnDate">//________</span></p> 
-                            </div> 
-                            <div class="termo-info-item"> 
-                                <p>Horário da Devolução: <span id="termoReturnTime">____________</span></p> 
+                                <p>Horário da Retirada: <span id="termoWithdrawalTime">_____</span></p> 
                             </div> 
                         </div> 
                         
                         <div class="termo-info"> 
                             <div class="termo-info-item"> 
-                                <p>Período da Retirada: <span id="termoWithdrawalPeriod">____________</span></p> 
+                                <p>Data da Devolução: <span id="termoReturnDate">_____</span></p> 
                             </div> 
                             <div class="termo-info-item"> 
-                                <p>Período da Devolução: <span id="termoReturnPeriod">____________</span></p> 
+                                <p>Horário da Devolução: <span id="termoReturnTime">_____</span></p> 
+                            </div> 
+                        </div> 
+                        
+                        <div class="termo-info"> 
+                            <div class="termo-info-item"> 
+                                <p>Período da Retirada: <span id="termoWithdrawalPeriod">_____</span></p> 
+                            </div> 
+                            <div class="termo-info-item"> 
+                                <p>Período da Devolução: <span id="termoReturnPeriod">_____</span></p> 
                             </div>
                         </div>
 
@@ -1753,7 +1897,7 @@
     </div>
 
     <!-- Modal para Nova Reserva -->
-    <div id="reservationModal" class="modal">
+    <div id="reservationModal" class="modal schedule-modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Nova Reserva de Equipamento</h3>
@@ -1814,6 +1958,10 @@
                     </div>
                     <div id="availabilityInfo" class="schedule-info" style="display: none;">
                         <!-- Preenchido dinamicamente -->
+                    </div>
+                    <div id="scheduleConflict" class="schedule-conflict">
+                        <h4>Conflitos de Agendamento:</h4>
+                        <div id="conflictList"></div>
                     </div>
                 </form>
             </div>
@@ -1941,6 +2089,8 @@
         let equipmentCounter = 1;
         let registros = [];
         let uploadedFiles = [];
+        let currentDate = new Date();
+        let reservations = [];
 
         // Dados de exemplo
         const professores = {
@@ -1964,7 +2114,7 @@
             "CLAUDINEIA DE AGUIAR LIMA": "aguiarl@prof.educacao.sp.gov.br",
             "DANIEL DE FREITAS ALMEIDA": "danielalmeida@prof.educacao.sp.gov.br",
             "DANIEL LOPES BARBOSA": "daniellopesbarbosa@prof.educacao.sp.gov.br",
-            "DANIELA FERREIRA LIMA": "danielaflima@prof.educacao.sp.gov.br",
+            "DANIELA FERREIRA LIMA": "danielafirma@prof.educacao.sp.gov.br",
             "DANIELLE LUCIA BATISTA DE ALMEIDA": "danielelucia@prof.educacao.sp.gov.br",
             "EDIANE VIEIRA DA SILVA": "ediane@prof.educacao.sp.gov.br",
             "EDILEUSA NUNES PEREIRA": "edileusa@prof.educacao.sp.gov.br",
@@ -1974,7 +2124,7 @@
             "ELISABETE APARECIDA PIRES": "elisabetepires@prof.educacao.sp.gov.br",
             "ELZA DE FARIA PEREIRA": "elzafariapereira@prof.educacao.sp.gov.br",
             "EMERSON GABLER DE ALMEIDA": "egabler@prof.educacao.sp.gov.br",
-            "ERINEIDE LEITE ARAGAO NERY": "erineidearagao@prof.educacao.sp.gov.br",
+            "ERINEIDE LEITE ARAGAO NERY": "erineidearago@prof.educacao.sp.gov.br",
             "EUZELI ARAUJO DE OLIVEIRA": "euzeli@prof.educacao.sp.gov.br",
             "FABIANO AUGUSTO PIEDADE": "fabianoaugusto@prof.educacao.sp.gov.br",
             "FABIO CAMILO": "camilof@prof.educacao.sp.gov.br",
@@ -1989,7 +2139,7 @@
             "INGRYD CAROLINA SUGUIMOTO VIEIRA": "ingryd@prof.educacao.sp.gov.br",
             "IVANILDES DOS SANTOS OSHIKAWA": "oshikawa@prof.educacao.sp.gov.br",
             "JANINA DOS PASSOS BRAGA DE ALMEIDA": "janinabraga@prof.educacao.sp.gov.br",
-            "JOSE APARECIDO DA SILVA": "joseaparecidosilva@prof.educacao.sp.gov.br",
+            "JOSE APARECIDO DA SILVA": "joseparecidosilva@prof.educacao.sp.gov.br",
             "JUAREZ GOMES DE MAGALHAES FILHO": "juarezgomes@prof.educacao.sp.gov.br",
             "JUREMA SOLEDADE FURINI SANTOS": "juremas@prof.educacao.sp.gov.br",
             "KATIUSCIA ALVES BOMFIM": "katiusciabomfim@prof.educacao.sp.gov.br",
@@ -2018,7 +2168,7 @@
             "ROSIMERY DE SOUZA PESSOA": "rosimerypessoa@prof.educacao.sp.gov.br",
             "ROSMARA DA SILVA CARDOSO": "rosmaracardoso@prof.educacao.sp.gov.br",
             "SANDRA CRISTINA MACEDO MORAES": "sandracristinamacedo@prof.educacao.sp.gov.br",
-            "SELMA GOMES DA SILVA": "selmagomess@prof.educacao.sp.gov.br",
+            "SELMA GOMES DA SILVA": "selmagomesso@prof.educacao.sp.gov.br",
             "SERGIO AGRIPINO VILLA NOVA": "sergioagripino@prof.educacao.sp.gov.br",
             "SOLANGE ALMEIDA DA SILVA": "almeidafazio@prof.educacao.sp.gov.br",
             "SUELI SILVE PEREIRA": "suelisilve@prof.educacao.sp.gov.br",
@@ -2086,16 +2236,16 @@
             "NOTEBOOK": [
                 { id: "NB001", serial: "SN123456789", status: "Disponível" },
                 { id: "NB002", serial: "SN987654321", status: "Disponível" },
-                { id: "NB003", serial: "SN456789123", status: "Manutenção" }
+                { id: "NB003", serial: "SN456789123", status: "Manutenção" } 
             ],
             "TABLET": [
                 { id: "TAB001", serial: "SNTAB001", status: "Disponível" },
                 { id: "TAB002", serial: "SNTAB002", status: "Em uso" },
-                { id: "TAB003", serial: "SNTAB003", status: "Disponível" }
+                { id: "TAB003", serial: "SNTAB003", status: "Disponível" } 
             ],
             "SMARTPHONE": [
                 { id: "SP001", serial: "SNSP001", status: "Disponível" },
-                { id: "SP002", serial: "SNSP002", status: "Com avarias" }
+                { id: "SP002", serial: "SNSP002", status: "Com avarias" } 
             ],
             "HEAD SET": [
                 { id: "HS001", serial: "SNHS001", status: "Disponível" },
@@ -2103,7 +2253,7 @@
             ],
             "CHROMEBOOK": [
                 { id: "CB001", serial: "SNCB001", status: "Disponível" },
-                { id: "CB002", serial: "SNCB002", status: "Em uso" }
+                { id: "CB002", serial: "SNCB002", status: "Em uso" } 
             ],
             "CAIXA DE SOM": [
                 { id: "CS001", serial: "SNCS001", status: "Disponível" },
@@ -2146,6 +2296,12 @@
                 document.getElementById('customDateRange').style.display = 
                     this.value === 'custom' ? 'block' : 'none';
             });
+            
+            // Inicializa o calendário
+            generateCalendar(currentDate);
+            
+            // Carrega as reservas
+            loadReservations();
         });
 
         // Funções de autenticação
@@ -2175,6 +2331,7 @@
                 })
                 .catch((error) => {
                     console.error('Erro ao fazer login: ' + error.message);
+                    alert('Erro ao fazer login: ' + error.message);
                 });
         }
 
@@ -2253,7 +2410,7 @@
             const teacherSelect = document.getElementById('teacherName');
             const emailInput = document.getElementById('teacherEmail');
             const selectedTeacher = teacherSelect.value;
-
+            
             if (professores[selectedTeacher]) {
                 emailInput.value = professores[selectedTeacher];
             } else {
@@ -2265,10 +2422,10 @@
             const equipmentTypeSelect = document.getElementById(`equipmentType${id}`);
             const identificationNumberSelect = document.getElementById(`identificationNumber${id}`);
             const selectedEquipment = equipmentTypeSelect.value;
-
+            
             // Limpar opções anteriores
             identificationNumberSelect.innerHTML = '<option value="">Selecione o aparelho primeiro</option>';
-
+            
             if (selectedEquipment && equipamentos[selectedEquipment]) {
                 equipamentos[selectedEquipment].forEach(eq => {
                     const option = document.createElement('option');
@@ -2285,7 +2442,7 @@
             const identificationNumberSelect = document.getElementById(`identificationNumber${id}`);
             const serialNumberInput = document.getElementById(`serialNumber${id}`);
             const selectedOption = identificationNumberSelect.options[identificationNumberSelect.selectedIndex];
-
+            
             if (selectedOption && selectedOption.dataset.serial) {
                 serialNumberInput.value = selectedOption.dataset.serial;
             } else {
@@ -2297,24 +2454,23 @@
             const classSelect = document.getElementById('studentClass');
             const roomInput = document.getElementById('room');
             const selectedClass = classSelect.value;
-
+            
             if (salasPorTurmaPeriodo[selectedClass]) {
                 roomInput.value = salasPorTurmaPeriodo[selectedClass];
             } else {
-                roomInput.value = '';
+                roomInput.value = "";
             }
         }
 
         function addEquipment() {
             equipmentCounter++;
             const container = document.getElementById('equipmentContainer');
-
             const newRow = document.createElement('div');
             newRow.className = 'equipment-row';
             newRow.innerHTML = `
                 <div class="form-group">
                     <label for="equipmentType${equipmentCounter}">APARELHO:</label>
-                    <select id="equipmentType${equipmentCounter}" class="form-control" onchange="updateIdentificationNumbers('${equipmentCounter}')">
+                    <select id="equipmentType${equipmentCounter}" class="form-control" onchange="updateIdentificationNumbers(${equipmentCounter})">
                         <option value="">Selecione o aparelho</option>
                         <option value="NOTEBOOK">NOTEBOOK</option>
                         <option value="TABLET">TABLET</option>
@@ -2326,7 +2482,7 @@
                 </div>
                 <div class="form-group">
                     <label for="identificationNumber${equipmentCounter}">N° DE IDENTIFICAÇÃO:</label>
-                    <select id="identificationNumber${equipmentCounter}" class="form-control" onchange="fillSerialNumber('${equipmentCounter}')">
+                    <select id="identificationNumber${equipmentCounter}" class="form-control" onchange="fillSerialNumber(${equipmentCounter})">
                         <option value="">Selecione o aparelho primeiro</option>
                     </select>
                 </div>
@@ -2356,11 +2512,11 @@
         function handleFileUpload() {
             const fileInput = document.getElementById('fileUpload');
             const fileList = document.getElementById('fileList');
-
+            
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
                 uploadedFiles.push(file);
-
+                
                 const fileItem = document.createElement('div');
                 fileItem.className = 'file-item';
                 fileItem.innerHTML = `
@@ -2371,7 +2527,7 @@
                     </span>
                 `;
                 fileList.appendChild(fileItem);
-
+                
                 // Resetar o input para permitir novos uploads
                 fileInput.value = "";
             }
@@ -2399,18 +2555,18 @@
             document.getElementById('observation').value = "";
             document.getElementById('withdrawalPeriod').value = "";
             document.getElementById('returnPeriod').value = "";
-            document.getElementById('observationPeriod').value = '';
-
+            document.getElementById('observationPeriod').value = "";
+            
             // Limpar lista de arquivos
             uploadedFiles = [];
-            document.getElementById('fileList').innerHTML = '';
-
+            document.getElementById('fileList').innerHTML = "";
+            
             // Manter apenas um campo de equipamento e limpá-lo
             const container = document.getElementById('equipmentContainer');
-            container.innerHTML = '';
+            container.innerHTML = "";
             equipmentCounter = 1;
             addEquipment();
-
+            
             // Esconder o termo
             document.getElementById('termoContainer').style.display = 'none';
         }
@@ -2439,16 +2595,16 @@
             // Coletar equipamentos
             const equipmentRows = document.querySelectorAll('.equipment-row');
             const equipmentList = [];
-
+            
             equipmentRows.forEach(row => {
                 const id = row.id ? row.id.split('.')[1] : '1';
                 const equipmentType = document.getElementById(`equipmentType${id}`)?.value;
                 const identificationNumber = document.getElementById(`identificationNumber${id}`)?.value;
                 const serialNumber = document.getElementById(`serialNumber${id}`)?.value;
                 const quantity = document.getElementById(`quantity${id}`)?.value || 1;
-
+                
                 if (equipmentType && identificationNumber) {
-                    equipmentList.push({ 
+                    equipmentList.push({
                         type: equipmentType,
                         id: identificationNumber,
                         serial: serialNumber,
@@ -2487,7 +2643,7 @@
             // Salvar no Firebase
             database.ref('registros').push(registro)
                 .then(() => {
-                    alert('Registro realizado com sucesso!');
+                    alert("Registro realizado com sucesso!");
                     clearForm();
                     loadRegistrationTable(); // Recarrega a tabela
                 })
@@ -2499,7 +2655,7 @@
         function loadRegistrationTable() {
             const tableBody = document.getElementById('registrationTable');
             tableBody.innerHTML = "";
-
+            
             database.ref("registros").once("value").then((snapshot) => {
                 snapshot.forEach((childSnapshot) => {
                     const reg = childSnapshot.val();
@@ -2515,7 +2671,7 @@
                         
                         // Só mostra o nome do professor na primeira linha
                         const teacherCell = index === 0 
-                            ? `<td rowspan="${reg.equipment.length}">${reg.teacherName}</td>`
+                            ? `<td rowspan="${reg.equipment.length}">${reg.teacherName}</td>` 
                             : "";
                         
                         row.innerHTML = `
@@ -2582,21 +2738,21 @@
             if (!teacherName || !studentClass || !registrationCode || 
                 !withdrawalDate || !returnDate || !withdrawalTime || !returnTime || 
                 !withdrawalPeriod || !returnPeriod || !observationPeriod) {
-                alert('Preencha todos os campos obrigatórios antes de gerar o termo.');
+                alert("Preencha todos os campos obrigatórios antes de gerar o termo.");
                 return;
             }
 
             // Coletar equipamentos
             const equipmentRows = document.querySelectorAll('.equipment-row');
             const equipmentList = [];
-
+            
             equipmentRows.forEach(row => {
-                const id = row.id ? row.id.split('.')[1] : '1';
+                const id = row.id ? row.id.split(".")[1] : '1';
                 const equipmentType = document.getElementById(`equipmentType${id}`)?.value;
                 const identificationNumber = document.getElementById(`identificationNumber${id}`)?.value;
                 const serialNumber = document.getElementById(`serialNumber${id}`)?.value;
                 const quantity = document.getElementById(`quantity${id}`)?.value || 1;
-
+                
                 if (equipmentType && identificationNumber) {
                     equipmentList.push({
                         type: equipmentType,
@@ -2630,7 +2786,7 @@
             // Preencher tabela de equipamentos
             const tableBody = document.getElementById('termoEquipmentTable');
             tableBody.innerHTML = '';
-
+            
             equipmentList.forEach(eq => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -2650,21 +2806,19 @@
         function generatePDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            
+
             // Título
             doc.setFontSize(16);
             doc.text("TERMO DE RESPONSABILIDADE PELO USO E DEVOLUÇÃO DE APARELHOS", 105, 15, null, null, 'center');
-            
+
             // Conteúdo
             doc.setFontSize(12);
             doc.text(`Eu, ${document.getElementById('termoTeacherName').textContent}, professor(a) da turma ${document.getElementById('termoClass').textContent}, declaro estar ciente e de acordo com as responsabilidades quanto ao uso dos aparelhos listados abaixo, os quais foram retirados em perfeitas condições de funcionamento.`, 15, 30, { maxWidth: 180 });
-            
             doc.text("Comprometo-me a:", 15, 50);
-            doc.text("- Zelar pelo bom uso dos aparelhos sob minha posse e dos meus alunos durante o período de utilização;", 20, 60);
-            doc.text("- Devolver todos os equipamentos nas mesmas condições em que foram entregues;", 20, 70);
-            
+            doc.text("• Zelar pelo bom uso dos aparelhos sob minha posse e dos meus alunos durante o período de utilização;", 20, 60);
+            doc.text("• Devolver todos os equipamentos nas mesmas condições em que foram entregues;", 20, 70);
             doc.text("OBSERVAÇÃO: Comunicar imediatamente qualquer dano ou irregularidade ocorrida durante o uso.", 15, 85, { maxWidth: 180 });
-            
+
             // Tabela de equipamentos
             const tableData = [];
             const equipmentRows = document.querySelectorAll('#termoEquipmentTable tr');
@@ -2681,40 +2835,404 @@
                     ]);
                 }
             });
-            
+
             doc.autoTable({
                 head: [['Aparelho', 'N° Identificação', 'N° Série', 'Quantidade', 'Status']],
                 body: tableData,
                 startY: 95
             });
-            
+
             // Informações finais
             const lastY = doc.lastAutoTable.finalY + 10;
-            
             doc.text(`Assinatura do(a) Professor(a): ______`, 15, lastY);
             doc.text(`Turma: ${document.getElementById('termoClass2').textContent}`, 15, lastY + 10);
-            
             doc.text(`Data da Retirada: ${document.getElementById('termoWithdrawalDate').textContent}`, 15, lastY + 20);
             doc.text(`Horário da Retirada: ${document.getElementById('termoWithdrawalTime').textContent}`, 100, lastY + 20);
-            
             doc.text(`Data da Devolução: ${document.getElementById('termoReturnDate').textContent}`, 15, lastY + 30);
             doc.text(`Horário da Devolução: ${document.getElementById('termoReturnTime').textContent}`, 100, lastY + 30);
-            
             doc.text(`Período da Retirada: ${document.getElementById('termoWithdrawalPeriod').textContent}`, 15, lastY + 40);
             doc.text(`Período da Devolução: ${document.getElementById('termoReturnPeriod').textContent}`, 100, lastY + 40);
-            
             doc.text(`Registrado por: ${document.getElementById('termoRegistrant').textContent}`, 15, lastY + 50);
             doc.text(`Código: ${document.getElementById('termoRegistrationCode').textContent}`, 15, lastY + 60);
             doc.text(`Período: ${document.getElementById('termoObservationPeriod').textContent}`, 15, lastY + 70);
-            
+
             // Salvar PDF
             doc.save(`termo_responsabilidade_${document.getElementById('termoTeacherName').textContent}.pdf`);
         }
 
         // ==============================
-        // FUNÇÕES COMUNS (DASHBOARD, CADASTRO, RESERVAS, ETC)
+        // FUNÇÕES DO SISTEMA DE AGENDAMENTO
         // ==============================
         
+        // Funções para navegação do calendário
+        function prevMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            generateCalendar(currentDate);
+        }
+        
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            generateCalendar(currentDate);
+        }
+        
+        function today() {
+            currentDate = new Date();
+            generateCalendar(currentDate);
+        }
+        
+        // Gera o calendário
+        function generateCalendar(date) {
+            const calendarDays = document.getElementById('calendarDays');
+            calendarDays.innerHTML = '';
+            
+            const month = date.getMonth();
+            const year = date.getFullYear();
+            
+            // Atualiza o cabeçalho com mês/ano
+            const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                               "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            document.getElementById('currentMonthYear').textContent = `${monthNames[month]} ${year}`;
+            
+            // Primeiro dia do mês
+            const firstDay = new Date(year, month, 1);
+            // Último dia do mês
+            const lastDay = new Date(year, month + 1, 0);
+            // Dia da semana do primeiro dia (0 = Domingo, 1 = Segunda, etc)
+            const firstDayOfWeek = firstDay.getDay();
+            // Total de dias no mês
+            const daysInMonth = lastDay.getDate();
+            
+            // Preenche os dias vazios do início do mês
+            for (let i = 0; i < firstDayOfWeek; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day empty';
+                calendarDays.appendChild(emptyDay);
+            }
+            
+            // Preenche os dias do mês
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.innerHTML = `<div class="day-number">${day}</div>`;
+                
+                // Verifica se há eventos neste dia
+                const hasEvents = hasEventsOnDate(new Date(year, month, day));
+                if (hasEvents) {
+                    const eventIndicator = document.createElement('div');
+                    eventIndicator.className = 'event-indicator';
+                    dayElement.appendChild(eventIndicator);
+                }
+                
+                // Adiciona evento de clique
+                dayElement.addEventListener('click', () => openDaySchedule(year, month, day));
+                
+                calendarDays.appendChild(dayElement);
+            }
+        }
+        
+        // Verifica se há eventos em uma data específica
+        function hasEventsOnDate(date) {
+            const dateStr = date.toISOString().split('T')[0];
+            return reservations.some(reservation => 
+                reservation.startDate === dateStr || 
+                reservation.endDate === dateStr ||
+                (new Date(reservation.startDate) <= date && new Date(reservation.endDate) >= date)
+            );
+        }
+        
+        // Abre o agendamento do dia
+        function openDaySchedule(year, month, day) {
+            const date = new Date(year, month, day);
+            const dateStr = date.toISOString().split('T')[0];
+            
+            // Filtra as reservas para este dia
+            const dayReservations = reservations.filter(reservation => {
+                const start = new Date(reservation.startDate);
+                const end = new Date(reservation.endDate);
+                return date >= start && date <= end;
+            });
+            
+            // Preenche a tabela de reservas do dia
+            const tableBody = document.getElementById('reservationsTable');
+            tableBody.innerHTML = '';
+            
+            dayReservations.forEach(reservation => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${reservation.date}</td>
+                    <td>${reservation.teacher}</td>
+                    <td>${reservation.equipment}</td>
+                    <td>${reservation.quantity}</td>
+                    <td>${reservation.location}</td>
+                    <td>
+                        <span class="badge ${getReservationStatusBadge(reservation.status)}">
+                            ${reservation.status}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="showReservationDetail(${reservation.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            // Abre a aba de reservas se não estiver aberta
+            openTab('reservations');
+        }
+        
+        // Carrega as reservas
+        function loadReservations() {
+            // Dados fictícios
+            reservations = [
+                {
+                    id: 1,
+                    date: "2023-07-18",
+                    teacher: "Ana Paula de Oliveira Souza",
+                    equipment: "Notebook do aluno",
+                    quantity: 15,
+                    location: "Sala de aula",
+                    status: "Confirmada",
+                    startDate: "2023-07-18",
+                    endDate: "2023-07-18"
+                },
+                {
+                    id: 2,
+                    date: "2023-07-19",
+                    teacher: "Rodrigo Vieira",
+                    equipment: "Tablets",
+                    quantity: 10,
+                    location: "Sala de informática",
+                    status: "Pendente",
+                    startDate: "2023-07-19",
+                    endDate: "2023-07-20"
+                },
+                {
+                    id: 3,
+                    date: "2023-07-20",
+                    teacher: "Wilson Rodrigues Mota",
+                    equipment: "Chromebooks",
+                    quantity: 8,
+                    location: "Anfiteatro",
+                    status: "Concluída",
+                    startDate: "2023-07-20",
+                    endDate: "2023-07-20"
+                },
+                {
+                    id: 4,
+                    date: "2023-07-21",
+                    teacher: "Vanessa Ivete Gomes dos Santos",
+                    equipment: "Smartphone",
+                    quantity: 5,
+                    location: "Quadra",
+                    status: "Cancelada",
+                    startDate: "2023-07-21",
+                    endDate: "2023-07-21"
+                }
+            ];
+            
+            // Atualiza o calendário
+            generateCalendar(currentDate);
+        }
+        
+        // Verifica a disponibilidade do equipamento
+        function checkEquipmentAvailability() {
+            const equipment = document.getElementById('reservationEquipment').value;
+            const date = document.getElementById('reservationDate').value;
+            const period = document.getElementById('reservationPeriod').value;
+            
+            if (!equipment || !date || !period) return;
+            
+            // Filtra reservas para o mesmo equipamento na mesma data e período
+            const conflicts = reservations.filter(reservation => 
+                reservation.equipment === equipment && 
+                reservation.date === date && 
+                reservation.period === period &&
+                reservation.status !== 'Cancelada'
+            );
+            
+            const availabilityInfo = document.getElementById('availabilityInfo');
+            const conflictList = document.getElementById('conflictList');
+            const scheduleConflict = document.getElementById('scheduleConflict');
+            
+            if (conflicts.length === 0) {
+                availabilityInfo.innerHTML = '<div class="alert alert-success">Equipamento disponível no período selecionado.</div>';
+                availabilityInfo.style.display = 'block';
+                scheduleConflict.style.display = 'none';
+            } else {
+                availabilityInfo.innerHTML = '<div class="alert alert-danger">Conflito de agendamento detectado!</div>';
+                availabilityInfo.style.display = 'block';
+                scheduleConflict.style.display = 'block';
+                
+                conflictList.innerHTML = '';
+                conflicts.forEach(conflict => {
+                    const conflictItem = document.createElement('div');
+                    conflictItem.className = 'conflict-item';
+                    conflictItem.innerHTML = `
+                        <strong>Professor:</strong> ${conflict.teacher}<br>
+                        <strong>Período:</strong> ${conflict.period}<br>
+                        <strong>Local:</strong> ${conflict.location}
+                    `;
+                    conflictList.appendChild(conflictItem);
+                });
+            }
+        }
+        
+        // Salva uma nova reserva
+        function saveReservation() {
+            const teacher = document.getElementById('reservationTeacher').value;
+            const equipment = document.getElementById('reservationEquipment').value;
+            const quantity = document.getElementById('reservationQuantity').value;
+            const location = document.getElementById('reservationLocation').value;
+            const studentClass = document.getElementById('reservationClass').value;
+            const period = document.getElementById('reservationPeriod').value;
+            const date = document.getElementById('reservationDate').value;
+            
+            if (!teacher || !equipment || !quantity || !location || !studentClass || !period || !date) {
+                alert('Preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            // Verifica se há conflitos
+            const conflicts = reservations.filter(reservation => 
+                reservation.equipment === equipment && 
+                reservation.date === date && 
+                reservation.period === period &&
+                reservation.status !== 'Cancelada'
+            );
+            
+            if (conflicts.length > 0) {
+                alert('Conflito de agendamento! Por favor, escolha outro horário ou equipamento.');
+                return;
+            }
+            
+            // Cria nova reserva
+            const newReservation = {
+                id: reservations.length + 1,
+                date,
+                teacher,
+                equipment,
+                quantity: parseInt(quantity),
+                location,
+                class: studentClass,
+                period,
+                status: "Pendente",
+                startDate: date,
+                endDate: date
+            };
+            
+            reservations.push(newReservation);
+            
+            alert('Reserva realizada com sucesso!');
+            closeModal('reservationModal');
+            generateCalendar(currentDate);
+            loadReservationsTable();
+        }
+        
+        // Carrega a tabela de reservas
+        function loadReservationsTable() {
+            const tableBody = document.getElementById('reservationsTable');
+            tableBody.innerHTML = '';
+            
+            reservations.forEach(reservation => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${reservation.date}</td>
+                    <td>${reservation.teacher}</td>
+                    <td>${reservation.equipment}</td>
+                    <td>${reservation.quantity}</td>
+                    <td>${reservation.location}</td>
+                    <td>
+                        <span class="badge ${getReservationStatusBadge(reservation.status)}">
+                            ${reservation.status}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="showReservationDetail(${reservation.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Mostra os detalhes de uma reserva
+        function showReservationDetail(reservationId) {
+            const reservation = reservations.find(r => r.id === reservationId);
+            if (!reservation) return;
+            
+            const modalContent = document.getElementById('reservationDetailContent');
+            modalContent.innerHTML = `
+                <p><strong>Professor:</strong> ${reservation.teacher}</p>
+                <p><strong>Equipamento:</strong> ${reservation.equipment}</p>
+                <p><strong>Quantidade:</strong> ${reservation.quantity}</p>
+                <p><strong>Local:</strong> ${reservation.location}</p>
+                <p><strong>Turma/Disciplina:</strong> ${reservation.class}</p>
+                <p><strong>Data:</strong> ${reservation.date}</p>
+                <p><strong>Período:</strong> ${reservation.period}</p>
+                <p><strong>Status:</strong> <span class="badge ${getReservationStatusBadge(reservation.status)}">${reservation.status}</span></p>
+            `;
+            
+            // Configura botões de ação
+            const cancelBtn = document.getElementById('cancelReservationBtn');
+            const completeBtn = document.getElementById('completeReservationBtn');
+            
+            if (reservation.status === 'Pendente' || reservation.status === 'Confirmada') {
+                cancelBtn.style.display = 'inline-block';
+                completeBtn.style.display = 'inline-block';
+            } else {
+                cancelBtn.style.display = 'none';
+                completeBtn.style.display = 'none';
+            }
+            
+            // Armazena o ID da reserva no modal
+            document.querySelector('#reservationDetailModal').dataset.reservationId = reservationId;
+            
+            document.getElementById('reservationDetailModal').style.display = 'flex';
+        }
+        
+        // Cancela uma reserva
+        function cancelReservation() {
+            const reservationId = parseInt(document.querySelector('#reservationDetailModal').dataset.reservationId);
+            const reservation = reservations.find(r => r.id === reservationId);
+            if (reservation) {
+                reservation.status = 'Cancelada';
+                alert('Reserva cancelada com sucesso!');
+                closeModal('reservationDetailModal');
+                loadReservationsTable();
+                generateCalendar(currentDate);
+            }
+        }
+        
+        // Completa uma reserva
+        function completeReservation() {
+            const reservationId = parseInt(document.querySelector('#reservationDetailModal').dataset.reservationId);
+            const reservation = reservations.find(r => r.id === reservationId);
+            if (reservation) {
+                reservation.status = 'Concluída';
+                alert('Reserva finalizada com sucesso!');
+                closeModal('reservationDetailModal');
+                loadReservationsTable();
+                generateCalendar(currentDate);
+            }
+        }
+        
+        // Retorna a classe CSS para o status da reserva
+        function getReservationStatusBadge(status) {
+            switch (status) {
+                case 'Confirmada': return 'badge-success';
+                case 'Pendente': return 'badge-warning';
+                case 'Concluída': return 'badge-primary';
+                case 'Cancelada': return 'badge-danger';
+                default: return 'badge-secondary';
+            }
+        }
+
+        // ==============================
+        // FUNÇÕES COMUNS (DASHBOARD, CADASTRO, ETC)
+        // ==============================
         function updateDashboard() {
             // Atualiza os contadores com dados fictícios
             document.getElementById('inUseCount').textContent = '12';
@@ -2728,7 +3246,7 @@
             // Carrega atividades recentes
             loadRecentActivities();
         }
-        
+
         function updateChart() {
             const ctx = document.getElementById('equipmentStatusChart').getContext('2d');
             
@@ -2765,10 +3283,10 @@
                 }
             });
         }
-        
+
         function loadRecentActivities() {
             const tableBody = document.getElementById('recentActivitiesTable');
-            tableBody.innerHTML = '';
+            tableBody.innerHTML = "";
             
             // Dados fictícios para demonstração
             const activities = [
@@ -2800,15 +3318,15 @@
                 tableBody.appendChild(row);
             });
         }
-        
+
         function showAddEquipmentModal() {
             document.getElementById('equipmentModal').style.display = 'flex';
         }
-        
+
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
         }
-        
+
         function saveEquipment() {
             // Obter dados do formulário
             const formData = {
@@ -2828,7 +3346,7 @@
             closeModal('equipmentModal');
             loadEquipmentTable();
         }
-        
+
         function loadEquipmentTable() {
             const tableBody = document.getElementById('equipmentTable');
             tableBody.innerHTML = '';
@@ -2868,7 +3386,7 @@
                 tableBody.appendChild(row);
             });
         }
-        
+
         function showNewReservationModal() {
             // Preencher lista de professores
             const teacherSelect = document.getElementById('reservationTeacher');
@@ -2883,102 +3401,14 @@
             
             document.getElementById('reservationModal').style.display = 'flex';
         }
-        
-        function loadReservationsTable() {
-            const tableBody = document.getElementById('reservationsTable');
-            tableBody.innerHTML = '';
-            
-            // Dados fictícios para demonstração
-            const reservations = [
-                { data: '2023-07-18', professor: 'Ana Paula de Oliveira Souza', equipamento: 'Notebook do aluno', quantidade: 15, local: 'Sala de aula', status: 'Confirmada' },
-                { data: '2023-07-17', professor: 'Rodrigo Vieira', equipamento: 'Tablets', quantidade: 10, local: 'Sala de informática', status: 'Pendente' },
-                { data: '2023-07-16', professor: 'Wilson Rodrigues Mota', equipamento: 'Chromebooks', quantidade: 8, local: 'Anfiteatro', status: 'Concluída' },
-                { data: '2023-07-15', professor: 'Vanessa Ivete Gomes dos Santos', equipamento: 'Smartphone', quantidade: 5, local: 'Quadra', status: 'Cancelada' }
-            ];
-            
-            reservations.forEach(reservation => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${reservation.data}</td>
-                    <td>${reservation.professor}</td>
-                    <td>${reservation.equipamento}</td>
-                    <td>${reservation.quantidade}</td>
-                    <td>${reservation.local}</td>
-                    <td>
-                        <span class="badge ${getReservationStatusBadge(reservation.status)}">
-                            ${reservation.status}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn btn-sm btn-primary">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-        
-        function getReservationStatusBadge(status) {
-            switch (status) {
-                case 'Confirmada': return 'badge-success';
-                case 'Pendente': return 'badge-warning';
-                case 'Concluída': return 'badge-primary';
-                case 'Cancelada': return 'badge-danger';
-                default: return 'badge-secondary';
-            }
-        }
-        
-        function loadMaintenanceTable() {
-            const tableBody = document.getElementById('maintenanceTable');
-            tableBody.innerHTML = '';
-            
-            // Dados fictícios para demonstração
-            const maintenanceList = [
-                { data: '2023-07-18', equipamento: 'Notebook Ultra', serie: 'SN2023-001', problema: 'Tela quebrada', tecnico: 'Técnico Raul', status: 'Pendente' },
-                { data: '2023-07-17', equipamento: 'Tablet', serie: 'SN2023-102', problema: 'Bateria não carrega', tecnico: 'Técnico Juarez', status: 'Em andamento' },
-                { data: '2023-07-16', equipamento: 'Smartphone', serie: 'SN2023-205', problema: 'Câmera traseira não funciona', tecnico: 'Técnico Júlio', status: 'Concluído' }
-            ];
-            
-            maintenanceList.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${item.data}</td>
-                    <td>${item.equipamento}</td>
-                    <td>${item.serie}</td>
-                    <td>${item.problema}</td>
-                    <td>${item.tecnico}</td>
-                    <td>
-                        <span class="badge ${getMaintenanceStatusBadge(item.status)}">
-                            ${item.status}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn btn-sm btn-primary">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-        
-        function getMaintenanceStatusBadge(status) {
-            switch (status) {
-                case 'Pendente': return 'badge-danger';
-                case 'Em andamento': return 'badge-warning';
-                case 'Concluído': return 'badge-success';
-                default: return 'badge-secondary';
-            }
-        }
-        
+
         function showMaintenanceModal() {
             // Preencher lista de equipamentos
             const equipmentSelect = document.getElementById('maintenanceEquipment');
             equipmentSelect.innerHTML = '<option value="">Selecione...</option>';
             
             const equipmentOptions = [
-                'Notebook do aluno', 'Chromebooks', 'Smartphone', 
+                'Notebook do aluno', 'Chromebooks', 'Smartphone',
                 'Tablets', 'Notebook Ultra', 'Datashow', 'Desktop Lenovo'
             ];
             
@@ -2991,20 +3421,20 @@
             
             document.getElementById('maintenanceModal').style.display = 'flex';
         }
-        
+
         function generateReport() {
             // Implementar lógica de geração de relatório
             alert('Relatório gerado com sucesso!');
         }
-        
+
         function exportReport() {
             alert('Relatório exportado com sucesso!');
         }
-        
+
         function printReport() {
             window.print();
         }
-        
+
         // Inicializa o dashboard quando a página carrega
         window.onload = function() {
             updateDashboard();
