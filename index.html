@@ -1433,7 +1433,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal('equipmentModal')">Cancelar</button>
-                <button class="btn btn-primary" onclick="saveEquipment()">Salvar</button>
+                <button class="btn btn-primary" id="saveEquipmentBtn">Salvar</button>
             </div>
         </div>
     </div>
@@ -1599,6 +1599,8 @@
         let uploadedFiles = [];
         let currentDate = new Date();
         let reservations = [];
+        let currentEditEquipmentKey = null;
+        let equipmentData = {};
 
         // Dados de exemplo
         const professores = {
@@ -1740,35 +1742,6 @@
             "3° ANO G NOITE": "Sala 8"
         };
 
-        const equipamentos = {
-            "NOTEBOOK": [
-                { id: "NB001", serial: "SN123456789", status: "Disponível" },
-                { id: "NB002", serial: "SN987654321", status: "Disponível" },
-                { id: "NB003", serial: "SN456789123", status: "Manutenção" }
-            ],
-            "TABLET": [
-                { id: "TAB001", serial: "SNTAB001", status: "Disponível" },
-                { id: "TAB002", serial: "SNTAB002", status: "Em uso" },
-                { id: "TAB003", serial: "SNTAB003", status: "Disponível" }
-            ],
-            "SMARTPHONE": [
-                { id: "SP001", serial: "SNSP001", status: "Disponível" },
-                { id: "SP002", serial: "SNSP002", status: "Com avarias" }
-            ],
-            "HEAD SET": [
-                { id: "HS001", serial: "SNHS001", status: "Disponível" },
-                { id: "HS002", serial: "SNHS002", status: "Disponível" }
-            ],
-            "CHROMEBOOK": [
-                { id: "CB001", serial: "SNCB001", status: "Disponível" },
-                { id: "CB002", serial: "SNCB002", status: "Em uso" }
-            ],
-            "CAIXA DE SOM": [
-                { id: "CS001", serial: "SNCS001", status: "Disponível" },
-                { id: "CS002", serial: "SNCS002", status: "Disponível" }
-            ]
-        };
-
         // Inicialização do sistema
         document.addEventListener('DOMContentLoaded', function() {
             // Configura data atual nos formulários
@@ -1805,8 +1778,11 @@
                     this.value === 'custom' ? 'block' : 'none';
             });
 
-            // Carrega as reservas
-            loadReservations();
+            // Configurar evento para salvar equipamento
+            document.getElementById('saveEquipmentBtn').addEventListener('click', saveEquipment);
+
+            // Carrega equipamentos do Firebase
+            loadEquipmentData();
         });
 
         // Funções de autenticação
@@ -1816,7 +1792,6 @@
 
             auth.signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
-                    // Login bem-sucedido
                     currentUser = {
                         id: userCredential.user.uid,
                         email: userCredential.user.email,
@@ -1908,6 +1883,139 @@
         }
 
         // ================================================================
+        // FUNÇÕES PARA CADASTRO DE EQUIPAMENTOS
+        // ================================================================
+        function loadEquipmentData() {
+            database.ref('equipamentos').on('value', (snapshot) => {
+                equipmentData = snapshot.val() || {};
+                loadEquipmentTable();
+            });
+        }
+
+        function showAddEquipmentModal() {
+            currentEditEquipmentKey = null;
+            document.getElementById('equipmentModal').style.display = 'flex';
+            document.getElementById('equipmentForm').reset();
+            document.getElementById('registrationDate').value = new Date().toISOString().split('T')[0];
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function saveEquipment() {
+            const formData = {
+                registrationDate: document.getElementById('registrationDate').value,
+                serialNumber: document.getElementById('serialNumber').value,
+                registerNumber: document.getElementById('registerNumber').value,
+                equipmentType: document.getElementById('equipmentType').value,
+                equipmentLocation: document.getElementById('equipmentLocation').value,
+                equipmentQuantity: parseInt(document.getElementById('equipmentQuantity').value) || 1,
+                equipmentCondition: document.getElementById('equipmentCondition').value,
+                equipmentNotes: document.getElementById('equipmentNotes').value,
+                timestamp: new Date().toISOString()
+            };
+
+            // Validar campos obrigatórios
+            if (!formData.serialNumber || !formData.registerNumber || !formData.equipmentType || 
+                !formData.equipmentLocation || !formData.equipmentCondition) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            const equipamentosRef = database.ref('equipamentos');
+            
+            if (currentEditEquipmentKey) {
+                // Atualizar equipamento existente
+                equipamentosRef.child(currentEditEquipmentKey).update(formData)
+                    .then(() => {
+                        alert('Equipamento atualizado com sucesso!');
+                        closeModal('equipmentModal');
+                    })
+                    .catch((error) => {
+                        alert('Erro ao atualizar equipamento: ' + error.message);
+                    });
+            } else {
+                // Adicionar novo equipamento
+                equipamentosRef.push(formData)
+                    .then(() => {
+                        alert('Equipamento cadastrado com sucesso!');
+                        closeModal('equipmentModal');
+                    })
+                    .catch((error) => {
+                        alert('Erro ao salvar equipamento: ' + error.message);
+                    });
+            }
+        }
+
+        function loadEquipmentTable() {
+            const tableBody = document.getElementById('equipmentTable');
+            tableBody.innerHTML = '';
+            
+            for (const key in equipmentData) {
+                const equip = equipmentData[key];
+                const dataFormatada = equip.registrationDate ? 
+                    new Date(equip.registrationDate).toLocaleDateString('pt-BR') : 'N/D';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${dataFormatada}</td>
+                    <td>${equip.serialNumber || ''}</td>
+                    <td>${equip.registerNumber || ''}</td>
+                    <td>${equip.equipmentType || ''}</td>
+                    <td>${equip.equipmentLocation || ''}</td>
+                    <td>${equip.equipmentQuantity || 1}</td>
+                    <td>
+                        <span class="badge ${getStatusBadgeClass(equip.equipmentCondition)}">
+                            ${equip.equipmentCondition}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="editEquipment('${key}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteEquipment('${key}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            }
+            
+            if (tableBody.innerHTML === '') {
+                tableBody.innerHTML = '<tr><td colspan="8">Nenhum equipamento cadastrado</td></tr>';
+            }
+        }
+
+        function editEquipment(key) {
+            currentEditEquipmentKey = key;
+            const equip = equipmentData[key];
+            
+            document.getElementById('registrationDate').value = equip.registrationDate;
+            document.getElementById('serialNumber').value = equip.serialNumber;
+            document.getElementById('registerNumber').value = equip.registerNumber;
+            document.getElementById('equipmentType').value = equip.equipmentType;
+            document.getElementById('equipmentLocation').value = equip.equipmentLocation;
+            document.getElementById('equipmentQuantity').value = equip.equipmentQuantity;
+            document.getElementById('equipmentCondition').value = equip.equipmentCondition;
+            document.getElementById('equipmentNotes').value = equip.equipmentNotes || '';
+            
+            document.getElementById('equipmentModal').style.display = 'flex';
+        }
+
+        function deleteEquipment(key) {
+            if (confirm('Tem certeza que deseja excluir este equipamento?')) {
+                database.ref(`equipamentos/${key}`).remove()
+                    .then(() => {
+                        alert('Equipamento excluído com sucesso!');
+                    })
+                    .catch((error) => {
+                        alert('Erro ao excluir equipamento: ' + error.message);
+                    });
+            }
+        }
+
+        // ================================================================
         // FUNÇÕES DA ABA DE REGISTRO
         // ================================================================
         function fillTeacherEmail() {
@@ -1930,15 +2038,22 @@
             // Limpar opções anteriores
             identificationNumberSelect.innerHTML = '<option value="">Selecione o aparelho primeiro</option>';
 
-            if (selectedEquipment && equipamentos[selectedEquipment]) {
-                equipamentos[selectedEquipment].forEach(eq => {
-                    const option = document.createElement('option');
-                    option.value = eq.id;
-                    option.textContent = eq.id;
-                    option.dataset.serial = eq.serial;
-                    option.dataset.status = eq.status;
-                    identificationNumberSelect.appendChild(option);
-                });
+            if (selectedEquipment) {
+                // Buscar equipamentos do Firebase
+                database.ref('equipamentos').orderByChild('equipmentType').equalTo(selectedEquipment)
+                    .once('value', (snapshot) => {
+                        const equipamentos = snapshot.val();
+                        if (equipamentos) {
+                            for (const key in equipamentos) {
+                                const eq = equipamentos[key];
+                                const option = document.createElement('option');
+                                option.value = eq.registerNumber;
+                                option.textContent = `${eq.registerNumber} - ${eq.serialNumber}`;
+                                option.dataset.serial = eq.serialNumber;
+                                identificationNumberSelect.appendChild(option);
+                            }
+                        }
+                    });
             }
         }
 
@@ -2186,7 +2301,6 @@
                             <td>${formatDate(reg.returnDate)} ${reg.returnTime}</td>
                             <td>
                                 <span class="badge ${getStatusBadgeClass(eq.status)}">
-                                    <span class="status-indicator ${getStatusIndicatorClass(eq.status)}"></span>
                                     ${eq.status}
                                 </span>
                             </td>
@@ -2212,15 +2326,6 @@
                 case "Devolvido": return "badge-success";
                 case "Com avarias": return "badge-danger";
                 default: return "badge-secondary";
-            }
-        }
-
-        function getStatusIndicatorClass(status) {
-            switch (status) {
-                case "Retirado": return "status-inuse";
-                case "Devolvido": return "status-available";
-                case "Com avarias": return "status-damaged";
-                default: return "status-unused";
             }
         }
 
@@ -2366,20 +2471,32 @@
         // ================================================================
 
         function updateDashboard() {
-            // Atualiza os contadores com dados fictícios
-            document.getElementById('inUseCount').textContent = '12';
-            document.getElementById('availableCount').textContent = '45';
-            document.getElementById('maintenanceCount').textContent = '8';
-            document.getElementById('damagedCount').textContent = '5';
+            // Atualiza os contadores com dados do Firebase
+            let inUse = 0, available = 0, maintenance = 0, damaged = 0;
+            
+            for (const key in equipmentData) {
+                const equip = equipmentData[key];
+                switch(equip.equipmentCondition) {
+                    case "Em uso": inUse++; break;
+                    case "Disponível": available++; break;
+                    case "Manutenção": maintenance++; break;
+                    case "Com avarias": damaged++; break;
+                }
+            }
+            
+            document.getElementById('inUseCount').textContent = inUse;
+            document.getElementById('availableCount').textContent = available;
+            document.getElementById('maintenanceCount').textContent = maintenance;
+            document.getElementById('damagedCount').textContent = damaged;
 
             // Atualiza o gráfico
-            updateChart();
+            updateChart(inUse, available, maintenance, damaged);
 
             // Carrega atividades recentes
             loadRecentActivities();
         }
 
-        function updateChart() {
+        function updateChart(inUse, available, maintenance, damaged) {
             const ctx = document.getElementById('equipmentStatusChart').getContext('2d');
 
             if (equipmentChart) {
@@ -2391,7 +2508,7 @@
                 data: {
                     labels: ['Em uso', 'Disponíveis', 'Manutenção', 'Com avarias'],
                     datasets: [{
-                        data: [12, 45, 8, 5],
+                        data: [inUse, available, maintenance, damaged],
                         backgroundColor: [
                             '#3498db',
                             '#27ae60',
@@ -2419,29 +2536,29 @@
         function loadRecentActivities() {
             const tableBody = document.getElementById('recentActivitiesTable');
             tableBody.innerHTML = "";
-            // Dados fictícios para demonstração
-            const activities = [
-                { data: '2023-07-15', equipamento: 'Notebook Ultra', serie: 'SN2023-001', local: 'Sala dos professores', status: 'Em uso' },
-                { data: '2023-07-14', equipamento: 'Chromebook', serie: 'SN2023-045', local: 'Sala de informática', status: 'Disponível' },
-                { data: '2023-07-13', equipamento: 'Tablet', serie: 'SN2023-102', local: 'Coordenação', status: 'Manutenção' },
-                { data: '2023-07-12', equipamento: 'Smartphone', serie: 'SN2023-205', local: 'Direção', status: 'Com avarias' },
-                { data: '2023-07-11', equipamento: 'Notebook do aluno', serie: 'SN2023-078', local: 'Sala dos professores', status: 'Disponível' }
-            ];
-
-            activities.forEach(activity => {
+            
+            // Ordenar equipamentos por data de registro
+            const sortedEquipments = Object.entries(equipmentData)
+                .sort((a, b) => new Date(b[1].timestamp) - new Date(a[1].timestamp))
+                .slice(0, 5); // Pegar os 5 mais recentes
+            
+            sortedEquipments.forEach(([key, equip]) => {
+                const dataFormatada = equip.registrationDate ? 
+                    new Date(equip.registrationDate).toLocaleDateString('pt-BR') : 'N/D';
+                
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${activity.data}</td>
-                    <td>${activity.equipamento}</td>
-                    <td>${activity.serie}</td>
-                    <td>${activity.local}</td>
+                    <td>${dataFormatada}</td>
+                    <td>${equip.equipmentType || ''}</td>
+                    <td>${equip.serialNumber || ''}</td>
+                    <td>${equip.equipmentLocation || ''}</td>
                     <td>
-                        <span class="badge ${getStatusBadgeClass(activity.status)}">
-                            ${activity.status}
+                        <span class="badge ${getStatusBadgeClass(equip.equipmentCondition)}">
+                            ${equip.equipmentCondition}
                         </span>
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-primary">
+                        <button class="btn btn-sm btn-primary" onclick="editEquipment('${key}')">
                             <i class="fas fa-eye"></i>
                         </button>
                     </td>
@@ -2450,123 +2567,19 @@
             });
         }
 
-        function showAddEquipmentModal() {
-            document.getElementById('equipmentModal').style.display = 'flex';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        function saveEquipment() {
-            // Obter dados do formulário
-            const formData = {
-                registrationDate: document.getElementById('registrationDate').value,
-                serialNumber: document.getElementById('serialNumber').value,
-                registerNumber: document.getElementById('registerNumber').value,
-                equipmentType: document.getElementById('equipmentType').value,
-                equipmentLocation: document.getElementById('equipmentLocation').value,
-                equipmentQuantity: document.getElementById('equipmentQuantity').value,
-                equipmentCondition: document.getElementById('equipmentCondition').value,
-                equipmentNotes: document.getElementById('equipmentNotes').value
-            };
-
-            // Aqui você salvaria os dados no Firebase
-            console.log('Equipamento salvo:', formData);
-            alert('Equipamento cadastrado com sucesso!');
-            closeModal('equipmentModal');
-            loadEquipmentTable();
-        }
-
-        function loadEquipmentTable() {
-            const tableBody = document.getElementById('equipmentTable');
-            tableBody.innerHTML = '';
-
-            // Dados fictícios para demonstração
-            const equipmentList = [
-                { data: '2023-07-10', serie: 'SN2023-001', registro: 'REG001', tipo: 'Notebook Ultra', local: 'Sala dos professores', quantidade: 1, status: 'Em uso' },
-                { data: '2023-07-09', serie: 'SN2023-045', registro: 'REG045', tipo: 'Chromebook', local: 'Sala de informática', quantidade: 5, status: 'Disponível' },
-                { data: '2023-07-08', serie: 'SN2023-102', registro: 'REG102', tipo: 'Tablet', local: 'Coordenação', quantidade: 3, status: 'Manutenção' },
-                { data: '2023-07-07', serie: 'SN2023-205', registro: 'REG205', tipo: 'Smartphone', local: 'Direção', quantidade: 2, status: 'Com avarias' },
-                { data: '2023-07-06', serie: 'SN2023-078', registro: 'REG078', tipo: 'Notebook do aluno', local: 'Sala dos professores', quantidade: 10, status: 'Disponível' }
-            ];
-
-            equipmentList.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${item.data}</td>
-                    <td>${item.serie}</td>
-                    <td>${item.registro}</td>
-                    <td>${item.tipo}</td>
-                    <td>${item.local}</td>
-                    <td>${item.quantidade}</td>
-                    <td>
-                        <span class="badge ${getStatusBadgeClass(item.status)}">
-                            ${item.status}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn btn-sm btn-primary">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        function showNewReservationModal() {
-            // Preencher lista de professores
-            const teacherSelect = document.getElementById('reservationTeacher');
-            teacherSelect.innerHTML = '<option value="">Selecione...</option>';
-
-            for (const [nome, email] of Object.entries(professores)) {
-                const option = document.createElement('option');
-                option.value = nome;
-                option.textContent = nome;
-                teacherSelect.appendChild(option);
+        // Funções auxiliares
+        function getStatusBadgeClass(status) {
+            switch (status) {
+                case "Disponível": return "badge-success";
+                case "Em uso": return "badge-primary";
+                case "Manutenção": return "badge-warning";
+                case "Com avarias": return "badge-danger";
+                case "Desuso": return "badge-secondary";
+                case "Retirado": return "badge-primary";
+                case "Devolvido": return "badge-success";
+                default: return "badge-secondary";
             }
-
-            document.getElementById('reservationModal').style.display = 'flex';
         }
-
-        function showMaintenanceModal() {
-            // Preencher lista de equipamentos
-            const equipmentSelect = document.getElementById('maintenanceEquipment');
-            equipmentSelect.innerHTML = '<option value="">Selecione...</option>';
-            const equipmentOptions = [
-                'Notebook do aluno', 'Chromebooks', 'Smartphone',
-                'Tablets', 'Notebook Ultra', 'Datashow', 'Desktop Lenovo'
-            ];
-            equipmentOptions.forEach(eq => {
-                const option = document.createElement('option');
-                option.value = eq;
-                option.textContent = eq;
-                equipmentSelect.appendChild(option);
-            });
-            document.getElementById('maintenanceModal').style.display = 'flex';
-        }
-
-        function generateReport() {
-            // Implementar lógica de geração de relatório
-            alert('Relatório gerado com sucesso!');
-        }
-
-        function exportReport() {
-            alert('Relatório exportado com sucesso!');
-        }
-
-        function printReport() {
-            window.print();
-        }
-
-        // Inicializa o dashboard quando a página carrega
-        window.onload = function() {
-            updateDashboard();
-        };
     </script>
 </body>
 </html>
