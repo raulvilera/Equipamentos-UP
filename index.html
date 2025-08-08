@@ -2069,19 +2069,20 @@
     <script>
         // Configuração do Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyBOoXyjLQPfgzQM06LVy-TRSPdSM_8CjcE",
-            authDomain: "gerenciamentoaparelho.firebaseapp.com",
-            projectId: "gerenciamentoaparelho",
-            storageBucket: "gerenciamentoaparelho.appspot.com",
-            messagingSenderId: "751628186418",
-            appId: "1:751628186418:web:dd68af74d9e3723c179d2b",
-            measurementId: "G-K02ZZQ4JBK"
-        };
+  apiKey: "AIzaSyBOoXyjLQPfgzQM06LVy-TRSPdSM_8CjcE",
+  authDomain: "gerenciamentoaparelho.firebaseapp.com",
+  databaseURL: "https://gerenciamentoaparelho-default-rtdb.firebaseio.com",
+  projectId: "gerenciamentoaparelho",
+  storageBucket: "gerenciamentoaparelho.firebasestorage.app",
+  messagingSenderId: "751628186418",
+  appId: "1:751628186418:web:dd68af74d9e3723c179d2b",
+  measurementId: "G-K02ZZQ4JBK"
+};
 
-        // Inicializa o Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const auth = firebase.auth();
+        // Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
 
         // Variáveis globais 
         let currentUser = null;
@@ -3442,3 +3443,4 @@
     </script>
 </body>
 </html>
+
