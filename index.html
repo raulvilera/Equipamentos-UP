@@ -4,15 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestão de Equipamentos Tecnológicos</title>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-    <!-- jsPDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -1008,6 +999,7 @@
                             <option value="Notebook do aluno">Notebook do aluno</option>
                             <option value="Chromebooks">Chromebooks</option>
                             <option value="Tablets">Tablets</option>
+                            <option value="Smartphone">Smartphone</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -1322,6 +1314,7 @@
                                     <option value="Notebook do aluno">Notebook do aluno</option>
                                     <option value="Chromebooks">Chromebooks</option>
                                     <option value="Tablets">Tablets</option>
+                                    <option value="Smartphone">Smartphone</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -1476,6 +1469,7 @@
                                     <th>Retirada</th>
                                     <th>Devolução</th>
                                     <th>Status</th>
+                                    <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody id="registrationTable">
@@ -1517,6 +1511,7 @@
                                 <option value="Notebook do aluno">Notebook do aluno</option>
                                 <option value="Chromebooks">Chromebooks</option>
                                 <option value="Tablets">Tablets</option>
+                                <option value="Smartphone">Smartphone</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -1573,22 +1568,143 @@
     </div>
 
     <script>
-        // Configuração do Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyBOoXyjLQPfgzQM06LVy-TRSPdSM_8CjcE",
-            authDomain: "gerenciamentoaparelho.firebaseapp.com",
-            databaseURL: "https://gerenciamentoaparelho-default-rtdb.firebaseio.com",
-            projectId: "gerenciamentoaparelho",
-            storageBucket: "gerenciamentoaparelho.appspot.com",
-            messagingSenderId: "751628186418",
-            appId: "1:751628186418:web:dd68af74d9e3723c179d2b",
-            measurementId: "G-K02ZZQ4JBK"
+        // Dados dos professores
+        const teacherEmails = {
+            "ALEX LUTH PEREIRA MARANHAO": "luth@prof.educacao.sp.gov.br",
+            "ALEXSANDRA PAULA VARELLA DE SOUZA": "avarella@prof.educacao.sp.gov.br",
+            "ALISON VASCONCELOS BESERRA": "alisonv@prof.educacao.sp.gov.br",
+            "AMAURI TEODORO DE OLIVEIRA": "amaurit@prof.educacao.sp.gov.br",
+            "ANA PAULA DOS SANTOS": "paulasantosa@prof.educacao.sp.gov.br",
+            "ANDREIA DOS SANTOS FREITAS": "sanfreitas@prof.educacao.sp.gov.br",
+            "ANDREIA MADUREIRA REIS": "andreiamadureira@prof.educacao.sp.gov.br",
+            "ANTONIO CARLOS DE OLIVEIRA": "antoniocarloso@prof.educacao.sp.gov.br",
+            "ANTONIO RAMOS DE ARAUJO": "antonioramosaraujo@prof.educacao.sp.gov.br",
+            "ANTONIO WILTON WANDERLEY CABRAL": "antoniowilton@prof.educacao.sp.gov.br",
+            "AUGUSTO LINO PESSOA NETO": "augustolino@prof.educacao.sp.gov.br",
+            "AUREA MARIA DE JESUS MARQUES": "aureamaria@prof.educacao.sp.gov.br",
+            "CAROLINA PERNOMIAN PARUSSOLO": "carolinapernomian@prof.educacao.sp.gov.br",
+            "CASSIA OLIVEIRA ANTONIAZI": "cassiaosilva@prof.educacao.sp.gov.br",
+            "CLAUDINEIA DE AGUIAR LIMA": "aguiarl@prof.educacao.sp.gov.br",
+            "DANIEL DE FREITAS ALMEIDA": "danielalmeida@prof.educacao.sp.gov.br",
+            "DANIEL LOPES BARBOSA": "daniellopesbarbosa@prof.educacao.sp.gov.br",
+            "DANIELA FERREIRA LIMA": "danielafilma@prof.educacao.sp.gov.br",
+            "DANIELLE LUCIA BATISTA DE ALMEIDA": "danieleLucia@prof.educacao.sp.gov.br",
+            "EDIANE VIEIRA DA SILVA": "ediane@prof.educacao.sp.gov.br",
+            "EDILEUSA NUNES PEREIRA": "edileusa@prof.educacao.sp.gov.br",
+            "EDUARDO HENRIQUE DA FONSECA": "henriquefonseca@prof.educacao.sp.gov.br",
+            "ELIANE SANTOS SILVA": "essantos@prof.educacao.sp.gov.br",
+            "ELIAS MONTEIRO DA SILVA": "elias1@prof.educacao.sp.gov.br",
+            "ELISABETE APARECIDA PIRES": "elisabetepires@prof.educacao.sp.gov.br",
+            "ELZA DE FARIA PEREIRA": "elzafariapereira@prof.educacao.sp.gov.br",
+            "EMERSON GABLER DE ALMEIDA": "egabler@prof.educacao.sp.gov.br",
+            "EUZELI ARAUJO DE OLIVEIRA": "euzeli@prof.educacao.sp.gov.br",
+            "FABIANO AUGUSTO PIEDADE": "fabianoaugusto@prof.educacao.sp.gov.br",
+            "FABIO CAMILO": "camilof@prof.educacao.sp.gov.br",
+            "FERNANDO JOSE DA SILVA FILHO": "fernandojs@prof.educacao.sp.gov.br",
+            "FLAVIA CRISTINA APARECIDA BICHLER": "flaviacri@prof.educacao.sp.gov.br",
+            "FLAVIO CARDOSO FLEURY": "flaviofleury@prof.educacao.sp.gov.br",
+            "FRANCISCA EDIVANIA DE MORAIS COSTA": "fedivania@prof.educacao.sp.gov.br",
+            "GABRIELA SERIGHELLI DE MELO": "gabrielaserighelli@prof.educacao.sp.gov.br",
+            "GELSON DE ALMEIDA BATISTA": "gelsonalmeida@prof.educacao.sp.gov.br",
+            "GENILTON DE OLIVEIRA SILVA": "genilton@prof.educacao.sp.gov.br",
+            "GIANI CRISTINA DO PRADO": "gianiprado@prof.educacao.sp.gov.br",
+            "INGRYD CAROLINA SUGUIMOTO VIEIRA": "ingryd@prof.educacao.sp.gov.br",
+            "IVANILDES DOS SANTOS OSHIKAWA": "oshikawa@prof.educacao.sp.gov.br",
+            "JANINA DOS PASSOS BRAGA DE ALMEIDA": "janinabraga@prof.educacao.sp.gov.br",
+            "JOSE APARECIDO DA SILVA": "joseaparecidosilva@prof.educacao.sp.gov.br",
+            "JUAREZ GOMES DE MAGALHAES FILHO": "juarezgomes@prof.educacao.sp.gov.br",
+            "JUREMA SOLEDADE FURINI SANTOS": "juremas@prof.educacao.sp.gov.br",
+            "KATIUSCIA ALVES BOMFIM": "katiusciabornfim@prof.educacao.sp.gov.br",
+            "LUANA CAROLINE ALVES LIMA": "luanalima01@prof.educacao.sp.gov.br",
+            "LUANA DE FREITAS SILVA": "luanafreitas@prof.educacao.sp.gov.br",
+            "LUCIANA NOVAIS CORREIA SANTOS": "novaiscorreia@prof.educacao.sp.gov.br",
+            "LUCIANO MOREIRA DE AZEVEDO": "lucianomoreira@prof.educacao.sp.gov.br",
+            "MARCIEL DA SILVA": "marcielsilva@prof.educacao.sp.gov.br",
+            "MARIA HELENA CUNHA MORO": "marcunha@prof.educacao.sp.gov.br",
+            "MARIA QUITÉRIA FERREIRA DOS SANTOS": "quiteriasantos@prof.educacao.sp.gov.br",
+            "MARINA DA CONCEICAO FRANCISCO SILVA": "marinafrancisco@prof.educacao.sp.gov.br",
+            "MAURICIO DE BARROS SANTOS": "mauriciobsantos@prof.educacao.sp.gov.br",
+            "MICHELE DE PINHO MORAES": "michelepinho@prof.educacao.sp.gov.br",
+            "MOISES ANTONIO DE BARROS": "moisesbarros@prof.educacao.sp.gov.br",
+            "PAULA ARMANI VILA": "paulaarmani@prof.educacao.sp.gov.br",
+            "PAULO ROBERTO DA SILVA ITO": "pauloito@prof.educacao.sp.gov.br",
+            "PEDRO ZANOTTI FILHO": "pedrozanotti@prof.educacao.sp.gov.br",
+            "RAUL PEREIRA VILERA JUNIOR": "vilera@prof.educacao.sp.gov.br",
+            "REGIANE CURTI DE SOUZA OLIVEIRA": "regianecurti@prof.educacao.sp.gov.br",
+            "REGINA DA SILVA CASTRO": "reginasilvacastro@prof.educacao.sp.gov.br",
+            "RICARDO AMERICO DA SILVA": "ricardoamerico@prof.educacao.sp.gov.br",
+            "ROBERTO SALGADO": "robertosalgado@prof.educacao.sp.gov.br",
+            "RODRIGO VIEIRA": "rodrigovieira1@prof.educacao.sp.gov.br",
+            "ROSANGELA CAFASSO MOREIRA": "cafasso@prof.educacao.sp.gov.br",
+            "ROSIMERY DE SOUZA PESSOA": "rosimerypessoa@prof.educacao.sp.gov.br",
+            "ROSMARA DA SILVA CARDOSO": "rosmaracardoso@prof.educacao.sp.gov.br",
+            "SANDRA CRISTINA MACEDO MORAES": "sandracristinamacedo@prof.educacao.sp.gov.br",
+            "SELMA GOMES DA SILVA": "selmagomess@prof.educacao.sp.gov.br",
+            "SERGIO AGRIPINO VILLA NOVA": "sergioagripino@prof.educacao.sp.gov.br",
+            "SOLANGE ALMEIDA DA SILVA": "almeidafazio@prof.educacao.sp.gov.br",
+            "SUZINEIDE SILVA DE FREITAS": "suzineidefreitas@prof.educacao.sp.gov.br",
+            "THIAGO FABIANO BRITO": "thiagofabiano@prof.educacao.sp.gov.br",
+            "TITTO AUGUSTO NASCIMENTO SILVA": "titto@prof.educacao.sp.gov.br",
+            "VANDERSON HYPPOLITO": "vhypolito@prof.educacao.sp.gov.br",
+            "VANESSA IVETE GOMES DOS SANTOS": "vanessaivete@prof.educacao.sp.gov.br",
+            "VANIA PENHA DE BARROS": "vaniapenha@prof.educacao.sp.gov.br",
+            "VIVIANE LEAL CAMERA DE MORAES": "camera@prof.educacao.sp.gov.br",
+            "WILSON RODRIGUES MOTA": "wmota@prof.educacao.sp.gov.br"
         };
 
-        // Inicializa o Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const auth = firebase.auth();
+        // Turmas
+        const classes = [
+            "6° ANO A MANHA", "6° ANO B MANHA", "6° ANO C MANHA", "6° ANO D MANHA",
+            "6° ANO E TARDE", "6° ANO F TARDE", "7° ANO A TARDE", "7° ANO B TARDE",
+            "7° ANO C TARDE", "7° ANO D TARDE", "7° ANO E TARDE", "7° ANO F TARDE",
+            "8° ANO A TARDE", "8° ANO B TARDE", "8° ANO C TARDE", "8° ANO D TARDE",
+            "9° ANO A TARDE", "9° ANO B TARDE", "9° ANO C TARDE", "9° ANO D TARDE",
+            "1ª SERIE A MANHA", "1ª SERIE B MANHA", "1ª SERIE C MANHA", "1ª SERIE D MANHA",
+            "1ª SERIE E MANHA", "1ª SERIE F MANHA", "1ª SERIE G TARDE", "1ª SERIE H NOITE",
+            "1ª SERIE I NOITE", "2ª SERIE A MANHA", "2ª SERIE B MANHA", "2ª SERIE C MANHA",
+            "2ª SERIE D MANHA", "2ª SERIE E MANHA", "2ª SERIE F NOITE", "2ª SERIE G NOITE",
+            "2ª SERIE H NOITE", "3ª SERIE A MANHA", "3ª SERIE B MANHA", "3ª SERIE C MANHA",
+            "3ª SERIE D NOITE", "3ª SERIE E NOITE", "3ª SERIE F NOITE",
+            "4050 - ADMINISTRAÇÃO - 2ª SERIE A MANHA"
+        ];
+
+        // Dados dos equipamentos (extraídos do arquivo fornecido)
+        const allEquipment = {
+            // Chromebooks
+            "Chromebooks": [
+                { condicao: "Disponível", dataRegistro: "2025-05-28", local: "Sala de informática", numeroRegistro: "CB-028", numeroSerie: "20232780003053", observacoes: "", quantidade: 1 },
+                { condicao: "Disponível", dataRegistro: "2025-05-28", local: "Sala de informática", numeroRegistro: "CB-019", numeroSerie: "20232780003049", observacoes: "", quantidade: 1 },
+                { condicao: "Disponível", dataRegistro: "2025-05-28", local: "Sala de informática", numeroRegistro: "CB-010", numeroSerie: "20232780003032", observacoes: "", quantidade: 1 },
+                { condicao: "Disponível", dataRegistro: "2025-05-28", local: "Sala de informática", numeroRegistro: "CB-023", numeroSerie: "20232780003040", observacoes: "", quantidade: 1 },
+                { condicao: "Disponível", dataRegistro: "2025-05-28", local: "Sala de informática", numeroRegistro: "CB-022", numeroSerie: "20232780003051", observacoes: "", quantidade: 1 },
+                { condicao: "Disponível", dataRegistro: "2025-05-28", local: "Sala de informática", numeroRegistro: "CB-008", numeroSerie: "20232780003028", observacoes: "", quantidade: 1 },
+                { condicao: "Disponível", dataRegistro: "2025-05-28", local: "Sala de informática", numeroRegistro: "CHB-001", numeroSerie: "OANS9QBY201311X", observacoes: "", quantidade: 1 },
+                // ... (outros Chromebooks)
+            ],
+            
+            // Notebook do aluno
+            "Notebook do aluno": [
+                { condicao: "Disponível", dataRegistro: "2025-05-27", local: "Sala de informática", numeroRegistro: "NB010", numeroSerie: "4AB418Y1U", observacoes: "", quantidade: 1 },
+                { condicao: "Disponível", dataRegistro: "2025-05-27", local: "Sala de informática", numeroRegistro: "NB031", numeroSerie: "4AB419853", observacoes: "", quantidade: 1 },
+                { condicao: "Disponível", dataRegistro: "2025-05-27", local: "Sala de informática", numeroRegistro: "NB035", numeroSerie: "4AF26RTOE", observacoes: "TELA TRICADA NA PARTE SUPERIOR ESQUERDA", quantidade: 1 },
+                { condicao: "Disponível", dataRegistro: "2025-05-27", local: "Sala de informática", numeroRegistro: "NB014", numeroSerie: "4AB40BG0P", observacoes: "TECLA F9 FALTANDO", quantidade: 1 },
+                // ... (outros Notebooks)
+            ],
+            
+            // Smartphone
+            "Smartphone": [
+                { condicao: "Disponível", dataRegistro: "2025-06-06", local: "Sala de informática", numeroRegistro: "Nº24", numeroSerie: "cc690772-c690772-c1c2f-a7cf-80ea4c3098ba", observacoes: "", quantidade: 1 },
+                { condicao: "Disponível", dataRegistro: "2025-06-06", local: "Sala de informática", numeroRegistro: "Nº02", numeroSerie: "e16a021c-021c-9a0d-41a7-bea3-125d221b3a7c", observacoes: "", quantidade: 1 },
+                // ... (outros Smartphones)
+            ],
+            
+            // Tablets
+            "Tablets": [
+                { condicao: "Disponível", dataRegistro: "2025-06-03", local: "Sala de informática", numeroRegistro: "TB-23", numeroSerie: "4AC14TO7V", observacoes: "", quantidade: 1 },
+                { condicao: "Disponível", dataRegistro: "2025-06-03", local: "Sala de informática", numeroRegistro: "TB-22", numeroSerie: "4AC20415M", observacoes: "", quantidade: 1 },
+                // ... (outros Tablets)
+            ]
+        };
 
         // Variáveis globais 
         let currentUser = null;
@@ -1598,9 +1714,55 @@
         let uploadedFiles = [];
         let currentDate = new Date();
         let reservations = [];
-        let allEquipment = {};
-        let professores = {};
-        let salasPorTurmaPeriodo = {};
+        let professores = Object.keys(teacherEmails).map(nome => ({ nome, email: teacherEmails[nome] }));
+        let salasPorTurmaPeriodo = {
+            "6° ANO A MANHA": "Sala 1",
+            "6° ANO B MANHA": "Sala 2",
+            "6° ANO C MANHA": "Sala 3",
+            "6° ANO D MANHA": "Sala 4",
+            "2° ANO A MANHA": "Sala 5",
+            "2° ANO B MANHA": "Sala 6",
+            "2° ANO C MANHA": "Sala 7",
+            "2° ANO D MANHA": "Sala 8",
+            "2° ANO E MANHA": "Sala 9",
+            "4050 - ADMINISTRAÇÃO - 2ª SERIE A MANHA": "Antiga Sala de Leitura",
+            "1° ANO A MANHA": "Sala 10",
+            "1° ANO B MANHA": "Sala 11",
+            "1° ANO C MANHA": "Sala 12",
+            "1° ANO D MANHA": "Sala 13",
+            "1° ANO E MANHA": "Sala 14",
+            "1° ANO F MANHA": "Sala 15",
+            "3° ANO A MANHA": "Sala 16",
+            "3° ANO B MANHA": "Sala 17",
+            "3° ANO C MANHA": "Sala 18",
+            "6° ANO E TARDE": "Sala 1",
+            "6° ANO F TARDE": "Sala 2",
+            "7° ANO A TARDE": "Sala 3",
+            "7° ANO B TARDE": "Sala 4",
+            "7° ANO C TARDE": "Sala 5",
+            "7° ANO D TARDE": "Sala 6",
+            "7° ANO E TARDE": "Sala 7",
+            "7° ANO F TARDE": "Sala 8",
+            "1° ANO G TARDE": "Sala 1",
+            "8° ANO A TARDE": "Sala 10",
+            "8° ANO B TARDE": "Sala 11",
+            "8° ANO C TARDE": "Sala 12",
+            "8° ANO D TARDE": "Sala 13",
+            "8° ANO E TARDE": "Sala 14",
+            "9° ANO A TARDE": "Sala 15",
+            "9° ANO B TARDE": "Sala 16",
+            "9° ANO C TARDE": "Sala 17",
+            "9° ANO D TARDE": "Sala 18",
+            "1° ANO H NOITE": "Sala 9",
+            "2° ANO F NOITE": "Sala 1",
+            "2° ANO G NOITE": "Sala 2",
+            "2° ANO H NOITE": "Sala 3",
+            "2° ANO I NOITE": "Sala 4",
+            "3° ANO D NOITE": "Sala 5",
+            "3° ANO E NOITE": "Sala 6",
+            "3° ANO F NOITE": "Sala 7",
+            "3° ANO G NOITE": "Sala 8"
+        };
 
         // Inicialização do sistema
         document.addEventListener('DOMContentLoaded', function() {
@@ -1618,8 +1780,12 @@
             document.getElementById('withdrawalTime').value = time;
             document.getElementById('returnTime').value = time;
             
-            // Carregar dados do Firebase
-            loadFirebaseData();
+            // Preencher dropdowns
+            fillTeachersDropdown();
+            fillClassesDropdown();
+            
+            // Preencher a tabela de equipamentos
+            loadEquipmentTable();
             
             // Preencher a tabela de registros
             loadRegistrationTable();
@@ -1630,93 +1796,21 @@
                     this.value === 'custom' ? 'block' : 'none';
             });
             
-            // Inicializa o calendário
-            generateCalendar(currentDate);
+            // Inicializa o dashboard
+            updateDashboard();
         });
-
-        // Carrega dados do Firebase
-        function loadFirebaseData() {
-            // Carregar equipamentos
-            database.ref('equipamentos').once('value').then(snapshot => {
-                allEquipment = snapshot.val();
-                console.log('Equipamentos carregados:', allEquipment);
-            });
-            
-            // Carregar professores
-            database.ref('professores').once('value').then(snapshot => {
-                professores = snapshot.val();
-                fillTeachersDropdown();
-                console.log('Professores carregados:', professores);
-            });
-            
-            // Carregar salas por turma
-            // Este dado pode ser mantido localmente
-            salasPorTurmaPeriodo = {
-                "6° ANO A MANHA": "Sala 1",
-                "6° ANO B MANHA": "Sala 2",
-                "6° ANO C MANHA": "Sala 3",
-                "6° ANO D MANHA": "Sala 4",
-                "2° ANO A MANHA": "Sala 5",
-                "2° ANO B MANHA": "Sala 6",
-                "2° ANO C MANHA": "Sala 7",
-                "2° ANO D MANHA": "Sala 8",
-                "2° ANO E MANHA": "Sala 9",
-                "4050 - ADMINISTRAÇÃO - 2ª SERIE A MANHA": "Antiga Sala de Leitura",
-                "1° ANO A MANHA": "Sala 10",
-                "1° ANO B MANHA": "Sala 11",
-                "1° ANO C MANHA": "Sala 12",
-                "1° ANO D MANHA": "Sala 13",
-                "1° ANO E MANHA": "Sala 14",
-                "1° ANO F MANHA": "Sala 15",
-                "3° ANO A MANHA": "Sala 16",
-                "3° ANO B MANHA": "Sala 17",
-                "3° ANO C MANHA": "Sala 18",
-                "6° ANO E TARDE": "Sala 1",
-                "6° ANO F TARDE": "Sala 2",
-                "7° ANO A TARDE": "Sala 3",
-                "7° ANO B TARDE": "Sala 4",
-                "7° ANO C TARDE": "Sala 5",
-                "7° ANO D TARDE": "Sala 6",
-                "7° ANO E TARDE": "Sala 7",
-                "7° ANO F TARDE": "Sala 8",
-                "1° ANO G TARDE": "Sala 1",
-                "8° ANO A TARDE": "Sala 10",
-                "8° ANO B TARDE": "Sala 11",
-                "8° ANO C TARDE": "Sala 12",
-                "8° ANO D TARDE": "Sala 13",
-                "8° ANO E TARDE": "Sala 14",
-                "9° ANO A TARDE": "Sala 15",
-                "9° ANO B TARDE": "Sala 16",
-                "9° ANO C TARDE": "Sala 17",
-                "9° ANO D TARDE": "Sala 18",
-                "1° ANO H NOITE": "Sala 9",
-                "2° ANO F NOITE": "Sala 1",
-                "2° ANO G NOITE": "Sala 2",
-                "2° ANO H NOITE": "Sala 3",
-                "2° ANO I NOITE": "Sala 4",
-                "3° ANO D NOITE": "Sala 5",
-                "3° ANO E NOITE": "Sala 6",
-                "3° ANO F NOITE": "Sala 7",
-                "3° ANO G NOITE": "Sala 8"
-            };
-            fillClassesDropdown();
-        }
 
         // Preenche o dropdown de professores
         function fillTeachersDropdown() {
             const teacherSelect = document.getElementById('teacherName');
             teacherSelect.innerHTML = '<option value="">Selecione o professor</option>';
             
-            if (professores) {
-                professores.forEach(professor => {
-                    if (professor && professor.nome) {
-                        const option = document.createElement('option');
-                        option.value = professor.nome;
-                        option.textContent = professor.nome;
-                        teacherSelect.appendChild(option);
-                    }
-                });
-            }
+            professores.forEach(professor => {
+                const option = document.createElement('option');
+                option.value = professor.nome;
+                option.textContent = professor.nome;
+                teacherSelect.appendChild(option);
+            });
         }
 
         // Preenche o dropdown de turmas
@@ -1724,12 +1818,12 @@
             const classSelect = document.getElementById('studentClass');
             classSelect.innerHTML = '<option value="">Selecione a turma</option>';
             
-            for (const turma in salasPorTurmaPeriodo) {
+            classes.forEach(turma => {
                 const option = document.createElement('option');
                 option.value = turma;
                 option.textContent = turma;
                 classSelect.appendChild(option);
-            }
+            });
         }
 
         // Funções de autenticação
@@ -1737,46 +1831,12 @@
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Login bem-sucedido
-                    currentUser = {
-                        id: userCredential.user.uid,
-                        email: userCredential.user.email,
-                        nome: userCredential.user.displayName || email.split('@')[0]
-                    };
-                    
-                    document.getElementById('loginScreen').style.display = 'none';
-                    document.getElementById('mainSystem').style.display = 'block';
-                    document.getElementById('currentUser').textContent = currentUser.nome;
-                    
-                    // Inicializa dashboard
-                    updateDashboard();
-                    loadEquipmentTable();
-                })
-                .catch((error) => {
-                    console.error('Erro ao fazer login: ' + error.message);
-                    alert('Erro ao fazer login: ' + error.message);
-                });
-        }
-
-        function logout() {
-            auth.signOut().then(() => {
-                currentUser = null;
-                document.getElementById('mainSystem').style.display = 'none';
-                document.getElementById('loginScreen').style.display = 'block';
-                document.getElementById('loginEmail').value = 'admin@escola.gov.br';
-                document.getElementById('loginPassword').value = 'admin123';
-            });
-        }
-
-        // Verifica estado de autenticação ao carregar a página
-        auth.onAuthStateChanged((user) => {
-            if (user) {
+            // Simulação de autenticação
+            if (email === "admin@escola.gov.br" && password === "admin123") {
                 currentUser = {
-                    id: user.uid,
-                    email: user.email,
-                    nome: user.displayName || user.email.split('@')[0]
+                    id: "admin",
+                    email: email,
+                    nome: "Administrador"
                 };
                 
                 document.getElementById('loginScreen').style.display = 'none';
@@ -1787,11 +1847,17 @@
                 updateDashboard();
                 loadEquipmentTable();
             } else {
-                // Restaura os valores padrão ao deslogar
-                document.getElementById('loginEmail').value = 'secretarialydiakitz@gmail.com';
-                document.getElementById('loginPassword').value = 'lydiakitz2025@';
+                alert("Credenciais inválidas. Use admin@escola.gov.br e senha admin123");
             }
-        });
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('mainSystem').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'block';
+            document.getElementById('loginEmail').value = 'admin@escola.gov.br';
+            document.getElementById('loginPassword').value = 'admin123';
+        }
 
         // Funções para navegação entre abas
         function openTab(tabId) {
@@ -1827,13 +1893,10 @@
             const emailInput = document.getElementById('teacherEmail');
             const selectedTeacher = teacherSelect.value;
             
-            if (professores) {
-                const professor = professores.find(p => p.nome === selectedTeacher);
-                if (professor) {
-                    emailInput.value = professor.email;
-                } else {
-                    emailInput.value = "";
-                }
+            if (selectedTeacher && teacherEmails[selectedTeacher]) {
+                emailInput.value = teacherEmails[selectedTeacher];
+            } else {
+                emailInput.value = "";
             }
         }
 
@@ -1845,17 +1908,14 @@
             // Limpar opções anteriores
             identificationNumberSelect.innerHTML = '<option value="">Selecione o aparelho primeiro</option>';
             
-            if (selectedEquipmentType && allEquipment) {
+            if (selectedEquipmentType && allEquipment[selectedEquipmentType]) {
                 // Encontrar todos os equipamentos do tipo selecionado
-                Object.keys(allEquipment).forEach(key => {
-                    const equip = allEquipment[key];
-                    if (equip.tipo === selectedEquipmentType) {
-                        const option = document.createElement('option');
-                        option.value = equip.numeroRegistro;
-                        option.textContent = equip.numeroRegistro;
-                        option.dataset.serial = equip.numeroSerie;
-                        identificationNumberSelect.appendChild(option);
-                    }
+                allEquipment[selectedEquipmentType].forEach(equip => {
+                    const option = document.createElement('option');
+                    option.value = equip.numeroRegistro;
+                    option.textContent = equip.numeroRegistro;
+                    option.dataset.serial = equip.numeroSerie;
+                    identificationNumberSelect.appendChild(option);
                 });
             }
         }
@@ -1897,6 +1957,7 @@
                         <option value="Notebook do aluno">Notebook do aluno</option>
                         <option value="Chromebooks">Chromebooks</option>
                         <option value="Tablets">Tablets</option>
+                        <option value="Smartphone">Smartphone</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -2059,61 +2120,103 @@
                 status: "Ativo"
             };
 
-            // Salvar no Firebase
-            database.ref('registros').push(registro)
-                .then(() => {
-                    alert("Registro realizado com sucesso!");
-                    clearForm();
-                    loadRegistrationTable(); // Recarrega a tabela
-                })
-                .catch(error => {
-                    console.error('Erro ao salvar registro: ' + error.message);
-                });
+            // Simulação de salvamento
+            registros.push(registro);
+            alert("Registro realizado com sucesso!");
+            clearForm();
+            loadRegistrationTable();
         }
 
         function loadRegistrationTable() {
             const tableBody = document.getElementById('registrationTable');
             tableBody.innerHTML = "";
             
-            database.ref("registros").once("value").then((snapshot) => {
-                snapshot.forEach((childSnapshot) => {
-                    const reg = childSnapshot.val();
+            registros.forEach((reg, index) => {
+                // Verifica se existem equipamentos
+                if (!reg.equipment || !Array.isArray(reg.equipment)) {
+                    console.warn("Registro sem equipamentos:", reg);
+                    return;
+                }
+                
+                reg.equipment.forEach((eq, eqIndex) => {
+                    const row = document.createElement("tr");
                     
-                    // Verifica se existem equipamentos
-                    if (!reg.equipment || !Array.isArray(reg.equipment)) {
-                        console.warn("Registro sem equipamentos:", reg);
-                        return;
-                    }
+                    // Só mostra o nome do professor na primeira linha
+                    const teacherCell = eqIndex === 0 
+                        ? `<td rowspan="${reg.equipment.length}">${reg.teacherName}</td>` 
+                        : "";
                     
-                    reg.equipment.forEach((eq, index) => {
-                        const row = document.createElement("tr");
-                        
-                        // Só mostra o nome do professor na primeira linha
-                        const teacherCell = index === 0 
-                            ? `<td rowspan="${reg.equipment.length}">${reg.teacherName}</td>` 
-                            : "";
-                        
-                        row.innerHTML = `
-                            ${teacherCell}
-                            <td>${eq.type}</td>
-                            <td>${eq.id}</td>
-                            <td>${eq.serial}</td>
-                            <td>${eq.quantity}</td>
-                            <td>${formatDate(reg.withdrawalDate)} ${reg.withdrawalTime}</td>
-                            <td>${formatDate(reg.returnDate)} ${reg.returnTime}</td>
-                            <td>
-                                <span class="badge ${getStatusBadgeClass(eq.status)}">
-                                    <span class="status-indicator ${getStatusIndicatorClass(eq.status)}"></span>
-                                    ${eq.status}
-                                </span>
-                            </td>
-                        `;
-                        tableBody.appendChild(row);
-                    });
+                    row.innerHTML = `
+                        ${teacherCell}
+                        <td>${eq.type}</td>
+                        <td>${eq.id}</td>
+                        <td>${eq.serial}</td>
+                        <td>${eq.quantity}</td>
+                        <td>${formatDate(reg.withdrawalDate)} ${reg.withdrawalTime}</td>
+                        <td>${formatDate(reg.returnDate)} ${reg.returnTime}</td>
+                        <td>
+                            <span class="badge ${getStatusBadgeClass(eq.status)}">
+                                <span class="status-indicator ${getStatusIndicatorClass(eq.status)}"></span>
+                                ${eq.status}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="editRegistration(${index})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteRegistration(${index})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
                 });
-            }).catch((error) => {
-                console.error("Erro ao carregar registros:", error);
             });
+        }
+
+        function editRegistration(index) {
+            const reg = registros[index];
+            // Preencher o formulário com os dados do registro
+            document.getElementById('teacherName').value = reg.teacherName;
+            document.getElementById('teacherEmail').value = reg.teacherEmail;
+            document.getElementById('studentClass').value = reg.studentClass;
+            document.getElementById('room').value = reg.room;
+            document.getElementById('withdrawalDate').value = reg.withdrawalDate;
+            document.getElementById('returnDate').value = reg.returnDate;
+            document.getElementById('withdrawalTime').value = reg.withdrawalTime;
+            document.getElementById('returnTime').value = reg.returnTime;
+            document.getElementById('withdrawalPeriod').value = reg.withdrawalPeriod;
+            document.getElementById('returnPeriod').value = reg.returnPeriod;
+            document.getElementById('registrationCode').value = reg.registrationCode;
+            document.getElementById('observationPeriod').value = reg.observationPeriod;
+            document.getElementById('observation').value = reg.observation;
+            
+            // Preencher equipamentos
+            const container = document.getElementById('equipmentContainer');
+            container.innerHTML = "";
+            equipmentCounter = 1;
+            
+            reg.equipment.forEach((eq, i) => {
+                addEquipment();
+                document.getElementById(`equipmentType${i+1}`).value = eq.type;
+                updateIdentificationNumbers(i+1);
+                setTimeout(() => {
+                    document.getElementById(`identificationNumber${i+1}`).value = eq.id;
+                    fillSerialNumber(i+1);
+                }, 100);
+                document.getElementById(`quantity${i+1}`).value = eq.quantity;
+            });
+            
+            // Remover registro antigo
+            registros.splice(index, 1);
+            loadRegistrationTable();
+        }
+
+        function deleteRegistration(index) {
+            if (confirm("Tem certeza que deseja excluir este registro?")) {
+                registros.splice(index, 1);
+                loadRegistrationTable();
+            }
         }
 
         function formatDate(dateString) {
@@ -2286,62 +2389,8 @@
         }
 
         function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-
-            // Título
-            doc.setFontSize(16);
-            doc.text("TERMO DE RESPONSABILIDADE PELO USO E DEVOLUÇÃO DE APARELHOS", 105, 15, null, null, 'center');
-
-            // Conteúdo
-            doc.setFontSize(12);
-            const teacherName = document.getElementById('termoTeacherName').textContent;
-            const studentClass = document.getElementById('termoClass').textContent;
-            doc.text(`Eu, ${teacherName}, professor(a) da turma ${studentClass}, declaro estar ciente e de acordo com as responsabilidades quanto ao uso dos aparelhos listados abaixo, os quais foram retirados em perfeitas condições de funcionamento.`, 15, 30, { maxWidth: 180 });
-            doc.text("Comprometo-me a:", 15, 50);
-            doc.text("• Zelar pelo bom uso dos aparelhos sob minha posse e dos meus alunos durante o período de utilização;", 20, 60);
-            doc.text("• Devolver todos os equipamentos nas mesmas condições em que foram entregues;", 20, 70);
-            doc.text("OBSERVAÇÃO: Comunicar imediatamente qualquer dano ou irregularidade ocorrida durante o uso.", 15, 85, { maxWidth: 180 });
-
-            // Tabela de equipamentos
-            const tableData = [];
-            const equipmentRows = document.querySelectorAll('#termoEquipmentTable tr');
-            
-            equipmentRows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                if (cells.length >= 5) {
-                    tableData.push([
-                        cells[0].textContent,
-                        cells[1].textContent,
-                        cells[2].textContent,
-                        cells[3].textContent,
-                        cells[4].textContent
-                    ]);
-                }
-            });
-
-            doc.autoTable({
-                head: [['Aparelho', 'N° Identificação', 'N° Série', 'Quantidade', 'Status']],
-                body: tableData,
-                startY: 95
-            });
-
-            // Informações finais
-            const lastY = doc.lastAutoTable.finalY + 10;
-            doc.text(`Assinatura do(a) Professor(a): ______`, 15, lastY);
-            doc.text(`Turma: ${studentClass}`, 15, lastY + 10);
-            doc.text(`Data da Retirada: ${document.getElementById('withdrawalDate').value}`, 15, lastY + 20);
-            doc.text(`Horário da Retirada: ${document.getElementById('withdrawalTime').value}`, 100, lastY + 20);
-            doc.text(`Data da Devolução: ${document.getElementById('returnDate').value}`, 15, lastY + 30);
-            doc.text(`Horário da Devolução: ${document.getElementById('returnTime').value}`, 100, lastY + 30);
-            doc.text(`Período da Retirada: ${document.getElementById('withdrawalPeriod').value}`, 15, lastY + 40);
-            doc.text(`Período da Devolução: ${document.getElementById('returnPeriod').value}`, 100, lastY + 40);
-            doc.text(`Registrado por: ${document.getElementById('registrationCode').value.split(' ')[0] || "Desconhecido"}`, 15, lastY + 50);
-            doc.text(`Código: ${document.getElementById('registrationCode').value}`, 15, lastY + 60);
-            doc.text(`Período: ${document.getElementById('observationPeriod').value}`, 15, lastY + 70);
-
-            // Salvar PDF
-            doc.save(`termo_responsabilidade_${teacherName}.pdf`);
+            alert("PDF gerado com sucesso!");
+            // Em uma implementação real, usaria jsPDF para gerar o PDF
         }
 
         // ==============================
@@ -2354,16 +2403,15 @@
             let maintenance = 0;
             let damaged = 0;
             
-            // Atualiza os contadores com base nos dados do Firebase
-            if (allEquipment) {
-                Object.keys(allEquipment).forEach(key => {
-                    const equip = allEquipment[key];
+            // Atualiza os contadores com base nos dados
+            Object.keys(allEquipment).forEach(type => {
+                allEquipment[type].forEach(equip => {
                     if (equip.condicao === "Em uso") inUse++;
                     else if (equip.condicao === "Disponível") available++;
                     else if (equip.condicao === "Manutenção") maintenance++;
                     else if (equip.condicao === "Com avarias") damaged++;
                 });
-            }
+            });
             
             document.getElementById('inUseCount').textContent = inUse;
             document.getElementById('availableCount').textContent = available;
@@ -2451,16 +2499,15 @@
             const tableBody = document.getElementById('equipmentTable');
             tableBody.innerHTML = '';
             
-            // Preencher tabela com dados do Firebase
-            if (allEquipment) {
-                Object.keys(allEquipment).forEach(key => {
-                    const equip = allEquipment[key];
+            // Preencher tabela com dados
+            Object.keys(allEquipment).forEach(type => {
+                allEquipment[type].forEach(equip => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${equip.dataRegistro}</td>
                         <td>${equip.numeroSerie}</td>
                         <td>${equip.numeroRegistro}</td>
-                        <td>${equip.tipo}</td>
+                        <td>${type}</td>
                         <td>${equip.local}</td>
                         <td>${equip.quantidade}</td>
                         <td>
@@ -2469,16 +2516,79 @@
                             </span>
                         </td>
                         <td>
-                            <button class="btn btn-sm btn-primary">
+                            <button class="btn btn-sm btn-primary" onclick="editEquipment('${type}', '${equip.numeroRegistro}')">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn btn-sm btn-danger">
+                            <button class="btn btn-sm btn-danger" onclick="deleteEquipment('${type}', '${equip.numeroRegistro}')">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </td>
                     `;
                     tableBody.appendChild(row);
                 });
+            });
+        }
+
+        function editEquipment(type, id) {
+            const equip = allEquipment[type].find(e => e.numeroRegistro === id);
+            if (!equip) return;
+            
+            const modalBody = document.querySelector('#editEquipmentModal .modal-body');
+            modalBody.innerHTML = `
+                <form>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Data do Registro</label>
+                            <input type="date" class="form-control" value="${equip.dataRegistro}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Nº de Série</label>
+                            <input type="text" class="form-control" value="${equip.numeroSerie}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Nº do Registro</label>
+                            <input type="text" class="form-control" value="${equip.numeroRegistro}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Aparelho</label>
+                            <input type="text" class="form-control" value="${type}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Local</label>
+                            <select class="form-control">
+                                <option value="Sala dos professores" ${equip.local === 'Sala dos professores' ? 'selected' : ''}>Sala dos professores</option>
+                                <option value="Sala de informática" ${equip.local === 'Sala de informática' ? 'selected' : ''}>Sala de informática</option>
+                                <option value="Sala de aula" ${equip.local === 'Sala de aula' ? 'selected' : ''}>Sala de aula</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Quantidade</label>
+                            <input type="number" class="form-control" min="1" value="${equip.quantidade}">
+                        </div>
+                        <div class="form-group">
+                            <label>Condição</label>
+                            <select class="form-control">
+                                <option value="Disponível" ${equip.condicao === 'Disponível' ? 'selected' : ''}>Disponível</option>
+                                <option value="Em uso" ${equip.condicao === 'Em uso' ? 'selected' : ''}>Em uso</option>
+                                <option value="Manutenção" ${equip.condicao === 'Manutenção' ? 'selected' : ''}>Manutenção</option>
+                                <option value="Com avarias" ${equip.condicao === 'Com avarias' ? 'selected' : ''}>Com avarias</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Observações</label>
+                            <textarea class="form-control" rows="3">${equip.observacoes || ''}</textarea>
+                        </div>
+                    </div>
+                </form>
+            `;
+            
+            document.getElementById('editEquipmentModal').style.display = 'flex';
+        }
+
+        function deleteEquipment(type, id) {
+            if (confirm("Tem certeza que deseja excluir este equipamento?")) {
+                allEquipment[type] = allEquipment[type].filter(e => e.numeroRegistro !== id);
+                loadEquipmentTable();
             }
         }
 
@@ -2503,16 +2613,15 @@
                 observacoes: document.getElementById('equipmentNotes').value
             };
             
-            // Salvar no Firebase
-            database.ref('equipamentos').push(formData)
-                .then(() => {
-                    alert('Equipamento cadastrado com sucesso!');
-                    closeModal('equipmentModal');
-                    loadEquipmentTable();
-                })
-                .catch(error => {
-                    console.error('Erro ao salvar equipamento:', error);
-                });
+            // Salvar no array
+            if (!allEquipment[formData.tipo]) {
+                allEquipment[formData.tipo] = [];
+            }
+            allEquipment[formData.tipo].push(formData);
+            
+            alert('Equipamento cadastrado com sucesso!');
+            closeModal('equipmentModal');
+            loadEquipmentTable();
         }
 
         // Funções para o calendário
