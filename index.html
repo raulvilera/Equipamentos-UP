@@ -743,6 +743,39 @@
         .status-unused {
             background-color: var(--gray-medium);
         }
+        
+        /* ===== ESTILOS PARA LISTAS DROPDOWN ===== */
+        .dropdown-container {
+            position: relative;
+        }
+        
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 100;
+            display: none;
+        }
+        
+        .dropdown-item {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .dropdown-visible {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -1328,7 +1361,19 @@
                         
                         <div class="form-group">
                             <label for="registrationCode">CÓDIGO DO REGISTRO *</label>
-                            <input type="text" id="registrationCode" class="form-control" placeholder="Digite o código de registro (ex: PROATI - 001)" required>
+                            <select id="registrationCode" class="form-control" required onchange="fillRegistrantName()">
+                                <option value="">Selecione o código</option>
+                                <option value="PROATI - 001">PROATI - 001 (Raul)</option>
+                                <option value="PROATI - 002">PROATI - 002 (Juarez)</option>
+                                <option value="PROATI - 003">PROATI - 003 (Júlio)</option>
+                                <option value="CGP - 004">CGP - 004 (ERINEIDE)</option>
+                                <option value="CGP - 005">CGP - 005 (PATRÍCIA)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="registrantName">Registrante:</label>
+                            <input type="text" id="registrantName" class="form-control" readonly>
                         </div>
                         
                         <div class="form-group">
@@ -2147,8 +2192,16 @@
                 "NOTEBOOK": EQUIPAMENTOS.NOTEBOOK,
                 "SMARTPHONE": EQUIPAMENTOS.SMARTPHONE,
                 "TABLET": EQUIPAMENTOS.TABLET,
-                "HEAD SET": EQUIPAMENTOS["HEAD SET"],
-                "CAIXA DE SOM": EQUIPAMENTOS["CAIXA DE SOM"]
+                "HEAD SET": [
+                    { id: "HS001", serial: "HS-SERIAL-001" },
+                    { id: "HS002", serial: "HS-SERIAL-002" },
+                    { id: "HS003", serial: "HS-SERIAL-003" }
+                ],
+                "CAIXA DE SOM": [
+                    { id: "CS001", serial: "CS-SERIAL-001" },
+                    { id: "CS002", serial: "CS-SERIAL-002" },
+                    { id: "CS003", serial: "CS-SERIAL-003" }
+                ]
             };
 
             // Inicialização do sistema
@@ -3312,12 +3365,21 @@
                 document.getElementById('withdrawalTime').value = '';
                 document.getElementById('returnTime').value = '';
                 document.getElementById('registrationCode').value = '';
+                document.getElementById('registrantName').value = '';
                 document.getElementById('observation').value = '';
                 
                 // Manter apenas um campo de equipamento e limpá-lo
                 const container = document.getElementById('equipmentContainer');
                 container.innerHTML = '';
                 addEquipment(); // Adiciona um campo limpo
+            }
+            
+            function fillRegistrantName() {
+                const codeSelect = document.getElementById('registrationCode');
+                const registrantInput = document.getElementById('registrantName');
+                const selectedCode = codeSelect.value;
+                
+                registrantInput.value = registrantes[selectedCode] || '';
             }
             
             function registerEquipment() {
@@ -3330,6 +3392,7 @@
                 const withdrawalTime = document.getElementById('withdrawalTime').value;
                 const returnTime = document.getElementById('returnTime').value;
                 const registrationCode = document.getElementById('registrationCode').value;
+                const registrantName = document.getElementById('registrantName').value;
                 const observation = document.getElementById('observation').value;
                 
                 // Validar campos obrigatórios
@@ -3375,7 +3438,7 @@
                     withdrawalTime,
                     returnTime,
                     registrationCode,
-                    registrant: registrantes[registrationCode] || "Desconhecido",
+                    registrant: registrantName,
                     observation,
                     equipment: equipmentList,
                     timestamp: new Date().toISOString()
