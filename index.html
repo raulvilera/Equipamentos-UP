@@ -1855,6 +1855,7 @@
             const firebaseConfig = {
                 apiKey: "AIzaSyBOoXyjLQPfgzQM06LVy-TRSPdSM_8CjcE",
                 authDomain: "gerenciamentoaparelho.firebaseapp.com",
+                databaseURL: "https://gerenciamentoaparelho-default-rtdb.firebaseio.com",
                 projectId: "gerenciamentoaparelho",
                 storageBucket: "gerenciamentoaparelho.appspot.com",
                 messagingSenderId: "751628186418",
@@ -1871,57 +1872,61 @@
             let currentUser = null;
             let equipmentChart = null;
             let registros = [];
+            let equipmentListener = null;
+            let reservationsListener = null;
+            let maintenanceListener = null;
 
             // Dados das salas por turma
             const salasPorTurmaPeriodo = {
-      "6° ANO A MANHA": "Sala 1",
-      "6° ANO B MANHA": "Sala 2",
-      "6° ANO C MANHA": "Sala 3",
-      "6° ANO D MANHA": "Sala 4",
-      "6° ANO E TARDE": "Sala 1",
-      "6° ANO F TARDE": "Sala 2",
-      "7° ANO A TARDE": "Sala 3",
-      "7° ANO B TARDE": "Sala 4",
-      "7° ANO C TARDE": "Sala 5",
-      "7° ANO D TARDE": "Sala 6",
-      "7° ANO E TARDE": "Sala 7",
-      "7° ANO F TARDE": "Sala 8",
-      "8° ANO A TARDE": "Sala 9",
-      "8° ANO B TARDE": "Sala 10",
-      "8° ANO C TARDE": "Sala 12",
-      "8° ANO D TARDE": "Sala 13",
-      "8° ANO E TARDE": "Sala 14",
-      "9° ANO A TARDE": "Sala 15",
-      "9° ANO B TARDE": "Sala 16",
-      "9° ANO C TARDE": "Sala 17",
-      "9° ANO D TARDE": "Sala 18",
-      "1ª SERIE A MANHA": "Sala 10",
-      "1ª SERIE B MANHA": "Sala 11",
-      "1ª SERIE C MANHA": "Sala 12",
-      "1ª SERIE D MANHA": "Sala 13",
-      "1ª SERIE E MANHA": "Sala 14",
-      "1ª SERIE F MANHA": "Sala 15",
-      "1ª SERIE G TARDE": "Sala 9",
-      "1ª SERIE H NOITE": "Sala 9",
-      "1ª SERIE I NOITE": "Sala 602",
-      "2ª SERIE A MANHA": "Sala 5",
-      "2ª SERIE B MANHA": "Sala 6",
-      "2ª SERIE C MANHA": "Sala 7",
-      "2ª SERIE D MANHA": "Sala 8",
-      "2ª SERIE E MANHA": "Sala 9",
-      "2ª SERIE F NOITE": "Sala 1",
-      "2ª SERIE G NOITE": "Sala 2",
-      "2ª SERIE H NOITE": "Sala 3",
-      "2ª SERIE I NOITE": "Sala 4",
-      "3ª SERIE A MANHA": "Sala 16",
-      "3ª SERIE B MANHA": "Sala 17",
-      "3ª SERIE C MANHA": "Sala 18",
-      "3ª SERIE D NOITE": "Sala 5",
-      "3ª SERIE E NOITE": "Sala 6",
-      "3ª SERIE F NOITE": "Sala 7",
-      "3ª SERIE G NOITE": "Sala 8",
-      "4050 - ADMINISTRAÇÃO - 2ª SERIE A MANHA": "Laboratório 1"
-    };
+                "6° ANO A MANHA": "Sala 1",
+                "6° ANO B MANHA": "Sala 2",
+                "6° ANO C MANHA": "Sala 3",
+                "6° ANO D MANHA": "Sala 4",
+                "6° ANO E TARDE": "Sala 1",
+                "6° ANO F TARDE": "Sala 2",
+                "7° ANO A TARDE": "Sala 3",
+                "7° ANO B TARDE": "Sala 4",
+                "7° ANO C TARDE": "Sala 5",
+                "7° ANO D TARDE": "Sala 6",
+                "7° ANO E TARDE": "Sala 7",
+                "7° ANO F TARDE": "Sala 8",
+                "8° ANO A TARDE": "Sala 9",
+                "8° ANO B TARDE": "Sala 10",
+                "8° ANO C TARDE": "Sala 12",
+                "8° ANO D TARDE": "Sala 13",
+                "8° ANO E TARDE": "Sala 14",
+                "9° ANO A TARDE": "Sala 15",
+                "9° ANO B TARDE": "Sala 16",
+                "9° ANO C TARDE": "Sala 17",
+                "9° ANO D TARDE": "Sala 18",
+                "1ª SERIE A MANHA": "Sala 10",
+                "1ª SERIE B MANHA": "Sala 11",
+                "1ª SERIE C MANHA": "Sala 12",
+                "1ª SERIE D MANHA": "Sala 13",
+                "1ª SERIE E MANHA": "Sala 14",
+                "1ª SERIE F MANHA": "Sala 15",
+                "1ª SERIE G TARDE": "Sala 9",
+                "1ª SERIE H NOITE": "Sala 9",
+                "1ª SERIE I NOITE": "Sala 602",
+                "2ª SERIE A MANHA": "Sala 5",
+                "2ª SERIE B MANHA": "Sala 6",
+                "2ª SERIE C MANHA": "Sala 7",
+                "2ª SERIE D MANHA": "Sala 8",
+                "2ª SERIE E MANHA": "Sala 9",
+                "2ª SERIE F NOITE": "Sala 1",
+                "2ª SERIE G NOITE": "Sala 2",
+                "2ª SERIE H NOITE": "Sala 3",
+                "2ª SERIE I NOITE": "Sala 4",
+                "3ª SERIE A MANHA": "Sala 16",
+                "3ª SERIE B MANHA": "Sala 17",
+                "3ª SERIE C MANHA": "Sala 18",
+                "3ª SERIE D NOITE": "Sala 5",
+                "3ª SERIE E NOITE": "Sala 6",
+                "3ª SERIE F NOITE": "Sala 7",
+                "3ª SERIE G NOITE": "Sala 8",
+                "4050 - ADMINISTRAÇÃO - 2ª SERIE A MANHA": "Laboratório 1"
+            };
+            
             // Dados dos registrantes (código e nome)
             const registrantes = {
                 "PROATI - 001": "Raul Pereira Vilera Junior",
@@ -2275,6 +2280,9 @@
                         document.getElementById('mainSystem').style.display = 'block';
                         document.getElementById('currentUser').textContent = currentUser.nome;
                         
+                        // Inicializa listeners do Firebase
+                        initFirebaseListeners();
+                        
                         // Inicializa dashboard
                         updateDashboard();
                         loadEquipmentTable();
@@ -2286,7 +2294,34 @@
                     });
             }
 
+            function initFirebaseListeners() {
+                // Remove listeners anteriores se existirem
+                if (equipmentListener) equipmentListener();
+                if (reservationsListener) reservationsListener();
+                if (maintenanceListener) maintenanceListener();
+                
+                // Configura novos listeners
+                equipmentListener = database.ref('equipamentos').on('value', () => {
+                    loadEquipmentTable();
+                    updateDashboard();
+                });
+                
+                reservationsListener = database.ref('reservas').on('value', () => {
+                    loadReservationsTable();
+                });
+                
+                maintenanceListener = database.ref('manutencoes').on('value', () => {
+                    loadMaintenanceTable();
+                    updateDashboard();
+                });
+            }
+
             function logout() {
+                // Remove listeners do Firebase
+                if (equipmentListener) equipmentListener();
+                if (reservationsListener) reservationsListener();
+                if (maintenanceListener) maintenanceListener();
+                
                 auth.signOut().then(() => {
                     currentUser = null;
                     document.getElementById('mainSystem').style.display = 'none';
@@ -2308,6 +2343,9 @@
                     document.getElementById('loginScreen').style.display = 'none';
                     document.getElementById('mainSystem').style.display = 'block';
                     document.getElementById('currentUser').textContent = currentUser.nome;
+                    
+                    // Inicializa listeners do Firebase
+                    initFirebaseListeners();
                     
                     // Inicializa dashboard
                     updateDashboard();
@@ -2394,13 +2432,9 @@
                 };
                 
                 // Salva no Firebase
-                const newEquipmentRef = database.ref('equipamentos').push();
-                newEquipmentRef.set(newEquipment)
+                database.ref('equipamentos').push(newEquipment)
                     .then(() => {
                         closeModal('equipmentModal');
-                        loadEquipmentTable();
-                        updateDashboard();
-                        
                         alert('Equipamento cadastrado com sucesso!');
                     })
                     .catch((error) => {
@@ -2410,11 +2444,18 @@
 
             function loadEquipmentTable() {
                 const tableBody = document.getElementById('equipmentTable');
-                tableBody.innerHTML = '';
+                tableBody.innerHTML = '<tr><td colspan="9" style="text-align: center;">Carregando equipamentos...</td></tr>';
                 
                 const statusFilter = document.getElementById('filterStatus').value;
                 
                 database.ref('equipamentos').once('value', (snapshot) => {
+                    if (!snapshot.exists()) {
+                        tableBody.innerHTML = '<tr><td colspan="9" style="text-align: center;">Nenhum equipamento cadastrado</td></tr>';
+                        return;
+                    }
+                    
+                    tableBody.innerHTML = '';
+                    
                     snapshot.forEach((childSnapshot) => {
                         const equipamento = childSnapshot.val();
                         equipamento.id = childSnapshot.key;
@@ -2450,6 +2491,10 @@
                         
                         tableBody.appendChild(row);
                     });
+                    
+                    if (tableBody.innerHTML === '') {
+                        tableBody.innerHTML = '<tr><td colspan="9" style="text-align: center;">Nenhum equipamento encontrado</td></tr>';
+                    }
                 });
             }
 
@@ -2536,9 +2581,6 @@
                 database.ref('equipamentos/' + id).update(updates)
                     .then(() => {
                         closeModal('editEquipmentModal');
-                        loadEquipmentTable();
-                        updateDashboard();
-                        
                         alert('Equipamento atualizado com sucesso!');
                     })
                     .catch((error) => {
@@ -2551,9 +2593,6 @@
                 
                 database.ref('equipamentos/' + id).remove()
                     .then(() => {
-                        loadEquipmentTable();
-                        updateDashboard();
-                        
                         alert('Equipamento excluído com sucesso!');
                     })
                     .catch((error) => {
@@ -2635,12 +2674,9 @@
                 };
                 
                 // Salva a reserva no Firebase
-                const newReservationRef = database.ref('reservas').push();
-                newReservationRef.set(newReservation)
+                database.ref('reservas').push(newReservation)
                     .then(() => {
                         closeModal('reservationModal');
-                        loadReservationsTable();
-                        
                         alert('Reserva realizada com sucesso!');
                     })
                     .catch((error) => {
@@ -2650,9 +2686,16 @@
 
             function loadReservationsTable() {
                 const tableBody = document.getElementById('reservationsTable');
-                tableBody.innerHTML = '';
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Carregando reservas...</td></tr>';
                 
                 database.ref('reservas').once('value', (snapshot) => {
+                    if (!snapshot.exists()) {
+                        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Nenhuma reserva encontrada</td></tr>';
+                        return;
+                    }
+                    
+                    tableBody.innerHTML = '';
+                    
                     snapshot.forEach((childSnapshot) => {
                         const reserva = childSnapshot.val();
                         reserva.id = childSnapshot.key;
@@ -2739,8 +2782,6 @@
                 })
                 .then(() => {
                     closeModal('reservationDetailModal');
-                    loadReservationsTable();
-                    
                     alert('Reserva cancelada com sucesso!');
                 });
             }
@@ -2755,8 +2796,6 @@
                 })
                 .then(() => {
                     closeModal('reservationDetailModal');
-                    loadReservationsTable();
-                    
                     alert('Reserva concluída com sucesso!');
                 });
             }
@@ -2829,8 +2868,7 @@
                     };
                     
                     // Salva no Firebase
-                    const newMaintenanceRef = database.ref('manutencoes').push();
-                    newMaintenanceRef.set(newMaintenance)
+                    database.ref('manutencoes').push(newMaintenance)
                         .then(() => {
                             // Atualiza status do equipamento se necessário
                             if (status !== 'Concluído') {
@@ -2840,9 +2878,6 @@
                             }
                             
                             closeModal('maintenanceModal');
-                            loadMaintenanceTable();
-                            updateDashboard();
-                            
                             alert('Registro de manutenção salvo com sucesso!');
                         });
                 });
@@ -2850,11 +2885,18 @@
 
             function loadMaintenanceTable() {
                 const tableBody = document.getElementById('maintenanceTable');
-                tableBody.innerHTML = '';
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Carregando manutenções...</td></tr>';
                 
                 const statusFilter = document.getElementById('maintenanceStatus').value;
                 
                 database.ref('manutencoes').once('value', (snapshot) => {
+                    if (!snapshot.exists()) {
+                        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Nenhuma manutenção encontrada</td></tr>';
+                        return;
+                    }
+                    
+                    tableBody.innerHTML = '';
+                    
                     snapshot.forEach((childSnapshot) => {
                         const maintenance = childSnapshot.val();
                         maintenance.id = childSnapshot.key;
@@ -2955,9 +2997,6 @@
                 })
                 .then(() => {
                     closeModal('maintenanceDetailModal');
-                    loadMaintenanceTable();
-                    updateDashboard();
-                    
                     alert('Manutenção marcada como concluída!');
                 });
             }
@@ -2991,9 +3030,16 @@
             function generateClassificationReport() {
                 // Smartphones
                 const smartphoneTable = document.getElementById('smartphoneReport');
-                smartphoneTable.innerHTML = '';
+                smartphoneTable.innerHTML = '<tr><td colspan="5" style="text-align: center;">Carregando smartphones...</td></tr>';
                 
                 database.ref('equipamentos').orderByChild('equipmentType').equalTo('Smartphone').once('value', (snapshot) => {
+                    if (!snapshot.exists()) {
+                        smartphoneTable.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum smartphone encontrado</td></tr>';
+                        return;
+                    }
+                    
+                    smartphoneTable.innerHTML = '';
+                    
                     snapshot.forEach((childSnapshot) => {
                         const equipamento = childSnapshot.val();
                         
@@ -3015,9 +3061,16 @@
                 
                 // Tablets
                 const tabletsTable = document.getElementById('tabletsReport');
-                tabletsTable.innerHTML = '';
+                tabletsTable.innerHTML = '<tr><td colspan="5" style="text-align: center;">Carregando tablets...</td></tr>';
                 
                 database.ref('equipamentos').orderByChild('equipmentType').equalTo('Tablets').once('value', (snapshot) => {
+                    if (!snapshot.exists()) {
+                        tabletsTable.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum tablet encontrado</td></tr>';
+                        return;
+                    }
+                    
+                    tabletsTable.innerHTML = '';
+                    
                     snapshot.forEach((childSnapshot) => {
                         const equipamento = childSnapshot.val();
                         
@@ -3039,9 +3092,16 @@
                 
                 // Notebooks do aluno
                 const notebookTable = document.getElementById('notebookReport');
-                notebookTable.innerHTML = '';
+                notebookTable.innerHTML = '<tr><td colspan="5" style="text-align: center;">Carregando notebooks...</td></tr>';
                 
                 database.ref('equipamentos').orderByChild('equipmentType').equalTo('Notebook do aluno').once('value', (snapshot) => {
+                    if (!snapshot.exists()) {
+                        notebookTable.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum notebook encontrado</td></tr>';
+                        return;
+                    }
+                    
+                    notebookTable.innerHTML = '';
+                    
                     snapshot.forEach((childSnapshot) => {
                         const equipamento = childSnapshot.val();
                         
@@ -3063,9 +3123,16 @@
                 
                 // Chromebooks
                 const chromebooksTable = document.getElementById('chromebooksReport');
-                chromebooksTable.innerHTML = '';
+                chromebooksTable.innerHTML = '<tr><td colspan="5" style="text-align: center;">Carregando chromebooks...</td></tr>';
                 
                 database.ref('equipamentos').orderByChild('equipmentType').equalTo('Chromebooks').once('value', (snapshot) => {
+                    if (!snapshot.exists()) {
+                        chromebooksTable.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum chromebook encontrado</td></tr>';
+                        return;
+                    }
+                    
+                    chromebooksTable.innerHTML = '';
+                    
                     snapshot.forEach((childSnapshot) => {
                         const equipamento = childSnapshot.val();
                         
@@ -3110,6 +3177,16 @@
                 const locationFilter = document.getElementById('dashboardLocationFilter').value;
                 
                 database.ref('equipamentos').once('value', (snapshot) => {
+                    if (!snapshot.exists()) {
+                        document.getElementById('inUseCount').textContent = '0';
+                        document.getElementById('availableCount').textContent = '0';
+                        document.getElementById('maintenanceCount').textContent = '0';
+                        document.getElementById('damagedCount').textContent = '0';
+                        updateChart(0, 0, 0, 0, 0);
+                        updateRecentActivities();
+                        return;
+                    }
+                    
                     let filteredEquipment = [];
                     
                     snapshot.forEach((childSnapshot) => {
@@ -3188,36 +3265,51 @@
 
             function updateRecentActivities() {
                 const tableBody = document.getElementById('recentActivitiesTable');
-                tableBody.innerHTML = '';
+                tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Carregando atividades...</td></tr>';
                 
-                // Simula dados recentes
-                const recentData = [
-                    { date: new Date(), equipment: "Notebook do aluno", serial: "SN123456", location: "Sala de informática", status: "Em uso" },
-                    { date: new Date(Date.now() - 86400000), equipment: "Chromebooks", serial: "CB001", location: "Coordenação", status: "Disponível" },
-                    { date: new Date(Date.now() - 172800000), equipment: "Tablets", serial: "TAB002", location: "Sala dos professores", status: "Manutenção" },
-                    { date: new Date(Date.now() - 259200000), equipment: "Smartphone", serial: "SP001", location: "Direção", status: "Com avarias" },
-                    { date: new Date(Date.now() - 345600000), equipment: "Notebook Ultra", serial: "NBU001", location: "Depósito 1ª andar", status: "Desuso" }
-                ];
-                
-                recentData.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${formatDate(item.date)}</td>
-                        <td>${item.equipment}</td>
-                        <td>${item.serial}</td>
-                        <td>${item.location}</td>
-                        <td>
-                            <span class="badge ${getStatusBadgeClass(item.status)}">
-                                ${item.status}
-                            </span>
-                        </td>
-                        <td>
-                            <button class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
+                database.ref('equipamentos').orderByChild('createdAt').limitToLast(5).once('value', (snapshot) => {
+                    if (!snapshot.exists()) {
+                        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhuma atividade recente</td></tr>';
+                        return;
+                    }
+                    
+                    tableBody.innerHTML = '';
+                    
+                    const activities = [];
+                    snapshot.forEach((childSnapshot) => {
+                        const equipamento = childSnapshot.val();
+                        activities.push({
+                            date: equipamento.createdAt || new Date().toISOString(),
+                            equipment: equipamento.equipmentType,
+                            serial: equipamento.serialNumber,
+                            location: equipamento.equipmentLocation,
+                            status: equipamento.equipmentCondition
+                        });
+                    });
+                    
+                    // Ordena do mais recente para o mais antigo
+                    activities.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    
+                    activities.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${formatDate(item.date)}</td>
+                            <td>${item.equipment}</td>
+                            <td>${item.serial}</td>
+                            <td>${item.location}</td>
+                            <td>
+                                <span class="badge ${getStatusBadgeClass(item.status)}">
+                                    ${item.status}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
                 });
             }
 
