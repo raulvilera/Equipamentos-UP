@@ -744,7 +744,7 @@
             background-color: var(--gray-medium);
         }
         
-        /* ===== ESTILOS PARA LISTAS DROPDOWN ===== */
+        /* ===== ESTILOS PARA LISTAS DROPDOWNS ===== */
         .dropdown-container {
             position: relative;
         }
@@ -962,7 +962,8 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Data Registro</th>
+                                <th>Data</th>
+                                <th>Registro</th>
                                 <th>Nº de Série</th>
                                 <th>Nº Registro</th>
                                 <th>Equipamento</th>
@@ -1074,7 +1075,8 @@
                                                 <th>Nº de Identificação</th>
                                                 <th>Status</th>
                                                 <th>Local</th>
-                                                <th>Data Registro</th>
+                                                <th>Data</th>
+                                                <th>Registro</th>
                                             </tr>
                                         </thead>
                                         <tbody id="smartphoneReport">
@@ -1093,7 +1095,8 @@
                                                 <th>Nº de Identificação</th>
                                                 <th>Status</th>
                                                 <th>Local</th>
-                                                <th>Data Registro</th>
+                                                <th>Data</th>
+                                                <th>Registro</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tabletsReport">
@@ -1112,7 +1115,8 @@
                                                 <th>Nº de Identificação</th>
                                                 <th>Status</th>
                                                 <th>Local</th>
-                                                <th>Data Registro</th>
+                                                <th>Data</th>
+                                                <th>Registro</th>
                                             </tr>
                                         </thead>
                                         <tbody id="notebookReport">
@@ -1131,7 +1135,8 @@
                                                 <th>Nº de Identificação</th>
                                                 <th>Status</th>
                                                 <th>Local</th>
-                                                <th>Data Registro</th>
+                                                <th>Data</th>
+                                                <th>Registro</th>
                                             </tr>
                                         </thead>
                                         <tbody id="chromebooksReport">
@@ -1228,11 +1233,11 @@
                                     <label for="equipmentType">APARELHO:</label>
                                     <select id="equipmentType" class="form-control" onchange="updateIdentificationNumbers()">
                                         <option value="">Selecione o aparelho</option>
-                                        <option value="NOTEBOOK">NOTEBOOK</option>
-                                        <option value="TABLET">TABLET</option>
-                                        <option value="SMARTPHONE">SMARTPHONE</option>
-                                        <option value="HEAD SET">HEAD SET</option>
                                         <option value="CHROMEBOOK">CHROMEBOOK</option>
+                                        <option value="NOTEBOOK">NOTEBOOK</option>
+                                        <option value="SMARTPHONE">SMARTPHONE</option>
+                                        <option value="TABLET">TABLET</option>
+                                        <option value="HEAD SET">HEAD SET</option>
                                         <option value="CAIXA DE SOM">CAIXA DE SOM</option>
                                     </select>
                                 </div>
@@ -1246,13 +1251,13 @@
                                 
                                 <div class="form-group">
                                     <label for="serialNumber">N° DE SÉRIE:</label>
-                                    <input type="text" id="serialNumber" class="form-control">
-                                    <div class="auto-fill-label">Preenchido automaticamente quando possível</div>
+                                    <input type="text" id="serialNumber" class="form-control" readonly>
+                                    <div class="auto-fill-label">Preenchido automaticamente</div>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="quantity">QUANTIDADE:</label>
-                                    <input type="number" id="quantity" class="form-control" min="1" value="1">
+                                    <input type="number" id="quantity" class="form-control" min="1" value="1" readonly>
                                 </div>
                                 
                                 <button class="remove-equipment-btn" onclick="removeEquipment(this)">
@@ -2422,6 +2427,7 @@
                         
                         row.innerHTML = `
                             <td>${formatDate(equipamento.registrationDate)}</td>
+                            <td>${equipamento.registerNumber}</td>
                             <td>${equipamento.serialNumber}</td>
                             <td>${equipamento.registerNumber}</td>
                             <td>${equipamento.equipmentType}</td>
@@ -2993,7 +2999,7 @@
                         
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td>${equipamento.serialNumber}</td>
+                            <td>${equipamento.registerNumber}</td>
                             <td>
                                 <span class="badge ${getStatusBadgeClass(equipamento.equipmentCondition)}">
                                     ${equipamento.equipmentCondition}
@@ -3001,6 +3007,7 @@
                             </td>
                             <td>${equipamento.equipmentLocation}</td>
                             <td>${formatDate(equipamento.registrationDate)}</td>
+                            <td>${equipamento.registerNumber}</td>
                         `;
                         smartphoneTable.appendChild(row);
                     });
@@ -3016,7 +3023,7 @@
                         
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td>${equipamento.serialNumber}</td>
+                            <td>${equipamento.registerNumber}</td>
                             <td>
                                 <span class="badge ${getStatusBadgeClass(equipamento.equipmentCondition)}">
                                     ${equipamento.equipmentCondition}
@@ -3024,6 +3031,7 @@
                             </td>
                             <td>${equipamento.equipmentLocation}</td>
                             <td>${formatDate(equipamento.registrationDate)}</td>
+                            <td>${equipamento.registerNumber}</td>
                         `;
                         tabletsTable.appendChild(row);
                     });
@@ -3039,7 +3047,7 @@
                         
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td>${equipamento.serialNumber}</td>
+                            <td>${equipamento.registerNumber}</td>
                             <td>
                                 <span class="badge ${getStatusBadgeClass(equipamento.equipmentCondition)}">
                                     ${equipamento.equipmentCondition}
@@ -3047,6 +3055,7 @@
                             </td>
                             <td>${equipamento.equipmentLocation}</td>
                             <td>${formatDate(equipamento.registrationDate)}</td>
+                            <td>${equipamento.registerNumber}</td>
                         `;
                         notebookTable.appendChild(row);
                     });
@@ -3062,7 +3071,7 @@
                         
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td>${equipamento.serialNumber}</td>
+                            <td>${equipamento.registerNumber}</td>
                             <td>
                                 <span class="badge ${getStatusBadgeClass(equipamento.equipmentCondition)}">
                                     ${equipamento.equipmentCondition}
@@ -3070,6 +3079,7 @@
                             </td>
                             <td>${equipamento.equipmentLocation}</td>
                             <td>${formatDate(equipamento.registrationDate)}</td>
+                            <td>${equipamento.registerNumber}</td>
                         `;
                         chromebooksTable.appendChild(row);
                     });
@@ -3232,32 +3242,39 @@
                 // Limpar opções anteriores
                 identificationNumberSelect.innerHTML = '<option value="">Selecione o aparelho primeiro</option>';
                 
-                if (selectedEquipment && EQUIPAMENTOS[selectedEquipment]) {
-                    EQUIPAMENTOS[selectedEquipment].forEach(eq => {
+                if (selectedEquipment && equipamentos[selectedEquipment]) {
+                    equipamentos[selectedEquipment].forEach(eq => {
                         const option = document.createElement('option');
                         option.value = eq.id;
                         option.textContent = eq.id;
                         identificationNumberSelect.appendChild(option);
                     });
                 }
+                
+                // Resetar campos dependentes
+                document.getElementById('serialNumber').value = '';
+                document.getElementById('quantity').value = '0';
             }
             
             function fillSerialNumber() {
                 const equipmentTypeSelect = document.getElementById('equipmentType');
                 const identificationNumberSelect = document.getElementById('identificationNumber');
                 const serialNumberInput = document.getElementById('serialNumber');
+                const quantityInput = document.getElementById('quantity');
                 const selectedEquipment = equipmentTypeSelect.value;
                 const selectedId = identificationNumberSelect.value;
                 
-                if (selectedEquipment && selectedId && EQUIPAMENTOS[selectedEquipment]) {
-                    const equipment = EQUIPAMENTOS[selectedEquipment].find(eq => eq.id === selectedId);
+                if (selectedEquipment && selectedId && equipamentos[selectedEquipment]) {
+                    const equipment = equipamentos[selectedEquipment].find(eq => eq.id === selectedId);
                     if (equipment) {
                         serialNumberInput.value = equipment.serial;
+                        quantityInput.value = '1'; // Definir quantidade como 1
                         return;
                     }
                 }
                 
                 serialNumberInput.value = '';
+                quantityInput.value = '0';
             }
             
             function updateRoom() {
@@ -3281,11 +3298,11 @@
                         <label>APARELHO:</label>
                         <select class="form-control" onchange="updateIdNumbers(this)">
                             <option value="">Selecione o aparelho</option>
-                            <option value="NOTEBOOK">NOTEBOOK</option>
-                            <option value="TABLET">TABLET</option>
-                            <option value="SMARTPHONE">SMARTPHONE</option>
-                            <option value="HEAD SET">HEAD SET</option>
                             <option value="CHROMEBOOK">CHROMEBOOK</option>
+                            <option value="NOTEBOOK">NOTEBOOK</option>
+                            <option value="SMARTPHONE">SMARTPHONE</option>
+                            <option value="TABLET">TABLET</option>
+                            <option value="HEAD SET">HEAD SET</option>
                             <option value="CAIXA DE SOM">CAIXA DE SOM</option>
                         </select>
                     </div>
@@ -3299,13 +3316,13 @@
                     
                     <div class="form-group">
                         <label>N° DE SÉRIE:</label>
-                        <input type="text" class="form-control">
-                        <div class="auto-fill-label">Preenchido automaticamente quando possível</div>
+                        <input type="text" class="form-control" readonly>
+                        <div class="auto-fill-label">Preenchido automaticamente</div>
                     </div>
                     
                     <div class="form-group">
                         <label>QUANTIDADE:</label>
-                        <input type="number" class="form-control" min="1" value="1">
+                        <input type="number" class="form-control" min="0" value="0" readonly>
                     </div>
                     
                     <button class="remove-equipment-btn" onclick="removeEquipment(this)">
@@ -3318,19 +3335,25 @@
             function updateIdNumbers(select) {
                 const row = select.closest('.equipment-row');
                 const idSelect = row.querySelector('.form-group:nth-child(2) select'); // segundo form-group
+                const serialInput = row.querySelector('.form-group:nth-child(3) input');
+                const quantityInput = row.querySelector('.form-group:nth-child(4) input');
                 const selectedEquipment = select.value;
                 
                 // Limpar opções anteriores
                 idSelect.innerHTML = '<option value="">Selecione o aparelho primeiro</option>';
                 
-                if (selectedEquipment && EQUIPAMENTOS[selectedEquipment]) {
-                    EQUIPAMENTOS[selectedEquipment].forEach(eq => {
+                if (selectedEquipment && equipamentos[selectedEquipment]) {
+                    equipamentos[selectedEquipment].forEach(eq => {
                         const option = document.createElement('option');
                         option.value = eq.id;
                         option.textContent = eq.id;
                         idSelect.appendChild(option);
                     });
                 }
+                
+                // Resetar campos dependentes
+                serialInput.value = '';
+                quantityInput.value = '0';
             }
             
             function fillSerial(select) {
@@ -3338,16 +3361,19 @@
                 const equipmentType = row.querySelector('.form-group:first-child select').value;
                 const selectedId = select.value;
                 const serialInput = row.querySelector('.form-group:nth-child(3) input');
+                const quantityInput = row.querySelector('.form-group:nth-child(4) input');
                 
-                if (equipmentType && selectedId && EQUIPAMENTOS[equipmentType]) {
-                    const equipment = EQUIPAMENTOS[equipmentType].find(eq => eq.id === selectedId);
+                if (equipmentType && selectedId && equipamentos[equipmentType]) {
+                    const equipment = equipamentos[equipmentType].find(eq => eq.id === selectedId);
                     if (equipment) {
                         serialInput.value = equipment.serial;
+                        quantityInput.value = '1'; // Definir quantidade como 1
                         return;
                     }
                 }
                 
                 serialInput.value = '';
+                quantityInput.value = '0';
             }
             
             function removeEquipment(button) {
@@ -3409,11 +3435,11 @@
                 
                 equipmentRows.forEach(row => {
                     const equipmentType = row.querySelector('select').value;
-                    const identificationNumber = row.querySelector('.form-control').value;
-                    const serialNumber = row.querySelector('input[type="text"]').value;
-                    const quantity = row.querySelector('input[type="number"]').value || 1;
+                    const identificationNumber = row.querySelector('.form-group:nth-child(2) select').value;
+                    const serialNumber = row.querySelector('.form-group:nth-child(3) input').value;
+                    const quantity = row.querySelector('.form-group:nth-child(4) input').value || 1;
                     
-                    if (equipmentType) {
+                    if (equipmentType && identificationNumber && serialNumber) {
                         equipmentList.push({
                             type: equipmentType,
                             id: identificationNumber,
@@ -3424,7 +3450,7 @@
                 });
                 
                 if (equipmentList.length === 0) {
-                    alert('Por favor, adicione pelo menos um equipamento.');
+                    alert('Por favor, adicione pelo menos um equipamento válido.');
                     return;
                 }
                 
