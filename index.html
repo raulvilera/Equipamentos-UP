@@ -12,7 +12,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ===== VARIÁVEIS DE CORES ===== */
         :root {
             --primary-color: #2c3e50;
             --secondary-color: #34495e;
@@ -32,7 +31,6 @@
             --transition: all 0.3s ease;
         }
 
-        /* ===== ESTILOS GERAIS ===== */
         * {
             margin: 0;
             padding: 0;
@@ -52,7 +50,6 @@
             padding: 20px;
         }
 
-        /* ===== CABEÇALHO ===== */
         header {
             background-color: var(--primary-color);
             color: var(--white);
@@ -98,7 +95,6 @@
             background-color: #c0392b;
         }
 
-        /* ===== NAVEGAÇÃO ===== */
         .nav-tabs {
             display: flex;
             background-color: var(--secondary-color);
@@ -130,7 +126,6 @@
             background-color: var(--accent-color);
         }
 
-        /* ===== CONTEÚDO DAS ABAS ===== */
         .tab-content {
             display: none;
             background-color: var(--white);
@@ -150,7 +145,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== FORMULÁRIOS ===== */
         .form-title {
             margin-bottom: 20px;
             color: var(--primary-color);
@@ -259,7 +253,6 @@
             margin-top: 20px;
         }
 
-        /* ===== TABELAS ===== */
         .table-responsive {
             overflow-x: auto;
         }
@@ -322,7 +315,6 @@
             color: white;
         }
 
-        /* ===== CARDS DE DASHBOARD ===== */
         .dashboard-cards {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -388,7 +380,6 @@
             color: var(--primary-color);
         }
 
-        /* ===== GRÁFICOS ===== */
         .chart-container {
             background-color: var(--white);
             border-radius: var(--border-radius);
@@ -398,7 +389,6 @@
             height: 400px;
         }
 
-        /* ===== MODAIS ===== */
         .modal {
             display: none;
             position: fixed;
@@ -461,7 +451,6 @@
             gap: 10px;
         }
 
-        /* ===== RESPONSIVIDADE ===== */
         @media (max-width: 768px) {
             .nav-tabs {
                 flex-wrap: wrap;
@@ -486,7 +475,6 @@
             }
         }
 
-        /* ===== ANIMAÇÕES ===== */
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
@@ -497,7 +485,6 @@
             animation: pulse 2s infinite;
         }
 
-        /* ===== ESTILOS PARA A PÁGINA DE REGISTRO ===== */
         .register-form {
             background-color: #f8f9fa;
             padding: 25px;
@@ -585,7 +572,6 @@
             font-size: 14px;
         }
         
-        /* ===== ESTILOS PARA O TERMO DE RESPONSABILIDADE ===== */
         .termo-container {
             padding: 20px;
             background-color: white;
@@ -643,7 +629,6 @@
             text-align: center;
         }
 
-        /* ===== ESTILOS ESPECÍFICOS PARA RELATÓRIOS ===== */
         .report-section {
             margin-bottom: 30px;
         }
@@ -666,7 +651,50 @@
             color: var(--secondary-color);
         }
 
-        /* ===== ESTILOS PARA LISTAS DROPDOWNS ===== */
+        .filter-container {
+            background-color: var(--white);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .status-available {
+            background-color: var(--success-color);
+        }
+
+        .status-inuse {
+            background-color: var(--accent-color);
+        }
+
+        .status-maintenance {
+            background-color: var(--warning-color);
+        }
+
+        .status-damaged {
+            background-color: var(--danger-color);
+        }
+
+        .status-unused {
+            background-color: var(--gray-medium);
+        }
+        
         .dropdown-container {
             position: relative;
         }
@@ -697,6 +725,25 @@
         
         .dropdown-visible {
             display: block;
+        }
+
+        .history-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--gray-light);
+            transition: var(--transition);
+        }
+
+        .history-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .history-date {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .history-action {
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -747,6 +794,9 @@
                 </div>
                 <div class="nav-tab" onclick="openTab('reports')">
                     <i class="fas fa-file-alt"></i> Relatórios
+                </div>
+                <div class="nav-tab" onclick="openTab('history')">
+                    <i class="fas fa-history"></i> Histórico
                 </div>
             </div>
 
@@ -822,6 +872,25 @@
                 
                 <div class="chart-container">
                     <canvas id="equipmentStatusChart"></canvas>
+                </div>
+                
+                <h3 style="margin-bottom: 15px;">Últimos Registros</h3>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Equipamento</th>
+                                <th>Nº Série</th>
+                                <th>Local</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentActivitiesTable">
+                            <!-- Preenchido dinamicamente -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -1165,6 +1234,10 @@
                     </div>
                 </div>
                 
+                <div class="chart-container">
+                    <canvas id="reportChart"></canvas>
+                </div>
+                
                 <div id="reportContent" style="margin-top: 30px;">
                     <div class="table-responsive">
                         <table class="data-table">
@@ -1182,6 +1255,34 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+
+            <!-- Histórico -->
+            <div id="history" class="tab-content">
+                <h2 class="form-title">
+                    <i class="fas fa-history"></i> Histórico de Movimentações
+                </h2>
+                
+                <div class="filter-container">
+                    <div class="filter-group">
+                        <label for="historyStartDate">Data Inicial</label>
+                        <input type="date" id="historyStartDate" class="form-control">
+                    </div>
+                    <div class="filter-group">
+                        <label for="historyEndDate">Data Final</label>
+                        <input type="date" id="historyEndDate" class="form-control">
+                    </div>
+                    <div class="filter-group">
+                        <label>&nbsp;</label>
+                        <button class="btn btn-primary" onclick="loadHistory()">
+                            <i class="fas fa-filter"></i> Filtrar
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="historyList">
+                    <!-- Histórico será preenchido aqui -->
                 </div>
             </div>
         </div>
@@ -1289,7 +1390,6 @@
         </div>
     </div>
 
-    <!-- Scripts -->
     <script>
         // Dados completos dos professores
         const teacherEmails = {
@@ -1397,6 +1497,7 @@
         let equipmentChart = null;
         let registros = [];
         let equipmentListener = null;
+        let reportChart = null;
 
         // Dados das salas por turma
         const salasPorTurmaPeriodo = {
@@ -1717,15 +1818,7 @@
                 { id: "TAB021", serial: "4ACC16MB8R" },
                 { id: "TAB022", serial: "4AC21RT23" },
                 { id: "TAB023", serial: "4AC14KH45" }
-            ]
-        };
-
-        // Dados de equipamentos (aparelhos e seus números de série)
-        const equipamentos = {
-            "CHROMEBOOK": EQUIPAMENTOS.CHROMEBOOK,
-            "NOTEBOOK": EQUIPAMENTOS.NOTEBOOK,
-            "SMARTPHONE": EQUIPAMENTOS.SMARTPHONE,
-            "TABLET": EQUIPAMENTOS.TABLET,
+            ],
             "HEAD SET": [
                 { id: "HS001", serial: "HS-SERIAL-001" },
                 { id: "HS002", serial: "HS-SERIAL-002" },
@@ -1736,6 +1829,44 @@
                 { id: "CS002", serial: "CS-SERIAL-002" },
                 { id: "CS003", serial: "CS-SERIAL-003" }
             ]
+        };
+
+        // Dados de equipamentos (aparelhos e seus números de série)
+        const equipamentos = {
+            "CHROMEBOOK": EQUIPAMENTOS.CHROMEBOOK,
+            "NOTEBOOK": EQUIPAMENTOS.NOTEBOOK,
+            "SMARTPHONE": EQUIPAMENTOS.SMARTPHONE,
+            "TABLET": EQUIPAMENTOS.TABLET,
+            "HEAD SET": EQUIPAMENTOS["HEAD SET"],
+            "CAIXA DE SOM": EQUIPAMENTOS["CAIXA DE SOM"]
+        };
+
+        // Dados de equipamentos para dashboard
+        const equipmentData = {
+            "Notebook do aluno": {
+                "Disponível": 60,
+                "Em uso": 15,
+                "Em Manutenção": 3,
+                "Com avarias": 2
+            },
+            "Chromebooks": {
+                "Disponível": 120,
+                "Em uso": 30,
+                "Em Manutenção": 5,
+                "Com avarias": 3
+            },
+            "Smartphone": {
+                "Disponível": 25,
+                "Em uso": 8,
+                "Em Manutenção": 1,
+                "Com avarias": 1
+            },
+            "Tablets": {
+                "Disponível": 22,
+                "Em uso": 5,
+                "Em Manutenção": 1,
+                "Com avarias": 0
+            }
         };
 
         // Inicialização do sistema
@@ -1871,6 +2002,8 @@
                 loadEquipmentTable();
             } else if (tabId === 'reports') {
                 generateReport();
+            } else if (tabId === 'history') {
+                loadHistory();
             }
         }
 
@@ -2090,7 +2223,7 @@
             const rows = document.getElementById('equipmentTable').getElementsByTagName('tr');
             
             for (let i = 0; i < rows.length; i++) {
-                const rowText = rows[i].textContent.toLowerCase;
+                const rowText = rows[i].textContent.toLowerCase();
                 rows[i].style.display = rowText.includes(searchTerm) ? '' : 'none';
             }
         }
@@ -2353,16 +2486,23 @@
             // Adicionar ao array de registros
             registros.push(registro);
             
-            // Atualizar termo de responsabilidade
-            updateTermo(registro);
-            
-            // Atualizar relatório
-            generateReport();
-            
-            alert('Registro realizado com sucesso!');
-            
-            // Mostrar o termo de responsabilidade
-            document.getElementById('termoContainer').style.display = 'block';
+            // Salvar no Firebase
+            database.ref('registros').push(registro)
+                .then(() => {
+                    // Atualizar termo de responsabilidade
+                    updateTermo(registro);
+                    
+                    // Atualizar relatório
+                    generateReport();
+                    
+                    alert('Registro realizado com sucesso!');
+                    
+                    // Mostrar o termo de responsabilidade
+                    document.getElementById('termoContainer').style.display = 'block';
+                })
+                .catch((error) => {
+                    alert('Erro ao salvar registro: ' + error.message);
+                });
         }
         
         function updateTermo(registro) {
@@ -2490,6 +2630,40 @@
                 
                 // Atualiza o gráfico
                 updateChart(inUse, available, maintenance, damaged, unused);
+                
+                // Atualiza tabela de atividades recentes
+                updateRecentActivities(filteredEquipment);
+            });
+        }
+        
+        function updateRecentActivities(equipamentos) {
+            const tableBody = document.getElementById('recentActivitiesTable');
+            tableBody.innerHTML = '';
+            
+            // Ordena por data de registro (mais recentes primeiro)
+            const recentEquipments = [...equipamentos]
+                .sort((a, b) => new Date(b.registrationDate) - new Date(a.registrationDate))
+                .slice(0, 5);
+            
+            recentEquipments.forEach(equipamento => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${formatDate(equipamento.registrationDate)}</td>
+                    <td>${equipamento.equipmentType}</td>
+                    <td>${equipamento.serialNumber}</td>
+                    <td>${equipamento.equipmentLocation}</td>
+                    <td>
+                        <span class="badge ${getStatusBadgeClass(equipamento.equipmentCondition)}">
+                            ${equipamento.equipmentCondition}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="showEquipmentDetails('${equipamento.id}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
             });
         }
 
@@ -2550,12 +2724,21 @@
                 
                 tableBody.innerHTML = '';
                 
+                const equipmentCount = {};
+                
                 snapshot.forEach((childSnapshot) => {
                     const equipamento = childSnapshot.val();
                     
                     // Aplica filtro
                     if (equipmentFilter !== 'all' && equipamento.equipmentType !== equipmentFilter) {
                         return;
+                    }
+                    
+                    // Contagem para gráfico
+                    if (!equipmentCount[equipamento.equipmentType]) {
+                        equipmentCount[equipamento.equipmentType] = 1;
+                    } else {
+                        equipmentCount[equipamento.equipmentType]++;
                     }
                     
                     const row = document.createElement('tr');
@@ -2576,6 +2759,102 @@
                 if (tableBody.innerHTML === '') {
                     tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum equipamento encontrado</td></tr>';
                 }
+                
+                // Atualiza o gráfico de relatórios
+                updateReportChart(equipmentCount);
+            });
+        }
+        
+        function updateReportChart(equipmentCount) {
+            const ctx = document.getElementById('reportChart').getContext('2d');
+            
+            // Destrói o gráfico anterior se existir
+            if (reportChart) {
+                reportChart.destroy();
+            }
+            
+            const labels = Object.keys(equipmentCount);
+            const data = Object.values(equipmentCount);
+            
+            reportChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Quantidade de Equipamentos',
+                        data: data,
+                        backgroundColor: '#3498db',
+                        borderColor: '#2980b9',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribuição de Equipamentos por Tipo',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Funções para histórico
+        function loadHistory() {
+            const startDate = document.getElementById('historyStartDate').value;
+            const endDate = document.getElementById('historyEndDate').value;
+            
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '<div class="history-item">Carregando histórico...</div>';
+            
+            database.ref('registros').once('value', (snapshot) => {
+                if (!snapshot.exists()) {
+                    historyList.innerHTML = '<div class="history-item">Nenhum registro encontrado</div>';
+                    return;
+                }
+                
+                historyList.innerHTML = '';
+                
+                snapshot.forEach((childSnapshot) => {
+                    const registro = childSnapshot.val();
+                    const registroDate = new Date(registro.timestamp);
+                    
+                    // Aplicar filtros de data
+                    if (startDate && new Date(registroDate) < new Date(startDate)) return;
+                    if (endDate && new Date(registroDate) > new Date(endDate)) return;
+                    
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    historyItem.innerHTML = `
+                        <div class="history-date">${formatDateTime(registro.timestamp)}</div>
+                        <div class="history-action">
+                            <strong>${registro.teacherName}</strong> registrou a retirada de equipamentos para a turma ${registro.studentClass}
+                        </div>
+                        <div>Equipamentos: ${registro.equipment.length} itens</div>
+                        <div>Código: ${registro.registrationCode}</div>
+                    `;
+                    historyList.appendChild(historyItem);
+                });
+                
+                if (historyList.innerHTML === '') {
+                    historyList.innerHTML = '<div class="history-item">Nenhum registro encontrado no período selecionado</div>';
+                }
             });
         }
 
@@ -2592,6 +2871,18 @@
             if (!dateString) return '';
             const date = new Date(dateString);
             return date.toLocaleDateString('pt-BR');
+        }
+        
+        function formatDateTime(dateTimeString) {
+            if (!dateTimeString) return 'N/A';
+            const options = { 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            return new Date(dateTimeString).toLocaleDateString('pt-BR', options);
         }
 
         function getStatusBadgeClass(status) {
@@ -2636,6 +2927,20 @@
             return conditions.map(condition => `
                 <option value="${condition}" ${condition === selectedCondition ? 'selected' : ''}>${condition}</option>
             `).join('');
+        }
+        
+        function showEquipmentDetails(equipmentId) {
+            database.ref('equipamentos/' + equipmentId).once('value', (snapshot) => {
+                const equipamento = snapshot.val();
+                if (!equipamento) return;
+                
+                alert(`Detalhes do Equipamento:\n
+Tipo: ${equipamento.equipmentType}\n
+Nº Série: ${equipamento.serialNumber}\n
+Local: ${equipamento.equipmentLocation}\n
+Status: ${equipamento.equipmentCondition}\n
+Observações: ${equipamento.equipmentNotes || 'Nenhuma'}`);
+            });
         }
     </script>
 </body>
