@@ -264,6 +264,7 @@
         /* ===== TABELAS ===== */
         .table-responsive {
             overflow-x: auto;
+            margin-top: 20px;
         }
 
         .data-table {
@@ -867,6 +868,7 @@
             background-color: #fef9e7;
             padding: 5px;
             border-radius: 4px;
+            cursor: pointer;
         }
 
         .calendar-day.today {
@@ -879,6 +881,55 @@
             padding: 20px;
             border-radius: var(--border-radius);
             margin-top: 20px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+        
+        .edit-btn {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .delete-btn {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .reservation-detail {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 15px;
+        }
+        
+        .history-details {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .history-detail-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .history-detail-item:last-child {
+            border-bottom: none;
         }
     </style>
 </head>
@@ -928,7 +979,7 @@
                     <i class="fas fa-calendar-alt"></i> Reservas
                 </div>
                 <div class="nav-tab" onclick="openTab('reports')">
-                    <i class="fas fa-file-alt"></i> Relatórios
+                    <i class="fas fa-file-alt"></i> Relatório
                 </div>
                 <div class="nav-tab" onclick="openTab('maintenance')">
                     <i class="fas fa-tools"></i> Manutenção
@@ -1135,45 +1186,114 @@
                     </div>
                 </div>
                 
-                <div class="reservation-form">
-                    <h3>Adicionar Nova Reserva</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="reservationTeacher">Professor</label>
-                            <select id="reservationTeacher" class="form-control">
-                                <option value="">Selecione o professor</option>
-                                <!-- Professores serão preenchidos via JavaScript -->
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="reservationEquipment">Equipamento</label>
-                            <select id="reservationEquipment" class="form-control">
-                                <option value="">Selecione o equipamento</option>
-                                <option value="Notebook do aluno">Notebook do aluno</option>
-                                <option value="Chromebooks">Chromebooks</option>
-                                <option value="Smartphone">Smartphone</option>
-                                <option value="Tablets">Tablets</option>
-                                <option value="Notebook Ultra">Notebook Ultra</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="reservationDate">Data</label>
-                            <input type="date" id="reservationDate" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="reservationStartTime">Hora Início</label>
-                            <input type="time" id="reservationStartTime" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="reservationEndTime">Hora Fim</label>
-                            <input type="time" id="reservationEndTime" class="form-control">
-                        </div>
+                <h3 style="margin-top: 30px;">Reservas Ativas</h3>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Professor</th>
+                                <th>Equipamento</th>
+                                <th>Hora Início</th>
+                                <th>Hora Fim</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservationsList">
+                            <!-- Preenchido dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Relatório de Equipamentos -->
+            <div id="reports" class="tab-content">
+                <h2 class="form-title">
+                    <i class="fas fa-file-alt"></i> Relatório de Equipamentos
+                </h2>
+                
+                <div class="filter-container">
+                    <div class="filter-group">
+                        <label for="reportEquipmentFilter">Filtrar por Equipamento</label>
+                        <select id="reportEquipmentFilter" class="form-control" onchange="generateReport()">
+                            <option value="all">Todos os Equipamentos</option>
+                            <option value="CHROMEBOOK">CHROMEBOOK</option>
+                            <option value="NOTEBOOK">NOTEBOOK</option>
+                            <option value="SMARTPHONE">SMARTPHONE</option>
+                            <option value="TABLET">TABLET</option>
+                            <option value="HEAD SET">HEAD SET</option>
+                            <option value="CAIXA DE SOM">CAIXA DE SOM</option>
+                        </select>
                     </div>
-                    <div class="btn-group">
-                        <button class="btn btn-success" onclick="addReservation()">
-                            <i class="fas fa-save"></i> Salvar Reserva
+                </div>
+                
+                <div id="reportContent" style="margin-top: 30px;">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Aparelho</th>
+                                    <th>Nº de Série</th>
+                                    <th>Status</th>
+                                    <th>Local</th>
+                                    <th>Data Registro</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportTable">
+                                <!-- Preenchido dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manutenção -->
+            <div id="maintenance" class="tab-content">
+                <h2 class="form-title">
+                    <i class="fas fa-tools"></i> Controle de Manutenção
+                </h2>
+                
+                <div class="filter-container">
+                    <div class="filter-group">
+                        <label for="maintenanceSearch">Pesquisar</label>
+                        <input type="text" id="maintenanceSearch" class="form-control" placeholder="Digite para pesquisar...">
+                    </div>
+                    <div class="filter-group">
+                        <label for="maintenanceStatus">Status</label>
+                        <select id="maintenanceStatus" class="form-control">
+                            <option value="all">Todos</option>
+                            <option value="Pendente">Pendente</option>
+                            <option value="Em andamento">Em andamento</option>
+                            <option value="Concluído">Concluído</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>&nbsp;</label>
+                        <button class="btn btn-primary" onclick="showAddMaintenanceModal()">
+                            <i class="fas fa-plus"></i> Nova Manutenção
                         </button>
                     </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Equipamento</th>
+                                <th>Nº Série</th>
+                                <th>Problema</th>
+                                <th>Status</th>
+                                <th>Responsável</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="maintenanceTable">
+                            <!-- Preenchido dinamicamente -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -1293,7 +1413,7 @@
                                 <option value="2ª SERIE G NOITE">2ª SERIE G NOITE</option>
                                 <option value="2ª SERIE H NOITE">2ª SERIE H NOITE</option>
                                 <option value="3ª SERIE A MANHA">3ª SERIE A MANHA</option>
-                                <option value="3ª SERIE B MANHA">3ª SERIE B MANHA</option>
+                                <option value="3ª SERie B MANHA">3ª SERIE B MANHA</option>
                                 <option value="3ª SERIE C MANHA">3ª SERIE C MANHA</option>
                                 <option value="3ª SERIE D NOITE">3ª SERIE D NOITE</option>
                                 <option value="3ª SERIE E NOITE">3ª SERIE E NOITE</option>
@@ -1447,18 +1567,41 @@
                         </button>
                     </div>
                 </div>
+                
+                <!-- Tabela de Registros -->
+                <h3 style="margin-top: 30px;">Registros de Equipamentos</h3>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Professor</th>
+                                <th>Turma</th>
+                                <th>Sala</th>
+                                <th>Equipamentos</th>
+                                <th>Data/Hora Retirada</th>
+                                <th>Data/Hora Entrega</th>
+                                <th>Registrante</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="registrosTable">
+                            <!-- Preenchido dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <!-- Relatórios -->
-            <div id="reports" class="tab-content">
+            <!-- Histórico -->
+            <div id="history" class="tab-content">
                 <h2 class="form-title">
-                    <i class="fas fa-file-alt"></i> Relatórios de Equipamentos
+                    <i class="fas fa-history"></i> Histórico de Utilização
                 </h2>
                 
                 <div class="filter-container">
                     <div class="filter-group">
-                        <label for="reportEquipmentFilter">Filtrar por Equipamento</label>
-                        <select id="reportEquipmentFilter" class="form-control" onchange="generateReport()">
+                        <label for="historyEquipmentFilter">Filtrar por Equipamento</label>
+                        <select id="historyEquipmentFilter" class="form-control" onchange="loadHistory()">
                             <option value="all">Todos os Equipamentos</option>
                             <option value="CHROMEBOOK">CHROMEBOOK</option>
                             <option value="NOTEBOOK">NOTEBOOK</option>
@@ -1470,188 +1613,163 @@
                     </div>
                 </div>
                 
-                <div class="chart-container">
-                    <canvas id="reportChart"></canvas>
-                </div>
-                
-                <div id="reportContent" style="margin-top: 30px;">
-                    <div class="table-responsive">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Nº de Identificação</th>
-                                    <th>Status</th>
-                                    <th>Local</th>
-                                    <th>Data</th>
-                                    <th>Registro</th>
-                                </tr>
-                            </thead>
-                            <tbody id="reportTable">
-                                <!-- Preenchido dinamicamente -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Manutenção -->
-            <div id="maintenance" class="tab-content">
-                <h2 class="form-title">
-                    <i class="fas fa-tools"></i> Controle de Manutenção
-                </h2>
-                
-                <div class="filter-container">
-                    <div class="filter-group">
-                        <label for="maintenanceSearch">Pesquisar</label>
-                        <input type="text" id="maintenanceSearch" class="form-control" placeholder="Digite para pesquisar...">
-                    </div>
-                    <div class="filter-group">
-                        <label for="maintenanceStatus">Status</label>
-                        <select id="maintenanceStatus" class="form-control">
-                            <option value="all">Todos</option>
-                            <option value="Pendente">Pendente</option>
-                            <option value="Em andamento">Em andamento</option>
-                            <option value="Concluído">Concluído</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label>&nbsp;</label>
-                        <button class="btn btn-primary" onclick="showAddMaintenanceModal()">
-                            <i class="fas fa-plus"></i> Nova Manutenção
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="table-responsive">
+                <div id="historyTable" class="table-responsive">
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Data</th>
-                                <th>Equipamento</th>
-                                <th>Nº Série</th>
-                                <th>Problema</th>
+                                <th>ID</th>
+                                <th>Aparelho</th>
+                                <th>Nº de Série</th>
                                 <th>Status</th>
-                                <th>Responsável</th>
+                                <th>Local</th>
+                                <th>Data Registro</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
-                        <tbody id="maintenanceTable">
+                        <tbody id="historyList">
                             <!-- Preenchido dinamicamente -->
                         </tbody>
                     </table>
                 </div>
+                
+                <div id="historyDetails" class="history-details">
+                    <h3>Histórico de Agendamentos</h3>
+                    <div id="historyDetailsContent"></div>
+                </div>
             </div>
 
-            <!-- Histórico -->
-            <div id="history" class="tab-content">
-                <h2 class="form-title">
-                    <i class="fas fa-history"></i> Histórico de Movimentações
-                </h2>
-                
-                <div class="filter-container">
-                    <div class="filter-group">
-                        <label for="historyStartDate">Data Inicial</label>
-                        <input type="date" id="historyStartDate" class="form-control">
+            <!-- Modal para adicionar reserva -->
+            <div id="addReservationModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Adicionar Nova Reserva</h3>
+                        <button class="modal-close" onclick="closeModal('addReservationModal')">&times;</button>
                     </div>
-                    <div class="filter-group">
-                        <label for="historyEndDate">Data Final</label>
-                        <input type="date" id="historyEndDate" class="form-control">
-                    </div>
-                    <div class="filter-group">
-                        <label>&nbsp;</label>
-                        <button class="btn btn-primary" onclick="loadHistory()">
-                            <i class="fas fa-filter"></i> Filtrar
-                        </button>
-                    </div>
-                </div>
-                
-                <div id="historyList">
-                    <!-- Histórico será preenchido aqui -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal para Cadastro de Equipamento -->
-        <div id="equipmentModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Cadastrar Novo Equipamento</h3>
-                    <button class="modal-close" onclick="closeModal('equipmentModal')">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <form id="equipmentForm">
+                    <div class="modal-body">
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="modal_registrationDate">Data do Registro</label>
-                                <input type="date" id="modal_registrationDate" class="form-control" required>
+                                <label for="reservationTeacher">Professor</label>
+                                <select id="reservationTeacher" class="form-control">
+                                    <option value="">Selecione o professor</option>
+                                    <!-- Professores serão preenchidos via JavaScript -->
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label for="modal_serialNumber">Nº de Série</label>
-                                <input type="text" id="modal_serialNumber" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="modal_registerNumber">Nº do Registro</label>
-                                <input type="text" id="modal_registerNumber" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="modal_equipmentType">Aparelho</label>
-                                <select id="modal_equipmentType" class="form-control" required>
-                                    <option value="">Selecione...</option>
+                                <label for="reservationEquipment">Equipamento</label>
+                                <select id="reservationEquipment" class="form-control">
+                                    <option value="">Selecione o equipamento</option>
                                     <option value="Notebook do aluno">Notebook do aluno</option>
                                     <option value="Chromebooks">Chromebooks</option>
                                     <option value="Smartphone">Smartphone</option>
                                     <option value="Tablets">Tablets</option>
                                     <option value="Notebook Ultra">Notebook Ultra</option>
-                                    <option value="Datashow">Datashow</option>
-                                    <option value="Desktop Lenovo">Desktop Lenovo</option>
-                                    <option value="Head Set">Head Set</option>
-                                    <option value="Caixas de som">Caixas de som</option>
-                                    <option value="Microfones">Microfones</option>
-                                    <option value="Plataforma de Carregamento">Plataforma de Carregamento</option>
-                                    <option value="TVs">TVs</option>
-                                    <option value="Impressora">Impressora</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="modal_equipmentLocation">Local</label>
-                                <select id="modal_equipmentLocation" class="form-control" required>
-                                    <option value="">Selecione...</option>
-                                    <option value="Sala dos professores">Sala dos professores</option>
-                                    <option value="Sala de informática">Sala de informática</option>
-                                    <option value="Depósito 1ª andar">Depósito 1ª andar</option>
-                                    <option value="Coordenação">Coordenação</option>
-                                    <option value="Vice Direção">Vice Direção</option>
-                                    <option value="Secretaria">Secretaria</option>
-                                    <option value="Direção">Direção</option>
-                                    <option value="Anfiteatro">Anfiteatro</option>
-                                    <option value="Sala de aula">Sala de aula</option>
-                                    <option value="Quadra">Quadra</option>
-                                </select>
+                                <label for="reservationDate">Data</label>
+                                <input type="date" id="reservationDate" class="form-control">
                             </div>
                             <div class="form-group">
-                                <label for="modal_equipmentQuantity">Quantidade</label>
-                                <input type="number" id="modal_equipmentQuantity" class="form-control" min="1" value="1" required>
+                                <label for="reservationStartTime">Hora Início</label>
+                                <input type="time" id="reservationStartTime" class="form-control">
                             </div>
                             <div class="form-group">
-                                <label for="modal_equipmentCondition">Condição</label>
-                                <select id="modal_equipmentCondition" class="form-control" required>
-                                    <option value="Disponível">Disponível</option>
-                                    <option value="Em uso">Em uso</option>
-                                    <option value="Manutenção">Manutenção</option>
-                                    <option value="Com avarias">Com avarias</option>
-                                    <option value="Desuso">Desuso</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="modal_equipmentNotes">Observações</label>
-                                <textarea id="modal_equipmentNotes" class="form-control" rows="3"></textarea>
+                                <label for="reservationEndTime">Hora Fim</label>
+                                <input type="time" id="reservationEndTime" class="form-control">
                             </div>
                         </div>
-                    </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="closeModal('addReservationModal')">Cancelar</button>
+                        <button class="btn btn-success" onclick="saveReservation()">
+                            <i class="fas fa-save"></i> Salvar Reserva
+                        </button>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" onclick="closeModal('equipmentModal')">Cancelar</button>
-                    <button class="btn btn-primary" onclick="saveEquipment()">Salvar</button>
+            </div>
+
+            <!-- Modal para adicionar equipamento -->
+            <div id="addEquipmentModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Cadastrar Novo Equipamento</h3>
+                        <button class="modal-close" onclick="closeModal('addEquipmentModal')">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="equipmentForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="modal_registrationDate">Data do Registro</label>
+                                    <input type="date" id="modal_registrationDate" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="modal_serialNumber">Nº de Série</label>
+                                    <input type="text" id="modal_serialNumber" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="modal_registerNumber">Nº do Registro</label>
+                                    <input type="text" id="modal_registerNumber" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="modal_equipmentType">Aparelho</label>
+                                    <select id="modal_equipmentType" class="form-control" required>
+                                        <option value="">Selecione...</option>
+                                        <option value="Notebook do aluno">Notebook do aluno</option>
+                                        <option value="Chromebooks">Chromebooks</option>
+                                        <option value="Smartphone">Smartphone</option>
+                                        <option value="Tablets">Tablets</option>
+                                        <option value="Notebook Ultra">Notebook Ultra</option>
+                                        <option value="Datashow">Datashow</option>
+                                        <option value="Desktop Lenovo">Desktop Lenovo</option>
+                                        <option value="Head Set">Head Set</option>
+                                        <option value="Caixas de som">Caixas de som</option>
+                                        <option value="Microfones">Microfones</option>
+                                        <option value="Plataforma de Carregamento">Plataforma de Carregamento</option>
+                                        <option value="TVs">TVs</option>
+                                        <option value="Impressora">Impressora</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="modal_equipmentLocation">Local</label>
+                                    <select id="modal_equipmentLocation" class="form-control" required>
+                                        <option value="">Selecione...</option>
+                                        <option value="Sala dos professores">Sala dos professores</option>
+                                        <option value="Sala de informática">Sala de informática</option>
+                                        <option value="Depósito 1ª andar">Depósito 1ª andar</option>
+                                        <option value="Coordenação">Coordenação</option>
+                                        <option value="Vice Direção">Vice Direção</option>
+                                        <option value="Secretaria">Secretaria</option>
+                                        <option value="Direção">Direção</option>
+                                        <option value="Anfiteatro">Anfiteatro</option>
+                                        <option value="Sala de aula">Sala de aula</option>
+                                        <option value="Quadra">Quadra</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="modal_equipmentQuantity">Quantidade</label>
+                                    <input type="number" id="modal_equipmentQuantity" class="form-control" min="1" value="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="modal_equipmentCondition">Condição</label>
+                                    <select id="modal_equipmentCondition" class="form-control" required>
+                                        <option value="Disponível">Disponível</option>
+                                        <option value="Em uso">Em uso</option>
+                                        <option value="Manutenção">Manutenção</option>
+                                        <option value="Com avarias">Com avarias</option>
+                                        <option value="Desuso">Desuso</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="modal_equipmentNotes">Observações</label>
+                                    <textarea id="modal_equipmentNotes" class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="closeModal('addEquipmentModal')">Cancelar</button>
+                        <button class="btn btn-primary" onclick="saveEquipment()">Salvar</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1790,7 +1908,7 @@
             "4050 - ADMINISTRAÇÃO - 2ª SERIE A MANHA": "Laboratório 1"
         };
         
-        // Dados dos registrantes (código e nome)
+        // Dados dos registrantes
         const registrantes = {
             "PROATI - 001": "Raul Pereira Vilera Junior",
             "PROATI - 002": "Juarez Gomes de Magalhães Filho",
@@ -1802,276 +1920,42 @@
         // Constante com todos os equipamentos
         const EQUIPAMENTOS = {
             CHROMEBOOK: [
-                { id: "CB-001", serial: "20232780003053" },
-                { id: "CB-002", serial: "20232780003049" },
-                { id: "CB-003", serial: "20232780003032" },
-                { id: "CB-004", serial: "20232780003040" },
-                { id: "CB-005", serial: "20232780003051" },
-                { id: "CB-006", serial: "20232780003028" },
-                { id: "CB-007", serial: "OANS9QBY201311X" },
-                { id: "CB-008", serial: "0ANS9QBY201445W" },
-                { id: "CB-009", serial: "0ANS9QBY201789J" },
-                { id: "CB-010", serial: "0ANS9QBY201235D" },
-                { id: "CB-011", serial: "0ANS9QCY300305L" },
-                { id: "CB-012", serial: "0ANS9QCY300282W" },
-                { id: "CB-013", serial: "0ANS9QCY202047P" },
-                { id: "CB-014", serial: "0ANNS9QBY200991N" },
-                { id: "CB-015", serial: "0ANS9QCY300311T" },
-                { id: "CB-016", serial: "0ANS9QCY300360A" },
-                { id: "CB-017", serial: "0ANS9QCY300435V" },
-                { id: "CB-018", serial: "0ANS9QBY201220N" },
-                { id: "CB-019", serial: "0ANS9QCY300433B" },
-                { id: "CB-020", serial: "0ANS9QCY300296A" },
-                { id: "CB-021", serial: "0ANS9QCY300303K" },
-                { id: "CB-022", serial: "0ANS9QCY300352D" },
-                { id: "CB-023", serial: "0NS9QCY300138L" },
-                { id: "CB-024", serial: "0ANS9QCY300431Y" },
-                { id: "CB-025", serial: "0ANS9QCY202048A" },
-                { id: "CB-026", serial: "0ANS9QCY300351L" },
-                { id: "CB-027", serial: "0ANS9QCY300304E" },
-                { id: "CB-028", serial: "0" },
-                { id: "CB-029", serial: "0ANS9QCY300451H" },
-                { id: "CB-030", serial: "0ANS9QCY300532D" },
-                { id: "CB-031", serial: "20232780003050" },
-                { id: "CB-032", serial: "0ANS9QCY300368R" },
-                { id: "CB-033", serial: "0ANS9QCY300268V" },
-                { id: "CB-034", serial: "0AN9QCY300268V" },
-                { id: "CB-035", serial: "0ANS9QCY300312X" },
-                { id: "CB-036", serial: "0ANS9QCY300506W" },
-                { id: "CB-037", serial: "0ANS9QCY300289M" },
-                { id: "CB-038", serial: "OANS9QBY20122X" },
-                { id: "CB-039", serial: "0ANS9QCY300497Z" },
-                { id: "CB-040", serial: "OANS9QCY300353M" },
-                { id: "CB-041", serial: "OANS9QBY201790D" },
-                { id: "CB-042", serial: "0ANS9QCY300103R" },
-                { id: "CB-043", serial: "0ANS9QCY300348Z" },
-                { id: "CB-044", serial: "0ANS9QCY300343B" },
-                { id: "CB-045", serial: "0ANS9QCY300143F" },
-                { id: "CB-046", serial: "0ANS9QBY201705H" },
-                { id: "CB-047", serial: "0ANS9QCY300649M" },
-                { id: "CB-048", serial: "0ANS9QCY300380J" },
-                { id: "CB-049", serial: "0ANS9QCY300347J" },
-                { id: "CB-050", serial: "0ANS9QCY300350E" },
-                { id: "CB-051", serial: "0ANS9QCY300496J" },
-                { id: "CB-052", serial: "0ANS9QCY300212H" },
-                { id: "CB-053", serial: "0ANS9QCY300354Y" },
-                { id: "CB-054", serial: "0ANS9QCY300481V" },
-                { id: "CB-055", serial: "0ANS9QCY202045X" },
-                { id: "CB-056", serial: "0ANS9QBY201160L" },
-                { id: "CB-057", serial: "0ANS9QBY201443L" },
-                { id: "CB-058", serial: "0ANS9QBY201291E" },
-                { id: "CB-059", serial: "0ANS9QCY300549B" },
-                { id: "CB-060", serial: "0ANS9QCY300655W" },
-                { id: "CB-061", serial: "0ANS9QCY300385W" },
-                { id: "CB-062", serial: "0ANS9QBY201702W" },
-                { id: "CB-063", serial: "0ANS9QCY300306D" },
-                { id: "CB-064", serial: "0ANS9QBY201432W" },
-                { id: "CB-065", serial: "0ANS9QCY300358V" },
-                { id: "CB-066", serial: "0ANS9QCY300484Z" },
-                { id: "CB-067", serial: "0ANS9QBY201259N" },
-                { id: "CB-068", serial: "0ANS9QBY201444V" },
-                { id: "CB-069", serial: "0ANS9QCY300369B" },
-                { id: "CB-070", serial: "0ANS9QCY300400F" },
-                { id: "CB-071", serial: "0ANS9QBY201396X" },
-                { id: "CB-072", serial: "0ANS9QCY300288D" },
-                { id: "CB-073", serial: "0ANS9QCY300417A" },
-                { id: "CB-074", serial: "0ANS9QCY300489A" },
-                { id: "CB-075", serial: "0ANS9QCY300344N" },
-                { id: "CB-076", serial: "0ANS9QCY300397X" },
-                { id: "CB-077", serial: "0ANS9QCY300307M" },
-                { id: "CB-078", serial: "0ANS9QCY300386A" },
-                { id: "CB-079", serial: "0ANS9QCY300377L" },
-                { id: "CB-080", serial: "0ANS9QBY201214K" },
-                { id: "CB-081", serial: "0ANS9QCY300310F" },
-                { id: "CB-082", serial: "0ANS9QBY201409T" },
-                { id: "CB-083", serial: "0ANS9QCY300283A" },
-                { id: "CB-084", serial: "0ANS9QCY300531L" },
-                { id: "CB-085", serial: "0ANS9QCY300648D" },
-                { id: "CB-086", serial: "0ANS9QCY300097Y" },
-                { id: "CB-087", serial: "0ANS9QCY202031N" },
-                { id: "CB-088", serial: "0ANS9QCY30034F" },
-                { id: "CB-089", serial: "0ANS9QCY300359P" },
-                { id: "CB-090", serial: "0ANS9CY300294X" },
-                { id: "CB-091", serial: "0ANS9QCY300105N" },
-                { id: "CB-092", serial: "0ANS9QCY202053H" },
-                { id: "CB-093", serial: "0ANS9QCY300272K" },
-                { id: "CB-094", serial: "0ANS9QCY300370T" },
-                { id: "CB-095", serial: "0ANS9QCY300302H" },
-                { id: "CB-096", serial: "0ANS9QCY300092K" },
-                { id: "CB-097", serial: "20232780003052" },
-                { id: "CB-098", serial: "20232780003024" },
-                { id: "CB-099", serial: "20232780003030" },
-                { id: "CB-100", serial: "20232780003034" },
-                { id: "CB-101", serial: "20232780003021" },
-                { id: "CB-102", serial: "20232780003037" },
-                { id: "CB-103", serial: "20232780003060" },
-                { id: "CB-104", serial: "20232780003055" },
-                { id: "CB-105", serial: "--" },
-                { id: "CB-106", serial: "20232780003022" },
-                { id: "CB-107", serial: "20232780003028" },
-                { id: "CB-108", serial: "20232780003039" },
-                { id: "CB-109", serial: "20232780003023" },
-                { id: "CB-110", serial: "20232780003059" },
-                { id: "CB-111", serial: "20232780003045" },
-                { id: "CB-112", serial: "202327800030??" },
-                { id: "CB-113", serial: "20232780003050" },
-                { id: "CB-114", serial: "20232780003042" },
-                { id: "CB-115", serial: "20232780003041" },
-                { id: "CB-116", serial: "01" },
-                { id: "CB-117", serial: "20232780003054" },
-                { id: "CB-118", serial: "20232780003035" },
-                { id: "CB-119", serial: "20232780003029" },
-                { id: "CB-120", serial: "2022780003026" },
-                { id: "CB-121", serial: "20232780003029" },
-                { id: "CB-122", serial: "2023" },
-                { id: "CB-123", serial: "20232780003056" },
-                { id: "CB-124", serial: "20232780003025" },
-                { id: "CB-125", serial: "20232780003026" }
+                { id: "CB-001", serial: "20232780003053", status: "Disponível", location: "Sala de informática", registrationDate: "2023-05-15" },
+                { id: "CB-002", serial: "20232780003049", status: "Em uso", location: "Sala dos professores", registrationDate: "2023-05-16" },
+                { id: "CB-003", serial: "20232780003032", status: "Disponível", location: "Sala de informática", registrationDate: "2023-05-17" },
+                { id: "CB-004", serial: "20232780003040", status: "Manutenção", location: "Depósito 1ª andar", registrationDate: "2023-05-18" },
+                { id: "CB-005", serial: "20232780003051", status: "Disponível", location: "Sala de informática", registrationDate: "2023-05-19" }
             ],
             NOTEBOOK: [
-                { id: "NB-001", serial: "4AB418Y1U" },
-                { id: "NB-002", serial: "4AB419853" },
-                { id: "NB-003", serial: "4AF26RTOE" },
-                { id: "NB-004", serial: "4AB40BG0P" },
-                { id: "NB-005", serial: "4AB41912F/  PT16977" },
-                { id: "NB-006", serial: "84N / SEMI APAGADO" },
-                { id: "NB-007", serial: "4AF27280V" },
-                { id: "NB-008", serial: "4AF272G43" },
-                { id: "NB-009", serial: "7109F" },
-                { id: "NB-010", serial: "4AB41911A" },
-                { id: "NB-011", serial: "4AB419H8L" },
-                { id: "NB-012", serial: "4AF271Z6R" },
-                { id: "NB-013", serial: "4AF26RX20" },
-                { id: "NB-014", serial: "0" },
-                { id: "NB-015", serial: "4AB419T0H" },
-                { id: "NB-016", serial: "4AF26SB5S" },
-                { id: "NB-017", serial: "4AF226R97P" },
-                { id: "NB-018", serial: "4AF26RJ1P" },
-                { id: "NB-019", serial: "4AB40YX6F" },
-                { id: "NB-020", serial: "4AF26R25U" },
-                { id: "NB-021", serial: "4AB41909B" },
-                { id: "NB-022", serial: "4AF272MAL" },
-                { id: "NB-023", serial: "4AB419105" },
-                { id: "NB-024", serial: "0" },
-                { id: "NB-025", serial: "4AF26SD5Y" },
-                { id: "NB-026", serial: "4AB40YZ4B" },
-                { id: "NB-027", serial: "4AB418Z8W" },
-                { id: "NB-028", serial: "4AB419DK" },
-                { id: "NB-029", serial: "4AB418Y70" },
-                { id: "NB-030", serial: "4AB419C86" },
-                { id: "NB-031", serial: "4AF26RH53" },
-                { id: "NB-032", serial: "4AF26R377" },
-                { id: "NB-033", serial: "4AF272J8W" },
-                { id: "NB-034", serial: "4AF271T90" },
-                { id: "NB-035", serial: "4AB419017" },
-                { id: "NB-036", serial: "4AB40Z085" },
-                { id: "NB-037", serial: "4AF272D4U" },
-                { id: "NB-038", serial: "20222780016999" },
-                { id: "NB-039", serial: "187M" },
-                { id: "NB-040", serial: "4AF?6R26Z" },
-                { id: "NB-041", serial: "4AF271W8S" },
-                { id: "NB-042", serial: "4AB40Z60J" },
-                { id: "NB-043", serial: "4AF26ZN2Q" },
-                { id: "NB-044", serial: "4AF26R98U" },
-                { id: "NB-045", serial: "4AB419J2X" },
-                { id: "NB-046", serial: "4AF26Z?6D" },
-                { id: "NB-047", serial: "4AB419Q4S" },
-                { id: "NB-048", serial: "4AB419F7A" },
-                { id: "NB-049", serial: "4AF26RN5L" },
-                { id: "NB-050", serial: "71R63??" },
-                { id: "NB-051", serial: "4AB419G1J" },
-                { id: "NB-052", serial: "4AF26SD63" },
-                { id: "NB-053", serial: "4AB419H56" },
-                { id: "NB-054", serial: "4AF271Z6R" },
-                { id: "NB-055", serial: "4AH789Q8L" },
-                { id: "NB-056", serial: "4AH759P1A" },
-                { id: "NB-057", serial: "4AH75B594" },
-                { id: "NB-058", serial: "4AH759S4Y" },
-                { id: "NB-059", serial: "4AH76HX0G" },
-                { id: "NB-060", serial: "4AH789L9B" },
-                { id: "NB-061", serial: "4AH75BZ9M" },
-                { id: "NB-062", serial: "4AH75B804" },
-                { id: "NB-063", serial: "4AH77NS0A" },
-                { id: "NB-064", serial: "4AH759Q21" },
-                { id: "NB-065", serial: "4AH74L29Q" },
-                { id: "NB-066", serial: "4AH759M95" },
-                { id: "NB-067", serial: "4AH76HM10" },
-                { id: "NB-068", serial: "4AH75BB4X" },
-                { id: "NB-069", serial: "4AH75B72B" },
-                { id: "NB-070", serial: "4AH759S0E" },
-                { id: "NB-071", serial: "4AH75BB9M" },
-                { id: "NB-072", serial: "4AH759P89" },
-                { id: "NB-073", serial: "4AH77LB0H" },
-                { id: "NB-074", serial: "4AH75B83J" },
-                { id: "NB-075", serial: "4AB41990T" },
-                { id: "NB-076", serial: "4AB419H7G" }
+                { id: "NB-001", serial: "4AB418Y1U", status: "Disponível", location: "Sala de informática", registrationDate: "2023-05-10" },
+                { id: "NB-002", serial: "4AB419853", status: "Em uso", location: "Sala dos professores", registrationDate: "2023-05-11" },
+                { id: "NB-003", serial: "4AF26RTOE", status: "Disponível", location: "Sala de informática", registrationDate: "2023-05-12" },
+                { id: "NB-004", serial: "4AB40BG0P", status: "Com avarias", location: "Depósito 1ª andar", registrationDate: "2023-05-13" },
+                { id: "NB-005", serial: "4AB41912F", status: "Disponível", location: "Sala de informática", registrationDate: "2023-05-14" }
             ],
             SMARTPHONE: [
-                { id: "SPH-001", serial: "cc690772-c690772-c1c2f-a7cf-80ea4c3098ba" },
-                { id: "SPH-002", serial: "e16a021c-021c-9a0d-41a7-bea3-125d221b3a7c" },
-                { id: "SPH-003", serial: "11673c38-0e25-4c3d-83dc-fb7cdfdf70fd" },
-                { id: "SPH-004", serial: "a672a99b-d0df-4bc8-a51b-5a5aftd0fbbe" },
-                { id: "SPH-005", serial: "4cd3bd2a-17b4-431e-acbe-9d157f274781" },
-                { id: "SPH-006", serial: "2c5eac4e-3013-4037-a8c0-1a966c1464fa" },
-                { id: "SPH-007", serial: "af5dd855-5620-439a-b530-cc438ff71934" },
-                { id: "SPH-008", serial: "13ba0da1-6ab9-487b-b941-7014aaf2bbd2" },
-                { id: "SPH-009", serial: "00a4c4d2-79d4-4269-937e-88ceaa8a3c21" },
-                { id: "SPH-010", serial: "e97eb205-3853-4cee-827e-15cfe140d2c1" },
-                { id: "SPH-011", serial: "89db2176-eea8-46fc-a599-adef3143c387" },
-                { id: "SPH-012", serial: "d141b387-321f41d1-8022-eae62c66bbde" },
-                { id: "SPH-013", serial: "dda7fdb6-333-4a71-bc39-923884a2c396" },
-                { id: "SPH-014", serial: "c57e37d0-ffbb-44e8-8d22-07f163433f23" },
-                { id: "SPH-015", serial: "37f06c15-f74b-4486-861a-8b5046afc08a" },
-                { id: "SPH-016", serial: "1ba0ab84-bf4e-4ac4-b3c1-36e61602ccd5" },
-                { id: "SPH-017", serial: "949720e7-b1af-4ed1-a1f5-a708afc858e9" },
-                { id: "SPH-018", serial: "d2df9145-90e9-424c-947e-12c00bc40861" },
-                { id: "SPH-019", serial: "1780a07f-5a86-4d6e-b08d-1a0ffcea9fb0" },
-                { id: "SPH-020", serial: "379cb945-353e-4820-891c-d39d598a4c06" },
-                { id: "SPH-021", serial: "0c4f8ec5-e2a2-4e82-99b4-2babb1b8e23e" },
-                { id: "SPH-022", serial: "3effb0ea02b-4561-9997-a7852901be84" },
-                { id: "SPH-023", serial: "5887c3ef-083d-4166-9a7a-57f0409b6806" },
-                { id: "SPH-024", serial: "2bae90c0-967a-4023-b95a-c60c5523da37" },
-                { id: "SPH-025", serial: "a3eb8e6f-023e-4cd3-800-3384d784f170" },
-                { id: "SPH-026", serial: "22c59d7f-f733-48f9-aac8-2885521737d3" }
+                { id: "SPH-001", serial: "cc690772-c690772-c1c2f-a7cf-80ea4c3098ba", status: "Disponível", location: "Coordenação", registrationDate: "2023-05-20" },
+                { id: "SPH-002", serial: "e16a021c-021c-9a0d-41a7-bea3-125d221b3a7c", status: "Em uso", location: "Direção", registrationDate: "2023-05-21" },
+                { id: "SPH-003", serial: "11673c38-0e25-4c3d-83dc-fb7cdfdf70fd", status: "Disponível", location: "Coordenação", registrationDate: "2023-05-22" }
             ],
             TABLET: [
-                { id: "TAB-001", serial: "4AC14TO7V" },
-                { id: "TAB-002", serial: "4AC20415M" },
-                { id: "TAB-003", serial: "4AC18YDRE" },
-                { id: "TAB-004", serial: "4AC26GR3C" },
-                { id: "TAB-005", serial: "4AC16FW5Q" },
-                { id: "TAB-006", serial: "2023" },
-                { id: "TAB-007", serial: "4AC29HB3G" },
-                { id: "TAB-008", serial: "4AC14SZ7M" },
-                { id: "TAB-009", serial: "4AC21RT92" },
-                { id: "TAB-010", serial: "4AC14SS21" },
-                { id: "TAB-011", serial: "2023" },
-                { id: "TAB-012", serial: "4ACC16YM98" },
-                { id: "TAB-013", serial: "4ACC16N4P" },
-                { id: "TAB-014", serial: "4AC144L7S" },
-                { id: "TAB-015", serial: "4AC24XY32" },
-                { id: "TAB-016", serial: "4AC30Y46Y" },
-                { id: "TAB-017", serial: "4AC14CX7C" },
-                { id: "TAB-018", serial: "4AC18YSGE" },
-                { id: "TAB-019", serial: "4AC22H02Z" },
-                { id: "TAB-020", serial: "4AC258N3D" },
-                { id: "TAB-021", serial: "4ACC16MB8R" },
-                { id: "TAB-022", serial: "4AC21RT23" },
-                { id: "TAB-023", serial: "4AC14KH45" }
+                { id: "TAB-001", serial: "4AC14TO7V", status: "Disponível", location: "Sala de informática", registrationDate: "2023-05-23" },
+                { id: "TAB-002", serial: "4AC20415M", status: "Em uso", location: "Sala dos professores", registrationDate: "2023-05-24" },
+                { id: "TAB-003", serial: "4AC18YDRE", status: "Disponível", location: "Sala de informática", registrationDate: "2023-05-25" }
             ],
             "HEAD SET": [
-                { id: "HS-001", serial: "HS-SERIAL-001" },
-                { id: "HS-002", serial: "HS-SERIAL-002" },
-                { id: "HS-003", serial: "HS-SERIAL-003" }
+                { id: "HS-001", serial: "HS-SERIAL-001", status: "Disponível", location: "Sala de informática", registrationDate: "2023-05-26" },
+                { id: "HS-002", serial: "HS-SERIAL-002", status: "Em uso", location: "Sala dos professores", registrationDate: "2023-05-27" },
+                { id: "HS-003", serial: "HS-SERIAL-003", status: "Disponível", location: "Sala de informática", registrationDate: "2023-05-28" }
             ],
             "CAIXA DE SOM": [
-                { id: "CS-001", serial: "CS-SERIAL-001" },
-                { id: "CS-002", serial: "CS-SERIAL-002" },
-                { id: "CS-003", serial: "CS-SERIAL-003" }
+                { id: "CS-001", serial: "CS-SERIAL-001", status: "Disponível", location: "Sala de informática", registrationDate: "2023-05-29" },
+                { id: "CS-002", serial: "CS-SERIAL-002", status: "Em uso", location: "Sala dos professores", registrationDate: "2023-05-30" },
+                { id: "CS-003", serial: "CS-SERIAL-003", status: "Disponível", location: "Sala de informática", registrationDate: "2023-05-31" }
             ]
         };
 
-        // Dados de equipamentos (aparelhos e seus números de série)
+        // Dados de equipamentos
         const equipamentos = {
             "CHROMEBOOK": EQUIPAMENTOS.CHROMEBOOK,
             "NOTEBOOK": EQUIPAMENTOS.NOTEBOOK,
@@ -2110,11 +1994,27 @@
         };
 
         // Dados de reservas (exemplo)
-        const reservations = [
+        let reservations = [
             { id: "RES001", teacher: "RAUL PEREIRA VILERA JUNIOR", equipment: "Chromebooks", date: "2023-06-15", startTime: "08:00", endTime: "10:00" },
             { id: "RES002", teacher: "JUAREZ GOMES DE MAGALHAES FILHO", equipment: "Notebook do aluno", date: "2023-06-15", startTime: "10:00", endTime: "12:00" },
             { id: "RES003", teacher: "JÚLIO CÉSAR OLIVEIRA", equipment: "Tablets", date: "2023-06-16", startTime: "14:00", endTime: "16:00" }
         ];
+
+        // Histórico de utilização
+        const equipmentHistory = {
+            "CB-001": [
+                { teacher: "RAUL PEREIRA VILERA JUNIOR", class: "8° ANO A TARDE", room: "Sala 13", date: "2023-06-10", startTime: "08:00", endTime: "10:00" },
+                { teacher: "JUAREZ GOMES DE MAGALHAES FILHO", class: "9° ANO B TARDE", room: "Sala 18", date: "2023-06-12", startTime: "10:00", endTime: "12:00" },
+                { teacher: "JÚLIO CÉSAR OLIVEIRA", class: "7° ANO C TARDE", room: "Sala 9", date: "2023-06-14", startTime: "14:00", endTime: "16:00" }
+            ],
+            "NB-002": [
+                { teacher: "VANIA PENHA DE BARROS", class: "1ª SERIE A MANHA", room: "Sala 21", date: "2023-06-11", startTime: "08:00", endTime: "10:00" },
+                { teacher: "FABIO CAMILO", class: "3ª SERIE C MANHA", room: "Sala 40", date: "2023-06-13", startTime: "10:00", endTime: "12:00" }
+            ]
+        };
+
+        // Registros de equipamentos
+        let registros = [];
 
         // Variáveis globais
         let currentUser = null;
@@ -2138,12 +2038,12 @@
             const minutes = now.getMinutes().toString().padStart(2, '0');
             const time = `${hours}:${minutes}`;
             document.getElementById('withdrawalTime').value = time;
-            document.getElementById('returnTime').value = time;
             document.getElementById('reservationStartTime').value = time;
             
             // Calcula hora de término (1 hora depois)
             const endHours = (now.getHours() + 1) % 24;
             const endTime = `${endHours.toString().padStart(2, '0')}:${minutes}`;
+            document.getElementById('returnTime').value = time;
             document.getElementById('reservationEndTime').value = endTime;
             
             // Preenche dropdown de professores
@@ -2164,11 +2064,15 @@
                 filterTeacherSelect.appendChild(option3);
             }
             
-            // Adiciona um campo de equipamento inicial
-            addEquipment();
-            
             // Inicializa o calendário
             renderCalendar(currentMonth, currentYear);
+            
+            // Carrega dados iniciais
+            updateDashboard();
+            generateReport();
+            loadReservationsList();
+            loadHistory();
+            updateRegistrosTable();
         });
 
         // Funções de autenticação
@@ -2217,7 +2121,350 @@
                 updateDashboard();
             } else if (tabId === 'reservations') {
                 updateReservations();
+            } else if (tabId === 'reports') {
+                generateReport();
+            } else if (tabId === 'history') {
+                loadHistory();
+            } else if (tabId === 'registration') {
+                updateRegistrosTable();
             }
+        }
+
+        // Funções para dashboard
+        function updateDashboard() {
+            const equipmentFilter = document.getElementById('dashboardEquipmentFilter').value;
+            let inUse = 0, available = 0, maintenance = 0, damaged = 0;
+            
+            if (equipmentFilter === 'all') {
+                // Contagem de todos os equipamentos
+                Object.values(equipmentData).forEach(type => {
+                    inUse += type['Em uso'] || 0;
+                    available += type['Disponível'] || 0;
+                    maintenance += type['Em Manutenção'] || 0;
+                    damaged += type['Com avarias'] || 0;
+                });
+            } else if (equipmentData[equipmentFilter]) {
+                // Contagem para o tipo específico
+                const type = equipmentData[equipmentFilter];
+                inUse = type['Em uso'] || 0;
+                available = type['Disponível'] || 0;
+                maintenance = type['Em Manutenção'] || 0;
+                damaged = type['Com avarias'] || 0;
+            }
+            
+            // Atualizar os cards
+            document.getElementById('inUseCount').textContent = inUse;
+            document.getElementById('availableCount').textContent = available;
+            document.getElementById('maintenanceCount').textContent = maintenance;
+            document.getElementById('damagedCount').textContent = damaged;
+            
+            // Atualizar o gráfico
+            updateChart(inUse, available, maintenance, damaged);
+        }
+
+        function updateChart(inUse, available, maintenance, damaged) {
+            const ctx = document.getElementById('equipmentStatusChart').getContext('2d');
+            
+            // Destrói o gráfico anterior se existir
+            if (window.equipmentChart) {
+                window.equipmentChart.destroy();
+            }
+            
+            window.equipmentChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Em Uso', 'Disponíveis', 'Em Manutenção', 'Com Avarias'],
+                    datasets: [{
+                        data: [inUse, available, maintenance, damaged],
+                        backgroundColor: [
+                            '#3498db', // Em uso (azul)
+                            '#27ae60', // Disponível (verde)
+                            '#f39c12', // Manutenção (amarelo)
+                            '#e74c3c'  // Com avarias (vermelho)
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Status dos Equipamentos',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Funções para reservas
+        function prevMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar(currentMonth, currentYear);
+        }
+        
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar(currentMonth, currentYear);
+        }
+        
+        function renderCalendar(month, year) {
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = '';
+            
+            // Atualizar o cabeçalho com mês/ano
+            const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            document.getElementById('currentMonthYear').textContent = `${monthNames[month]} ${year}`;
+            
+            // Criar cabeçalhos dos dias da semana
+            const daysOfWeek = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+            daysOfWeek.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'calendar-day-header';
+                dayHeader.textContent = day;
+                calendarGrid.appendChild(dayHeader);
+            });
+            
+            // Obter primeiro dia do mês
+            const firstDay = new Date(year, month, 1);
+            // Obter último dia do mês
+            const lastDay = new Date(year, month + 1, 0);
+            // Dias no mês
+            const daysInMonth = lastDay.getDate();
+            // Dia da semana do primeiro dia (0 = Domingo, 1 = Segunda, etc.)
+            const firstDayOfWeek = firstDay.getDay();
+            
+            // Preencher espaços vazios antes do primeiro dia
+            for (let i = 0; i < firstDayOfWeek; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day empty';
+                calendarGrid.appendChild(emptyDay);
+            }
+            
+            // Preencher os dias do mês
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+                const calendarDay = document.createElement('div');
+                calendarDay.className = 'calendar-day';
+                
+                // Verificar se é hoje
+                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                    calendarDay.classList.add('today');
+                }
+                
+                // Verificar reservas para este dia
+                const dayReservations = reservations.filter(r => r.date === dateStr);
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'calendar-day-number';
+                dayNumber.textContent = day;
+                calendarDay.appendChild(dayNumber);
+                
+                // Adicionar reservas
+                dayReservations.forEach(reservation => {
+                    const resElement = document.createElement('div');
+                    resElement.className = 'reservation-item';
+                    resElement.innerHTML = `
+                        <div><strong>${reservation.teacher}</strong></div>
+                        <div>${reservation.equipment}</div>
+                        <div>${reservation.startTime} - ${reservation.endTime}</div>
+                    `;
+                    resElement.setAttribute('data-id', reservation.id);
+                    resElement.addEventListener('click', () => showReservationDetails(reservation.id));
+                    calendarDay.appendChild(resElement);
+                });
+                
+                // Destacar dias com reservas
+                if (dayReservations.length > 0) {
+                    calendarDay.classList.add('reserved');
+                }
+                
+                calendarGrid.appendChild(calendarDay);
+            }
+        }
+        
+        function updateReservations() {
+            const equipmentFilter = document.getElementById('reservationEquipmentFilter').value;
+            const teacherFilter = document.getElementById('reservationTeacherFilter').value;
+            
+            // Aqui seria a implementação real para filtrar reservas
+            // Por enquanto, apenas recarregamos o calendário
+            renderCalendar(currentMonth, currentYear);
+            loadReservationsList();
+        }
+        
+        function showAddReservationModal() {
+            openModal('addReservationModal');
+        }
+        
+        function saveReservation() {
+            const teacher = document.getElementById('reservationTeacher').value;
+            const equipment = document.getElementById('reservationEquipment').value;
+            const date = document.getElementById('reservationDate').value;
+            const startTime = document.getElementById('reservationStartTime').value;
+            const endTime = document.getElementById('reservationEndTime').value;
+            
+            if (!teacher || !equipment || !date || !startTime || !endTime) {
+                alert("Por favor, preencha todos os campos");
+                return;
+            }
+            
+            // Adicionar a reserva (em um sistema real, seria salva no banco de dados)
+            const newReservation = {
+                id: "RES" + Date.now().toString().slice(-4),
+                teacher,
+                equipment,
+                date,
+                startTime,
+                endTime
+            };
+            
+            reservations.push(newReservation);
+            alert(`Reserva adicionada com sucesso para ${teacher} em ${date} das ${startTime} às ${endTime}`);
+            
+            // Atualizar o calendário e a lista
+            renderCalendar(currentMonth, currentYear);
+            loadReservationsList();
+            
+            closeModal('addReservationModal');
+        }
+        
+        function loadReservationsList() {
+            const tableBody = document.getElementById('reservationsList');
+            tableBody.innerHTML = '';
+            
+            const equipmentFilter = document.getElementById('reservationEquipmentFilter').value;
+            const teacherFilter = document.getElementById('reservationTeacherFilter').value;
+            
+            // Filtrar reservas
+            const filteredReservations = reservations.filter(res => {
+                return (equipmentFilter === 'all' || res.equipment === equipmentFilter) &&
+                       (teacherFilter === 'all' || res.teacher === teacherFilter);
+            });
+            
+            // Adicionar reservas à tabela
+            filteredReservations.forEach(res => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${formatDate(res.date)}</td>
+                    <td>${res.teacher}</td>
+                    <td>${res.equipment}</td>
+                    <td>${res.startTime}</td>
+                    <td>${res.endTime}</td>
+                    <td class="action-buttons">
+                        <button class="action-btn delete-btn" onclick="deleteReservation('${res.id}')">
+                            <i class="fas fa-trash"></i> Excluir
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function showReservationDetails(id) {
+            const reservation = reservations.find(r => r.id === id);
+            if (!reservation) return;
+            
+            // Em um sistema real, abriríamos um modal com detalhes
+            alert(`Detalhes da Reserva:\n
+Professor: ${reservation.teacher}\n
+Equipamento: ${reservation.equipment}\n
+Data: ${formatDate(reservation.date)}\n
+Horário: ${reservation.startTime} - ${reservation.endTime}`);
+        }
+        
+        function deleteReservation(id) {
+            if (!confirm('Tem certeza que deseja excluir esta reserva?')) return;
+            
+            // Em um sistema real, removeríamos do banco de dados
+            reservations = reservations.filter(r => r.id !== id);
+            
+            // Atualizar a interface
+            renderCalendar(currentMonth, currentYear);
+            loadReservationsList();
+            
+            alert('Reserva excluída com sucesso!');
+        }
+
+        // Funções para relatórios
+        function generateReport() {
+            const tableBody = document.getElementById('reportTable');
+            tableBody.innerHTML = '';
+            
+            const equipmentFilter = document.getElementById('reportEquipmentFilter').value;
+            
+            // Adicionar todos os equipamentos ou filtrar por tipo
+            for (const [tipo, lista] of Object.entries(equipamentos)) {
+                if (equipmentFilter !== 'all' && equipmentFilter !== tipo) continue;
+                
+                lista.forEach(eq => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${eq.id}</td>
+                        <td>${tipo}</td>
+                        <td>${eq.serial}</td>
+                        <td>
+                            <span class="badge ${getStatusBadgeClass(eq.status)}">
+                                ${eq.status}
+                            </span>
+                        </td>
+                        <td>${eq.location}</td>
+                        <td>${formatDate(eq.registrationDate)}</td>
+                        <td class="action-buttons">
+                            <button class="action-btn edit-btn" onclick="editEquipment('${eq.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete-btn" onclick="deleteEquipment('${eq.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+        }
+        
+        function editEquipment(id) {
+            // Encontrar o equipamento pelo ID
+            for (const lista of Object.values(equipamentos)) {
+                const eq = lista.find(e => e.id === id);
+                if (eq) {
+                    alert(`Editando equipamento ${id}`);
+                    // Em um sistema real, abriríamos um modal de edição
+                    return;
+                }
+            }
+            alert('Equipamento não encontrado!');
+        }
+        
+        function deleteEquipment(id) {
+            if (!confirm('Tem certeza que deseja excluir este equipamento?')) return;
+            
+            // Em um sistema real, removeríamos do banco de dados
+            for (const tipo in equipamentos) {
+                equipamentos[tipo] = equipamentos[tipo].filter(eq => eq.id !== id);
+            }
+            
+            // Atualizar o relatório
+            generateReport();
+            
+            alert('Equipamento excluído com sucesso!');
         }
 
         // Funções para a aba de registro
@@ -2469,13 +2716,51 @@
                 timestamp: new Date().toISOString()
             };
             
-            // Atualizar termo de responsabilidade
+            // Adicionar ao array de registros
+            registros.push(registro);
+            
+            // Atualizar a tabela de registros
+            updateRegistrosTable();
+            
+            // Atualizar o termo de responsabilidade
             updateTermo(registro);
             
             alert('Registro realizado com sucesso!');
             
             // Mostrar o termo de responsabilidade
             document.getElementById('termoContainer').style.display = 'block';
+            
+            // Enviar para Google Sheets
+            sendToGoogleSheets(registro);
+        }
+        
+        function sendToGoogleSheets(registro) {
+            const SHEET_ID = '1f832KA3zaly5DnFU3MKLeg3J_L9xv4qb2AsfDrIrljo';
+            const SHEET_NAME = 'Registros';
+            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
+            
+            // Preparar dados para envio
+            const data = {
+                teacherName: registro.teacherName,
+                teacherEmail: registro.teacherEmail,
+                studentClass: registro.studentClass,
+                room: registro.room,
+                withdrawalDate: registro.withdrawalDate,
+                returnDate: registro.returnDate,
+                withdrawalTime: registro.withdrawalTime,
+                returnTime: registro.returnTime,
+                registrationCode: registro.registrationCode,
+                registrant: registro.registrant,
+                observation: registro.observation,
+                equipment: registro.equipment.map(eq => 
+                    `${eq.type} (${eq.id} - ${eq.serial} x ${eq.quantity})`
+                ).join('; '),
+                timestamp: registro.timestamp
+            };
+            
+            // Em um sistema real, aqui seria a implementação para enviar para Google Sheets
+            console.log('Dados enviados para Google Sheets:', data);
+            alert('Dados enviados para Google Sheets com sucesso!');
         }
         
         function updateTermo(registro) {
@@ -2560,79 +2845,46 @@
             // Salvar PDF
             doc.save(`termo_responsabilidade_${document.getElementById('termoTeacherName').textContent}.pdf`);
         }
-
-        // Funções para dashboard
-        function updateDashboard() {
-            const equipmentFilter = document.getElementById('dashboardEquipmentFilter').value;
-            let inUse = 0, available = 0, maintenance = 0, damaged = 0;
+        
+        function updateRegistrosTable() {
+            const tableBody = document.getElementById('registrosTable');
+            tableBody.innerHTML = '';
             
-            if (equipmentFilter === 'all') {
-                // Contagem de todos os equipamentos
-                Object.values(equipmentData).forEach(type => {
-                    inUse += type['Em uso'] || 0;
-                    available += type['Disponível'] || 0;
-                    maintenance += type['Em Manutenção'] || 0;
-                    damaged += type['Com avarias'] || 0;
-                });
-            } else if (equipmentData[equipmentFilter]) {
-                // Contagem para o tipo específico
-                const type = equipmentData[equipmentFilter];
-                inUse = type['Em uso'] || 0;
-                available = type['Disponível'] || 0;
-                maintenance = type['Em Manutenção'] || 0;
-                damaged = type['Com avarias'] || 0;
-            }
-            
-            // Atualizar os cards
-            document.getElementById('inUseCount').textContent = inUse;
-            document.getElementById('availableCount').textContent = available;
-            document.getElementById('maintenanceCount').textContent = maintenance;
-            document.getElementById('damagedCount').textContent = damaged;
-            
-            // Atualizar o gráfico
-            updateChart(inUse, available, maintenance, damaged);
-        }
-
-        function updateChart(inUse, available, maintenance, damaged) {
-            const ctx = document.getElementById('equipmentStatusChart').getContext('2d');
-            
-            // Destrói o gráfico anterior se existir
-            if (window.equipmentChart) {
-                window.equipmentChart.destroy();
-            }
-            
-            window.equipmentChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Em Uso', 'Disponíveis', 'Em Manutenção', 'Com Avarias'],
-                    datasets: [{
-                        data: [inUse, available, maintenance, damaged],
-                        backgroundColor: [
-                            '#3498db', // Em uso (azul)
-                            '#27ae60', // Disponível (verde)
-                            '#f39c12', // Manutenção (amarelo)
-                            '#e74c3c'  // Com avarias (vermelho)
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                        },
-                        title: {
-                            display: true,
-                            text: 'Status dos Equipamentos',
-                            font: {
-                                size: 16
-                            }
-                        }
-                    }
-                }
+            registros.forEach(registro => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${formatDate(registro.timestamp)}</td>
+                    <td>${registro.teacherName}</td>
+                    <td>${registro.studentClass}</td>
+                    <td>${registro.room}</td>
+                    <td>${getEquipmentSummary(registro.equipment)}</td>
+                    <td>${formatDate(registro.withdrawalDate)} ${registro.withdrawalTime}</td>
+                    <td>${formatDate(registro.returnDate)} ${registro.returnTime}</td>
+                    <td>${registro.registrant}</td>
+                    <td>
+                        <button class="action-btn delete-btn" onclick="deleteRegistro(${registro.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
             });
+        }
+        
+        function getEquipmentSummary(equipmentArray) {
+            const counts = {};
+            equipmentArray.forEach(eq => {
+                counts[eq.type] = (counts[eq.type] || 0) + eq.quantity;
+            });
+            return Object.entries(counts).map(([type, count]) => `${type} (${count})`).join(', ');
+        }
+        
+        function deleteRegistro(id) {
+            if (!confirm('Tem certeza que deseja excluir este registro?')) return;
+            
+            registros = registros.filter(r => r.id !== id);
+            updateRegistrosTable();
+            alert('Registro excluído com sucesso!');
         }
 
         // Funções para QR Code
@@ -2667,136 +2919,67 @@
             }, 100);
         }
 
-        // Funções para reservas
-        function prevMonth() {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            renderCalendar(currentMonth, currentYear);
-        }
-        
-        function nextMonth() {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            renderCalendar(currentMonth, currentYear);
-        }
-        
-        function renderCalendar(month, year) {
-            const calendarGrid = document.getElementById('calendarGrid');
-            calendarGrid.innerHTML = '';
+        // Funções para histórico
+        function loadHistory() {
+            const tableBody = document.getElementById('historyList');
+            tableBody.innerHTML = '';
             
-            // Atualizar o cabeçalho com mês/ano
-            const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-            document.getElementById('currentMonthYear').textContent = `${monthNames[month]} ${year}`;
+            const equipmentFilter = document.getElementById('historyEquipmentFilter').value;
             
-            // Criar cabeçalhos dos dias da semana
-            const daysOfWeek = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
-            daysOfWeek.forEach(day => {
-                const dayHeader = document.createElement('div');
-                dayHeader.className = 'calendar-day-header';
-                dayHeader.textContent = day;
-                calendarGrid.appendChild(dayHeader);
-            });
-            
-            // Obter primeiro dia do mês
-            const firstDay = new Date(year, month, 1);
-            // Obter último dia do mês
-            const lastDay = new Date(year, month + 1, 0);
-            // Dias no mês
-            const daysInMonth = lastDay.getDate();
-            // Dia da semana do primeiro dia (0 = Domingo, 1 = Segunda, etc.)
-            const firstDayOfWeek = firstDay.getDay();
-            
-            // Preencher espaços vazios antes do primeiro dia
-            for (let i = 0; i < firstDayOfWeek; i++) {
-                const emptyDay = document.createElement('div');
-                emptyDay.className = 'calendar-day empty';
-                calendarGrid.appendChild(emptyDay);
-            }
-            
-            // Preencher os dias do mês
-            const today = new Date();
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-                const calendarDay = document.createElement('div');
-                calendarDay.className = 'calendar-day';
+            // Adicionar todos os equipamentos ou filtrar por tipo
+            for (const [tipo, lista] of Object.entries(equipamentos)) {
+                if (equipmentFilter !== 'all' && equipmentFilter !== tipo) continue;
                 
-                // Verificar se é hoje
-                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                    calendarDay.classList.add('today');
-                }
-                
-                // Verificar reservas para este dia
-                const dayReservations = reservations.filter(r => r.date === dateStr);
-                
-                const dayNumber = document.createElement('div');
-                dayNumber.className = 'calendar-day-number';
-                dayNumber.textContent = day;
-                calendarDay.appendChild(dayNumber);
-                
-                // Adicionar reservas
-                dayReservations.forEach(reservation => {
-                    const resElement = document.createElement('div');
-                    resElement.className = 'reservation-item';
-                    resElement.textContent = `${reservation.teacher}: ${reservation.equipment} (${reservation.startTime}-${reservation.endTime})`;
-                    calendarDay.appendChild(resElement);
+                lista.forEach(eq => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${eq.id}</td>
+                        <td>${tipo}</td>
+                        <td>${eq.serial}</td>
+                        <td>
+                            <span class="badge ${getStatusBadgeClass(eq.status)}">
+                                ${eq.status}
+                            </span>
+                        </td>
+                        <td>${eq.location}</td>
+                        <td>${formatDate(eq.registrationDate)}</td>
+                        <td>
+                            <button class="action-btn info-btn" onclick="showHistoryDetails('${eq.id}')">
+                                <i class="fas fa-info-circle"></i> Detalhes
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
                 });
-                
-                // Destacar dias com reservas
-                if (dayReservations.length > 0) {
-                    calendarDay.classList.add('reserved');
-                }
-                
-                calendarGrid.appendChild(calendarDay);
             }
         }
         
-        function updateReservations() {
-            const equipmentFilter = document.getElementById('reservationEquipmentFilter').value;
-            const teacherFilter = document.getElementById('reservationTeacherFilter').value;
+        function showHistoryDetails(id) {
+            const detailsContainer = document.getElementById('historyDetails');
+            const detailsContent = document.getElementById('historyDetailsContent');
             
-            // Aqui seria a implementação real para filtrar reservas
-            // Por enquanto, apenas recarregamos o calendário
-            renderCalendar(currentMonth, currentYear);
-        }
-        
-        function showAddReservationModal() {
-            // Aqui seria a implementação para mostrar o modal de nova reserva
-            alert("Funcionalidade de adicionar reserva será implementada aqui");
-        }
-        
-        function addReservation() {
-            const teacher = document.getElementById('reservationTeacher').value;
-            const equipment = document.getElementById('reservationEquipment').value;
-            const date = document.getElementById('reservationDate').value;
-            const startTime = document.getElementById('reservationStartTime').value;
-            const endTime = document.getElementById('reservationEndTime').value;
+            detailsContent.innerHTML = '';
             
-            if (!teacher || !equipment || !date || !startTime || !endTime) {
-                alert("Por favor, preencha todos os campos");
-                return;
+            if (equipmentHistory[id] && equipmentHistory[id].length > 0) {
+                detailsContent.innerHTML = '<h4>Histórico de Agendamentos:</h4>';
+                
+                equipmentHistory[id].forEach(history => {
+                    const detailItem = document.createElement('div');
+                    detailItem.className = 'history-detail-item';
+                    detailItem.innerHTML = `
+                        <p><strong>Professor:</strong> ${history.teacher}</p>
+                        <p><strong>Turma:</strong> ${history.class}</p>
+                        <p><strong>Sala:</strong> ${history.room}</p>
+                        <p><strong>Data:</strong> ${formatDate(history.date)}</p>
+                        <p><strong>Horário:</strong> ${history.startTime} - ${history.endTime}</p>
+                    `;
+                    detailsContent.appendChild(detailItem);
+                });
+            } else {
+                detailsContent.innerHTML = '<p>Nenhum histórico de agendamento encontrado para este equipamento.</p>';
             }
             
-            // Adicionar a reserva (em um sistema real, seria salva no banco de dados)
-            const newReservation = {
-                id: "RES" + Date.now().toString().slice(-4),
-                teacher,
-                equipment,
-                date,
-                startTime,
-                endTime
-            };
-            
-            reservations.push(newReservation);
-            alert(`Reserva adicionada com sucesso para ${teacher} em ${date} das ${startTime} às ${endTime}`);
-            
-            // Atualizar o calendário
-            renderCalendar(currentMonth, currentYear);
+            detailsContainer.style.display = 'block';
         }
 
         // Funções auxiliares
@@ -2806,16 +2989,15 @@
             return date.toLocaleDateString('pt-BR');
         }
         
-        function formatDateTime(dateTimeString) {
-            if (!dateTimeString) return 'N/A';
-            const options = { 
-                day: '2-digit', 
-                month: '2-digit', 
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            };
-            return new Date(dateTimeString).toLocaleDateString('pt-BR', options);
+        function getStatusBadgeClass(status) {
+            switch (status) {
+                case 'Disponível': return 'badge-success';
+                case 'Em uso': return 'badge-primary';
+                case 'Manutenção': return 'badge-warning';
+                case 'Com avarias': return 'badge-danger';
+                case 'Desuso': return 'badge-secondary';
+                default: return 'badge-secondary';
+            }
         }
         
         function openModal(modalId) {
@@ -2827,13 +3009,13 @@
         }
         
         function showAddEquipmentModal() {
-            openModal('equipmentModal');
+            openModal('addEquipmentModal');
         }
         
         function saveEquipment() {
             // Implementação real salvaria no Firebase
             alert("Equipamento cadastrado com sucesso!");
-            closeModal('equipmentModal');
+            closeModal('addEquipmentModal');
         }
     </script>
 </body>
