@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestão de Equipamentos Tecnológicos</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* ===== VARIÁVEIS DE CORES ===== */
@@ -325,165 +322,6 @@
             color: white;
         }
 
-        /* ===== CARDS DE DASHBOARD ===== */
-        .dashboard-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 20px;
-            transition: var(--transition);
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .card-title {
-            font-size: 16px;
-            color: var(--secondary-color);
-            font-weight: 500;
-        }
-
-        .card-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        .card-icon.primary {
-            background-color: var(--accent-color);
-        }
-
-        .card-icon.success {
-            background-color: var(--success-color);
-        }
-
-        .card-icon.warning {
-            background-color: var(--warning-color);
-        }
-
-        .card-icon.danger {
-            background-color: var(--danger-color);
-        }
-
-        .card-body {
-            font-size: 28px;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-
-        /* ===== GRÁFICOS ===== */
-        .chart-container {
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 20px;
-            margin-bottom: 30px;
-            height: 400px;
-        }
-
-        /* ===== MODAIS ===== */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            width: 90%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-            animation: modalFadeIn 0.3s ease;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--gray-light);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-title {
-            font-size: 20px;
-            color: var(--primary-color);
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--gray-medium);
-        }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        .modal-footer {
-            padding: 20px;
-            border-top: 1px solid var(--gray-light);
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        /* ===== RESPONSIVIDADE ===== */
-        @media (max-width: 768px) {
-            .nav-tab {
-                padding: 12px 5px;
-                font-size: 14px;
-            }
-            
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .btn-group {
-                flex-direction: column;
-            }
-            
-            .btn {
-                width: 100%;
-            }
-        }
-
         /* ===== ESTILOS PARA A PÁGINA DE REGISTRO ===== */
         .register-form {
             background-color: #f8f9fa;
@@ -636,140 +474,6 @@
             text-align: center;
         }
 
-        /* ===== ESTILOS ESPECÍFICOS PARA RELATÓRIOS ===== */
-        .report-section {
-            margin-bottom: 30px;
-        }
-
-        .report-title {
-            font-size: 18px;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            padding-bottom: 5px;
-            border-bottom: 2px solid var(--accent-color);
-        }
-
-        .equipment-category {
-            margin-bottom: 20px;
-        }
-
-        .category-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: var(--secondary-color);
-        }
-
-        /* ===== ESTILOS PARA O FORMULÁRIO DE AGENDAMENTO ===== */
-        .schedule-form .form-group {
-            margin-bottom: 20px;
-        }
-
-        .schedule-info {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            margin-bottom: 20px;
-        }
-
-        /* ===== ESTILOS PARA O HISTÓRICO ===== */
-        .history-item {
-            padding: 15px;
-            border-bottom: 1px solid var(--gray-light);
-            transition: var(--transition);
-        }
-
-        .history-item:hover {
-            background-color: #f8f9fa;
-        }
-
-        .history-date {
-            font-weight: bold;
-            color: var(--secondary-color);
-        }
-
-        .history-action {
-            margin-top: 5px;
-        }
-
-        /* ===== ESTILOS PARA O FILTRO DE EQUIPAMENTOS ===== */
-        .filter-container {
-            background-color: var(--white);
-            padding: 15px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .filter-group {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        /* ===== ESTILOS PARA O STATUS DOS EQUIPAMENTOS ===== */
-        .status-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 5px;
-        }
-
-        .status-available {
-            background-color: var(--success-color);
-        }
-
-        .status-inuse {
-            background-color: var(--accent-color);
-        }
-
-        .status-maintenance {
-            background-color: var(--warning-color);
-        }
-
-        .status-damaged {
-            background-color: var(--danger-color);
-        }
-
-        .status-unused {
-            background-color: var(--gray-medium);
-        }
-        
-        /* ===== ESTILOS PARA LISTAS DROPDOWN ===== */
-        .dropdown-container {
-            position: relative;
-        }
-        
-        .dropdown-list {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            max-height: 200px;
-            overflow-y: auto;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            z-index: 100;
-            display: none;
-        }
-        
-        .dropdown-item {
-            padding: 8px 12px;
-            cursor: pointer;
-        }
-        
-        .dropdown-item:hover {
-            background-color: #f5f5f5;
-        }
-        
-        .dropdown-visible {
-            display: block;
-        }
-
         /* ===== ESTILOS PARA QR CODE ===== */
         .qr-section {
             display: flex;
@@ -795,94 +499,75 @@
             background-color: #1a6099;
         }
 
-        /* ===== ESTILOS PARA CALENDÁRIO DE RESERVAS ===== */
-        .calendar-container {
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .calendar-header {
+        .qr-scanner-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
         }
 
-        .calendar-nav {
-            display: flex;
-            gap: 10px;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-        }
-
-        .calendar-day-header {
-            text-align: center;
-            padding: 10px;
-            font-weight: bold;
-            background-color: var(--secondary-color);
-            color: var(--white);
-            border-radius: 4px;
-        }
-
-        .calendar-day {
-            text-align: center;
-            padding: 15px 5px;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: var(--transition);
-            min-height: 80px;
+        .qr-scanner {
+            width: 90%;
+            max-width: 500px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
             position: relative;
         }
 
-        .calendar-day:hover {
-            background-color: #e8f4fc;
+        #qr-reader {
+            width: 100%;
         }
 
-        .calendar-day.empty {
-            background-color: transparent;
-            cursor: default;
-        }
-
-        .calendar-day.reserved {
-            background-color: #ffeaa7;
-        }
-
-        .calendar-day-number {
+        .close-scanner {
             position: absolute;
-            top: 5px;
-            right: 5px;
-            font-size: 14px;
-        }
-
-        .reservation-item {
-            margin-top: 25px;
-            font-size: 12px;
-            background-color: #fef9e7;
-            padding: 5px;
-            border-radius: 4px;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
             cursor: pointer;
+            color: var(--gray-medium);
         }
 
-        .calendar-day.today {
-            background-color: #d6eaf8;
-            font-weight: bold;
+        .scanner-instructions {
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
-        .reservation-form {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: var(--border-radius);
-            margin-top: 20px;
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .nav-tab {
+                padding: 12px 5px;
+                font-size: 14px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .equipment-row {
+                flex-direction: column;
+            }
         }
-        
+
         .action-buttons {
             display: flex;
             gap: 8px;
@@ -906,30 +591,6 @@
         .delete-btn {
             background-color: var(--danger-color);
             color: white;
-        }
-        
-        .reservation-detail {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            margin-top: 15px;
-        }
-        
-        .history-details {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            margin-top: 15px;
-            display: none;
-        }
-        
-        .history-detail-item {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .history-detail-item:last-child {
-            border-bottom: none;
         }
     </style>
 </head>
@@ -975,15 +636,6 @@
                 <div class="nav-tab" onclick="openTab('register')">
                     <i class="fas fa-cubes"></i> Cadastro
                 </div>
-                <div class="nav-tab" onclick="openTab('reservations')">
-                    <i class="fas fa-calendar-alt"></i> Reservas
-                </div>
-                <div class="nav-tab" onclick="openTab('reports')">
-                    <i class="fas fa-file-alt"></i> Relatório
-                </div>
-                <div class="nav-tab" onclick="openTab('maintenance')">
-                    <i class="fas fa-tools"></i> Manutenção
-                </div>
                 <div class="nav-tab" onclick="openTab('registration')">
                     <i class="fas fa-clipboard-list"></i> Registro
                 </div>
@@ -997,31 +649,6 @@
                 <h2 class="form-title">
                     <i class="fas fa-chart-line"></i> Dashboard
                 </h2>
-                
-                <div class="filter-container">
-                    <div class="filter-group">
-                        <label for="dashboardEquipmentFilter">Filtrar por Equipamento</label>
-                        <select id="dashboardEquipmentFilter" class="form-control" onchange="updateDashboard()">
-                            <option value="all">Todos os Equipamentos</option>
-                            <option value="Notebook do aluno">Notebook do aluno</option>
-                            <option value="Chromebooks">Chromebooks</option>
-                            <option value="Smartphone">Smartphone</option>
-                            <option value="Tablets">Tablets</option>
-                            <option value="Notebook Ultra">Notebook Ultra</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="dashboardLocationFilter">Filtrar por Local</label>
-                        <select id="dashboardLocationFilter" class="form-control" onchange="updateDashboard()">
-                            <option value="all">Todos os Locais</option>
-                            <option value="Sala dos professores">Sala dos professores</option>
-                            <option value="Sala de informática">Sala de informática</option>
-                            <option value="Depósito 1ª andar">Depósito 1ª andar</option>
-                            <option value="Coordenação">Coordenação</option>
-                            <option value="Direção">Direção</option>
-                        </select>
-                    </div>
-                </div>
                 
                 <div class="dashboard-cards">
                     <div class="card">
@@ -1062,10 +689,6 @@
                     </div>
                 </div>
                 
-                <div class="chart-container">
-                    <canvas id="equipmentStatusChart"></canvas>
-                </div>
-                
                 <h3 style="margin-bottom: 15px;">Últimos Registros</h3>
                 <div class="table-responsive">
                     <table class="data-table">
@@ -1076,7 +699,6 @@
                                 <th>Nº Série</th>
                                 <th>Local</th>
                                 <th>Status</th>
-                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody id="recentActivitiesTable">
@@ -1138,165 +760,6 @@
                 </div>
             </div>
 
-            <!-- Reservas -->
-            <div id="reservations" class="tab-content">
-                <h2 class="form-title">
-                    <i class="fas fa-calendar-alt"></i> Reservas de Equipamentos
-                </h2>
-                
-                <div class="filter-container">
-                    <div class="filter-group">
-                        <label for="reservationEquipmentFilter">Filtrar por Equipamento</label>
-                        <select id="reservationEquipmentFilter" class="form-control" onchange="updateReservations()">
-                            <option value="all">Todos os Equipamentos</option>
-                            <option value="Notebook do aluno">Notebook do aluno</option>
-                            <option value="Chromebooks">Chromebooks</option>
-                            <option value="Smartphone">Smartphone</option>
-                            <option value="Tablets">Tablets</option>
-                            <option value="Notebook Ultra">Notebook Ultra</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="reservationTeacherFilter">Filtrar por Professor</label>
-                        <select id="reservationTeacherFilter" class="form-control" onchange="updateReservations()">
-                            <option value="all">Todos os Professores</option>
-                            <!-- Professores serão preenchidos via JavaScript -->
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="calendar-container">
-                    <div class="calendar-header">
-                        <div class="calendar-nav">
-                            <button class="btn btn-secondary" onclick="prevMonth()">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <h3 id="currentMonthYear">Junho 2023</h3>
-                            <button class="btn btn-secondary" onclick="nextMonth()">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </div>
-                        <button class="btn btn-primary" onclick="showAddReservationModal()">
-                            <i class="fas fa-plus"></i> Nova Reserva
-                        </button>
-                    </div>
-                    
-                    <div class="calendar-grid" id="calendarGrid">
-                        <!-- Calendário será preenchido dinamicamente -->
-                    </div>
-                </div>
-                
-                <h3 style="margin-top: 30px;">Reservas Ativas</h3>
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Professor</th>
-                                <th>Equipamento</th>
-                                <th>Hora Início</th>
-                                <th>Hora Fim</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="reservationsList">
-                            <!-- Preenchido dinamicamente -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Relatório de Equipamentos -->
-            <div id="reports" class="tab-content">
-                <h2 class="form-title">
-                    <i class="fas fa-file-alt"></i> Relatório de Equipamentos
-                </h2>
-                
-                <div class="filter-container">
-                    <div class="filter-group">
-                        <label for="reportEquipmentFilter">Filtrar por Equipamento</label>
-                        <select id="reportEquipmentFilter" class="form-control" onchange="generateReport()">
-                            <option value="all">Todos os Equipamentos</option>
-                            <option value="CHROMEBOOK">CHROMEBOOK</option>
-                            <option value="NOTEBOOK">NOTEBOOK</option>
-                            <option value="SMARTPHONE">SMARTPHONE</option>
-                            <option value="TABLET">TABLET</option>
-                            <option value="HEAD SET">HEAD SET</option>
-                            <option value="CAIXA DE SOM">CAIXA DE SOM</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div id="reportContent" style="margin-top: 30px;">
-                    <div class="table-responsive">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Aparelho</th>
-                                    <th>Nº de Série</th>
-                                    <th>Status</th>
-                                    <th>Local</th>
-                                    <th>Data Registro</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="reportTable">
-                                <!-- Preenchido dinamicamente -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Manutenção -->
-            <div id="maintenance" class="tab-content">
-                <h2 class="form-title">
-                    <i class="fas fa-tools"></i> Controle de Manutenção
-                </h2>
-                
-                <div class="filter-container">
-                    <div class="filter-group">
-                        <label for="maintenanceSearch">Pesquisar</label>
-                        <input type="text" id="maintenanceSearch" class="form-control" placeholder="Digite para pesquisar...">
-                    </div>
-                    <div class="filter-group">
-                        <label for="maintenanceStatus">Status</label>
-                        <select id="maintenanceStatus" class="form-control">
-                            <option value="all">Todos</option>
-                            <option value="Pendente">Pendente</option>
-                            <option value="Em andamento">Em andamento</option>
-                            <option value="Concluído">Concluído</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label>&nbsp;</label>
-                        <button class="btn btn-primary" onclick="showAddMaintenanceModal()">
-                            <i class="fas fa-plus"></i> Nova Manutenção
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Equipamento</th>
-                                <th>Nº Série</th>
-                                <th>Problema</th>
-                                <th>Status</th>
-                                <th>Responsável</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="maintenanceTable">
-                            <!-- Preenchido dinamicamente -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
             <!-- Aba de Registro -->
             <div id="registration" class="tab-content">
                 <h2 class="form-title">
@@ -1336,7 +799,7 @@
                                         <option value="HEAD SET">HEAD SET</option>
                                         <option value="CAIXA DE SOM">CAIXA DE SOM</option>
                                     </select>
-                                    <button class="qr-button" onclick="readQRCode()">
+                                    <button class="qr-button" onclick="openQRScanner(this)">
                                         <i class="fas fa-qrcode"></i> Ler QR Code
                                     </button>
                                 </div>
@@ -1413,7 +876,7 @@
                                 <option value="2ª SERIE G NOITE">2ª SERIE G NOITE</option>
                                 <option value="2ª SERIE H NOITE">2ª SERIE H NOITE</option>
                                 <option value="3ª SERIE A MANHA">3ª SERIE A MANHA</option>
-                                <option value="3ª SERie B MANHA">3ª SERIE B MANHA</option>
+                                <option value="3ª SERIE B MANHA">3ª SERIE B MANHA</option>
                                 <option value="3ª SERIE C MANHA">3ª SERIE C MANHA</option>
                                 <option value="3ª SERIE D NOITE">3ª SERIE D NOITE</option>
                                 <option value="3ª SERIE E NOITE">3ª SERIE E NOITE</option>
@@ -1631,61 +1094,6 @@
                         </tbody>
                     </table>
                 </div>
-                
-                <div id="historyDetails" class="history-details">
-                    <h3>Histórico de Agendamentos</h3>
-                    <div id="historyDetailsContent"></div>
-                </div>
-            </div>
-
-            <!-- Modal para adicionar reserva -->
-            <div id="addReservationModal" class="modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">Adicionar Nova Reserva</h3>
-                        <button class="modal-close" onclick="closeModal('addReservationModal')">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="reservationTeacher">Professor</label>
-                                <select id="reservationTeacher" class="form-control">
-                                    <option value="">Selecione o professor</option>
-                                    <!-- Professores serão preenchidos via JavaScript -->
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="reservationEquipment">Equipamento</label>
-                                <select id="reservationEquipment" class="form-control">
-                                    <option value="">Selecione o equipamento</option>
-                                    <option value="Notebook do aluno">Notebook do aluno</option>
-                                    <option value="Chromebooks">Chromebooks</option>
-                                    <option value="Smartphone">Smartphone</option>
-                                    <option value="Tablets">Tablets</option>
-                                    <option value="Notebook Ultra">Notebook Ultra</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="reservationDate">Data</label>
-                                <input type="date" id="reservationDate" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="reservationStartTime">Hora Início</label>
-                                <input type="time" id="reservationStartTime" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="reservationEndTime">Hora Fim</label>
-                                <input type="time" id="reservationEndTime" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" onclick="closeModal('addReservationModal')">Cancelar</button>
-                        <button class="btn btn-success" onclick="saveReservation()">
-                            <i class="fas fa-save"></i> Salvar Reserva
-                        </button>
-                    </div>
-                </div>
             </div>
 
             <!-- Modal para adicionar equipamento -->
@@ -1772,6 +1180,18 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Scanner de QR Code -->
+    <div id="qrScannerContainer" class="qr-scanner-container">
+        <div class="scanner-instructions">
+            <h3>Posicione o QR Code do equipamento na câmera</h3>
+            <p>O equipamento será automaticamente identificado e registrado</p>
+        </div>
+        <div class="qr-scanner">
+            <button class="close-scanner" onclick="closeQRScanner()">&times;</button>
+            <div id="qr-reader"></div>
         </div>
     </div>
 
@@ -1917,325 +1337,292 @@
             "CGP - 005": "Patrícia Gomes Rocha Ribeiro"
         };
 
-        const EQUIPAMENTOS = {
-    CHROMEBOOK: [
-        { id: "CB-028", serial: "20232780003053", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CB-019", serial: "20232780003049", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CB-010", serial: "20232780003032", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CB-023", serial: "20232780003040", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CB-022", serial: "20232780003051", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CB-008", serial: "20232780003028", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-001", serial: "OANS9QBY201311X", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-002", serial: "0ANS9QBY201445W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-003", serial: "0ANS9QBY201789J", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-004", serial: "0ANS9QBY201235D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-005", serial: "0ANS9QCY300305L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-006", serial: "0ANS9QCY300282W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-007", serial: "0ANS9QCY202047P", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-008", serial: "0ANNS9QBY200991N", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-009", serial: "0ANS9QCY300311T", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-010", serial: "0ANS9QCY300360A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-011", serial: "0ANS9QCY300435V", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-012", serial: "0ANS9QBY201220N", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-013", serial: "0ANS9QCY300433B", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-014", serial: "0ANS9QCY300296A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-015", serial: "0ANS9QCY300303K", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-016", serial: "0ANS9QCY300352D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-017", serial: "0NS9QCY300138L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-018", serial: "0ANS9QCY300431Y", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-019", serial: "0ANS9QCY202048A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-020", serial: "0ANS9QCY300351L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-021", serial: "0ANS9QCY300304E", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CB-O24", serial: "0", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-022", serial: "0ANS9QCY300451H", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-023", serial: "0ANS9QCY300532D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CB-006", serial: "20232780003050", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-024", serial: "0ANS9QCY300368R", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-025", serial: "0ANS9QCY300268V", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-026", serial: "0AN9QCY300268V", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-027", serial: "0ANS9QCY300312X", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-028", serial: "0ANS9QCY300506W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-029", serial: "0ANS9QCY300289M", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-030", serial: "OANS9QBY20122X", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-031", serial: "0ANS9QCY300497Z", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-032", serial: "OANS9QCY300353M", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-033", serial: "OANS9QBY201790D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CBH-034", serial: "0ANS9QCY300103R", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-036", serial: "0ANS9QCY300348Z", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-037", serial: "0ANS9QCY300343B", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-038", serial: "0ANS9QCY300143F", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-039", serial: "0ANS9QBY201705H", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-040", serial: "0ANS9QCY300649M", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-048", serial: "0ANS9QCY300380J", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-047", serial: "0ANS9QCY300347J", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-046", serial: "0ANS9QCY300350E", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-045", serial: "0ANS9QCY300496J", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-042", serial: "0ANS9QCY300212H", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-043", serial: "0ANS9QCY300354Y", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-041", serial: "0ANS9QCY300481V", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-056", serial: "0ANS9QCY202045X", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-055", serial: "0ANS9QBY201160L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-054", serial: "0ANS9QBY201443L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-053", serial: "0ANS9QBY201291E", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-052", serial: "0ANS9QCY300549B", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-051", serial: "0ANS9QCY300655W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-050", serial: "0ANS9QCY300385W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-049", serial: "0ANS9QBY201702W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-063", serial: "0ANS9QCY300306D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-062", serial: "0ANS9QBY201432W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-061", serial: "0ANS9QCY300358V", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-060", serial: "0ANS9QCY300484Z", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-059", serial: "0ANS9QBY201259N", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-058", serial: "0ANS9QBY201444V", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-057", serial: "0ANS9QCY300369B", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-069", serial: "0ANS9QCY300400F", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-068", serial: "0ANS9QBY201396X", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-067", serial: "0ANS9QCY300288D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-066", serial: "0ANS9QCY300417A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-065", serial: "0ANS9QCY300489A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-064", serial: "0ANS9QCY300344N", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-079", serial: "0ANS9QCY300397X", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-078", serial: "0ANS9QCY300307M", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-077", serial: "0ANS9QCY300386A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-076", serial: "0ANS9QCY300377L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-075", serial: "0ANS9QBY201214K", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-074", serial: "0ANS9QCY300310F", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-073", serial: "0ANS9QBY201409T", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-072", serial: "0ANS9QCY300283A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-071", serial: "0ANS9QCY300531L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-070", serial: "0ANS9QCY300648D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-080", serial: "0ANS9QCY300097Y", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-081", serial: "0ANS9QCY202031N", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
-        { id: "CHB-082", serial: "0ANS9QCY30034F", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CHB-083", serial: "0ANS9QCY300359P", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CHB-084", serial: "0ANS9CY300294X", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CHB-085", serial: "0ANS9QCY300105N", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CHB-086", serial: "0ANS9QCY202053H", status: "Disponível", location: "Sala dos professores", registrationDate: "2025-05-30" },
-        { id: "CHB-087", serial: "0ANS9QCY300272K", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CHB-088", serial: "0ANS9QCY300370T", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CHB-089", serial: "0ANS9QCY300302H", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CHB-090", serial: "0ANS9QCY300092K", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CB-007", serial: "20232780003052", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CB-001", serial: "20232780003024", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CB-025", serial: "20232780003030", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CB-005", serial: "20232780003034", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CB-012", serial: "20232780003021", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CB-021", serial: "20232780003037", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CB-009", serial: "20232780003060", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CB-013", serial: "20232780003055", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CB-011", serial: "--", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CB-017", serial: "20232780003022", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CB-008", serial: "20232780003028", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CB-015", serial: "20232780003039", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CB-016", serial: "20232780003023", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CB-003", serial: "20232780003059", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
-        { id: "CB-026", serial: "20232780003045", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "CB-002", serial: "202327800030??", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "CB-006", serial: "20232780003050", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "CB-027", serial: "20232780003042", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "CB-004", serial: "20232780003041", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "CB-014", serial: "01", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "CB-029", serial: "20232780003054", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "CB-030", serial: "20232780003035", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "CB-0031", serial: "20232780003029", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "CB-032", serial: "2022780003026", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "CB-031", serial: "20232780003029", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "CB-033", serial: "2023", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "CB-034", serial: "20232780003056", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "CB-035", serial: "20232780003025", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "CB-036", serial: "20232780003026", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" }
-    ],
+        // Parâmetros do produto (do documento fornecido)
+        const productParams = {
+            "Tipo de fonte de luz": "LED vermelho",
+            "Velocidade de digitalização": "200\" ± \" duas vezes por segundo",
+            "Precisão de digitalização": "\" ≥ \"4.000,00",
+            "Material": "ABS + PC",
+            "Elevação e declinação": "55°/55°",
+            "Cabo": "1,6 m",
+            "Interface suportada": "USB",
+            "Tensão": "5 V",
+            "Modo de alerta": "luz indicadora de campainha",
+            "Corrente de trabalho": "400 ma"
+        };
 
-    NOTEBOOK: [
-        { id: "NB010", serial: "4AB418Y1U", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-27" },
-        { id: "NB031", serial: "4AB419853", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-27" },
-        { id: "NB035", serial: "4AF26RTOE", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-27", notes: "TELA TRICADA NA PARTE SUPERIOR ESQUERDA" },
-        { id: "NB014", serial: "4AB40BG0P", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-27", notes: "TECLA F9 FALTANDO" },
-        { id: "NB-034", serial: "4AB41912F/  PT16977", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-025", serial: "84N / SEMI APAGADO", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-037", serial: "4AF27280V", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-042", serial: "4AF272G43", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-049", serial: "7109F", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-020", serial: "4AB41911A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-055", serial: "4AB419H8L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-048", serial: "4AF271Z6R", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-009", serial: "4AF26RX20", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-002", serial: "0", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-024", serial: "4AB419T0H", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-033", serial: "4AF26SB5S", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-046", serial: "4AF226R97P", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-012", serial: "4AF26RJ1P", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-018", serial: "4AB40YX6F", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-016", serial: "4AF26R25U", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-017", serial: "4AB41909B", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-008", serial: "4AF272MAL", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-023", serial: "4AB419105", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-053", serial: "0", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-032", serial: "4AF26SD5Y", status: "Disponível", location: "Sala dos professores", registrationDate: "2025-06-02" },
-        { id: "NB-005", serial: "4AB40YZ4B", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-052", serial: "4AB418Z8W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-007", serial: "4AB419DK", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-006", serial: "4AB418Y70", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-054", serial: "4AB419C86", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-028", serial: "4AF26RH53", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-040", serial: "4AF26R377", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-011", serial: "4AF272J8W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-022", serial: "4AF271T90", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-021", serial: "4AB419017", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-030", serial: "4AB40Z085", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-013", serial: "4AF272D4U", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-004", serial: "20222780016999", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-026", serial: "187M", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-019", serial: "4AF?6R26Z", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-015", serial: "4AF271W8S", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-001", serial: "4AB40Z60J", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-043", serial: "4AF26ZN2Q", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-036", serial: "4AF26R98U", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-050", serial: "4AB419J2X", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-045", serial: "4AF26Z?6D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-047", serial: "4AB419Q4S", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-044", serial: "4AB419F7A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-041", serial: "4AF26RN5L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-051", serial: "71R63??", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-038", serial: "4AB419G1J", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-027", serial: "4AF26SD63", status: "Com avarias", location: "Sala de informática", registrationDate: "2025-06-02", notes: "Tela trincada" },
-        { id: "NB-029", serial: "4AB419H56", status: "Com avarias", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "NB-048", serial: "4AF271Z6R", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
-        { id: "D05 - ADM", serial: "4AH789Q8L", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "Sala do ADM" },
-        { id: "D17 - ADM", serial: "4AH759P1A", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "Sala do Futuro" },
-        { id: "D15 - ADM", serial: "4AH75B594", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "Sala do ADM" },
-        { id: "D07 - ADM", serial: "4AH759S4Y", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "Sala do ADM" },
-        { id: "D10 - ADM", serial: "4AH76HX0G", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "Sala do ADM" },
-        { id: "D02 - ADM", serial: "4AH789L9B", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
-        { id: "D18 - ADM", serial: "4AH75BZ9M", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
-        { id: "D09 - ADM", serial: "4AH75B804", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
-        { id: "D11 - ADM", serial: "4AH77NS0A", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
-        { id: "D20 - ADM", serial: "4AH759Q21", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
-        { id: "D04 - ADM", serial: "4AH74L29Q", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
-        { id: "D19 - ADM", serial: "4AH759M95", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
-        { id: "D03 - ADM", serial: "4AH76HM10", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
-        { id: "D12 - ADM", serial: "4AH75BB4X", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
-        { id: "D16 - ADM", serial: "4AH75B72B", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
-        { id: "D01 - ADM", serial: "4AH759S0E", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
-        { id: "D13 - ADM", serial: "4AH75BB9M", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
-        { id: "D14 - ADM", serial: "4AH759P89", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
-        { id: "D08 - ADM", serial: "4AH77LB0H", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
-        { id: "D06 - ADM", serial: "4AH75B83J", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
-        { id: "NB-056", serial: "4AB41990T", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-05" },
-        { id: "NB-057", serial: "4AB419H7G", status: "Com avarias", location: "Sala de informática", registrationDate: "2025-06-05" }
-    ],
-
-    SMARTPHONE: [
-        { id: "Nº24", serial: "cc690772-c690772-c1c2f-a7cf-80ea4c3098ba", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "Nº02", serial: "e16a021c-021c-9a0d-41a7-bea3-125d221b3a7c", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "Nº15", serial: "11673c38-0e25-4c3d-83dc-fb7cdfdf70fd", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "Nº21", serial: "a672a99b-d0df-4bc8-a51b-5a5aftd0fbbe", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°25", serial: "4cd3bd2a-17b4-431e-acbe-9d157f274781", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°26", serial: "2c5eac4e-3013-4037-a8c0-1a966c1464fa", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°04", serial: "af5dd855-5620-439a-b530-cc438ff71934", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°18", serial: "13ba0da1-6ab9-487b-b941-7014aaf2bbd2", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°17", serial: "00a4c4d2-79d4-4269-937e-88ceaa8a3c21", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°01", serial: "e97eb205-3853-4cee-827e-15cfe140d2c1", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°09", serial: "89db2176-eea8-46fc-a599-adef3143c387", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°22", serial: "d141b387-321f41d1-8022-eae62c66bbde", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°03", serial: "dda7fdb6-333-4a71-bc39-923884a2c396", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°12", serial: "c57e37d0-ffbb-44e8-8d22-07f163433f23", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°06", serial: "37f06c15-f74b-4486-861a-8b5046afc08a", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N° 20", serial: "1ba0ab84-bf4e-4ac4-b3c1-36e61602ccd5", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°14", serial: "949720e7-b1af-4ed1-a1f5-a708afc858e9", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°10", serial: "d2df9145-90e9-424c-947e-12c00bc40861", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°11", serial: "1780a07f-5a86-4d6e-b08d-1a0ffcea9fb0", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°16", serial: "379cb945-353e-4820-891c-d39d598a4c06", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°19", serial: "0c4f8ec5-e2a2-4e82-99b4-2babb1b8e23e", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°13", serial: "3effb0ea02b-4561-9997-a7852901be84", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°05", serial: "5887c3ef-083d-4166-9a7a-57f0409b6806", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°08", serial: "2bae90c0-967a-4023-b95a-c60c5523da37", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°23", serial: "a3eb8e6f-023e-4cd3-800-3384d784f170", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
-        { id: "N°07", serial: "22c59d7f-f733-48f9-aac8-2885521737d3", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" }
-    ],
-
-    TABLETS: [
-        { id: "TB-23", serial: "4AC14TO7V", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-22", serial: "4AC20415M", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-21", serial: "4AC18YDRE", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-20", serial: "4AC26GR3C", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-19", serial: "4AC16FW5Q", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-14", serial: "2023", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-15", serial: "4AC29HB3G", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-13", serial: "4AC14SZ7M", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-18", serial: "4AC21RT92", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-17", serial: "4AC14SS21", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-16", serial: "2023", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-12", serial: "4ACC16YM98", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-11", serial: "4ACC16N4P", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-10", serial: "4AC144L7S", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-09", serial: "4AC24XY32", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-08", serial: "4AC30Y46Y", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-07", serial: "4AC14CX7C", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-06", serial: "4AC18YSGE", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-05", serial: "4AC22H02Z", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-04", serial: "4AC258N3D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-03", serial: "4ACC16MB8R", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-02", serial: "4AC21RT23", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
-        { id: "TB-01", serial: "4AC14KH45", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" }
-    ]
-};
         // Dados de equipamentos
+        const EQUIPAMENTOS = {
+            CHROMEBOOK: [
+                { id: "CB-028", serial: "20232780003053", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CB-019", serial: "20232780003049", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CB-010", serial: "20232780003032", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CB-023", serial: "20232780003040", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CB-022", serial: "20232780003051", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CB-008", serial: "20232780003028", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-001", serial: "OANS9QBY201311X", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-002", serial: "0ANS9QBY201445W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-003", serial: "0ANS9QBY201789J", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-004", serial: "0ANS9QBY201235D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-005", serial: "0ANS9QCY300305L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-006", serial: "0ANS9QCY300282W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-007", serial: "0ANS9QCY202047P", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-008", serial: "0ANNS9QBY200991N", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-009", serial: "0ANS9QCY300311T", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-010", serial: "0ANS9QCY300360A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-011", serial: "0ANS9QCY300435V", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-012", serial: "0ANS9QBY201220N", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-013", serial: "0ANS9QCY300433B", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-014", serial: "0ANS9QCY300296A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-015", serial: "0ANS9QCY300303K", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-016", serial: "0ANS9QCY300352D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-017", serial: "0NS9QCY300138L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-018", serial: "0ANS9QCY300431Y", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-019", serial: "0ANS9QCY202048A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-020", serial: "0ANS9QCY300351L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-021", serial: "0ANS9QCY300304E", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CB-O24", serial: "0", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-022", serial: "0ANS9QCY300451H", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-023", serial: "0ANS9QCY300532D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CB-006", serial: "20232780003050", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-024", serial: "0ANS9QCY300368R", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-025", serial: "0ANS9QCY300268V", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-026", serial: "0AN9QCY300268V", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-027", serial: "0ANS9QCY300312X", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-028", serial: "0ANS9QCY300506W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-029", serial: "0ANS9QCY300289M", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-030", serial: "OANS9QBY20122X", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-031", serial: "0ANS9QCY300497Z", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-032", serial: "OANS9QCY300353M", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-033", serial: "OANS9QBY201790D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CBH-034", serial: "0ANS9QCY300103R", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-036", serial: "0ANS9QCY300348Z", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-037", serial: "0ANS9QCY300343B", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-038", serial: "0ANS9QCY300143F", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-039", serial: "0ANS9QBY201705H", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-040", serial: "0ANS9QCY300649M", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-048", serial: "0ANS9QCY300380J", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-047", serial: "0ANS9QCY300347J", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-046", serial: "0ANS9QCY300350E", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-045", serial: "0ANS9QCY300496J", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-042", serial: "0ANS9QCY300212H", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-043", serial: "0ANS9QCY300354Y", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-041", serial: "0ANS9QCY300481V", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-056", serial: "0ANS9QCY202045X", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-055", serial: "0ANS9QBY201160L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-054", serial: "0ANS9QBY201443L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-053", serial: "0ANS9QBY201291E", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-052", serial: "0ANS9QCY300549B", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-051", serial: "0ANS9QCY300655W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-050", serial: "0ANS9QCY300385W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-049", serial: "0ANS9QBY201702W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-063", serial: "0ANS9QCY300306D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-062", serial: "0ANS9QBY201432W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-061", serial: "0ANS9QCY300358V", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-060", serial: "0ANS9QCY300484Z", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-059", serial: "0ANS9QBY201259N", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-058", serial: "0ANS9QBY201444V", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-057", serial: "0ANS9QCY300369B", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-069", serial: "0ANS9QCY300400F", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-068", serial: "0ANS9QBY201396X", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-067", serial: "0ANS9QCY300288D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-066", serial: "0ANS9QCY300417A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-065", serial: "0ANS9QCY300489A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-064", serial: "0ANS9QCY300344N", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-079", serial: "0ANS9QCY300397X", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-078", serial: "0ANS9QCY300307M", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-077", serial: "0ANS9QCY300386A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-076", serial: "0ANS9QCY300377L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-075", serial: "0ANS9QBY201214K", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-074", serial: "0ANS9QCY300310F", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-073", serial: "0ANS9QBY201409T", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-072", serial: "0ANS9QCY300283A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-071", serial: "0ANS9QCY300531L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-070", serial: "0ANS9QCY300648D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-080", serial: "0ANS9QCY300097Y", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-081", serial: "0ANS9QCY202031N", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-28" },
+                { id: "CHB-082", serial: "0ANS9QCY30034F", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CHB-083", serial: "0ANS9QCY300359P", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CHB-084", serial: "0ANS9CY300294X", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CHB-085", serial: "0ANS9QCY300105N", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CHB-086", serial: "0ANS9QCY202053H", status: "Disponível", location: "Sala dos professores", registrationDate: "2025-05-30" },
+                { id: "CHB-087", serial: "0ANS9QCY300272K", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CHB-088", serial: "0ANS9QCY300370T", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CHB-089", serial: "0ANS9QCY300302H", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CHB-090", serial: "0ANS9QCY300092K", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CB-007", serial: "20232780003052", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CB-001", serial: "20232780003024", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CB-025", serial: "20232780003030", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CB-005", serial: "20232780003034", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CB-012", serial: "20232780003021", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CB-021", serial: "20232780003037", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CB-009", serial: "20232780003060", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CB-013", serial: "20232780003055", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CB-011", serial: "--", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CB-017", serial: "20232780003022", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CB-008", serial: "20232780003028", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CB-015", serial: "20232780003039", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CB-016", serial: "20232780003023", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CB-003", serial: "20232780003059", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-30" },
+                { id: "CB-026", serial: "20232780003045", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "CB-002", serial: "202327800030??", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "CB-006", serial: "20232780003050", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "CB-027", serial: "20232780003042", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "CB-004", serial: "20232780003041", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "CB-014", serial: "01", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "CB-029", serial: "20232780003054", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "CB-030", serial: "20232780003035", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "CB-0031", serial: "20232780003029", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "CB-032", serial: "2022780003026", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "CB-031", serial: "20232780003029", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "CB-033", serial: "2023", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "CB-034", serial: "20232780003056", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "CB-035", serial: "20232780003025", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "CB-036", serial: "20232780003026", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" }
+            ],
+
+            NOTEBOOK: [
+                { id: "NB010", serial: "4AB418Y1U", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-27" },
+                { id: "NB031", serial: "4AB419853", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-27" },
+                { id: "NB035", serial: "4AF26RTOE", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-27", notes: "TELA TRICADA NA PARTE SUPERIOR ESQUERDA" },
+                { id: "NB014", serial: "4AB40BG0P", status: "Disponível", location: "Sala de informática", registrationDate: "2025-05-27", notes: "TECLA F9 FALTANDO" },
+                { id: "NB-034", serial: "4AB41912F/  PT16977", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-025", serial: "84N / SEMI APAGADO", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-037", serial: "4AF27280V", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-042", serial: "4AF272G43", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-049", serial: "7109F", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-020", serial: "4AB41911A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-055", serial: "4AB419H8L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-048", serial: "4AF271Z6R", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-009", serial: "4AF26RX20", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-002", serial: "0", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-024", serial: "4AB419T0H", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-033", serial: "4AF26SB5S", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-046", serial: "4AF226R97P", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-012", serial: "4AF26RJ1P", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-018", serial: "4AB40YX6F", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-016", serial: "4AF26R25U", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-017", serial: "4AB41909B", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-008", serial: "4AF272MAL", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-023", serial: "4AB419105", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-053", serial: "0", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-032", serial: "4AF26SD5Y", status: "Disponível", location: "Sala dos professores", registrationDate: "2025-06-02" },
+                { id: "NB-005", serial: "4AB40YZ4B", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-052", serial: "4AB418Z8W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-007", serial: "4AB419DK", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-006", serial: "4AB418Y70", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-054", serial: "4AB419C86", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-028", serial: "4AF26RH53", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-040", serial: "4AF26R377", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-011", serial: "4AF272J8W", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-022", serial: "4AF271T90", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-021", serial: "4AB419017", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-030", serial: "4AB40Z085", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-013", serial: "4AF272D4U", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-004", serial: "20222780016999", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-026", serial: "187M", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-019", serial: "4AF?6R26Z", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-015", serial: "4AF271W8S", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-001", serial: "4AB40Z60J", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-043", serial: "4AF26ZN2Q", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-036", serial: "4AF26R98U", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-050", serial: "4AB419J2X", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-045", serial: "4AF26Z?6D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-047", serial: "4AB419Q4S", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-044", serial: "4AB419F7A", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-041", serial: "4AF26RN5L", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-051", serial: "71R63??", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-038", serial: "4AB419G1J", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-027", serial: "4AF26SD63", status: "Com avarias", location: "Sala de informática", registrationDate: "2025-06-02", notes: "Tela trincada" },
+                { id: "NB-029", serial: "4AB419H56", status: "Com avarias", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "NB-048", serial: "4AF271Z6R", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-02" },
+                { id: "D05 - ADM", serial: "4AH789Q8L", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "Sala do ADM" },
+                { id: "D17 - ADM", serial: "4AH759P1A", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "Sala do Futuro" },
+                { id: "D15 - ADM", serial: "4AH75B594", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "Sala do ADM" },
+                { id: "D07 - ADM", serial: "4AH759S4Y", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "Sala do ADM" },
+                { id: "D10 - ADM", serial: "4AH76HX0G", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "Sala do ADM" },
+                { id: "D02 - ADM", serial: "4AH789L9B", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
+                { id: "D18 - ADM", serial: "4AH75BZ9M", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
+                { id: "D09 - ADM", serial: "4AH75B804", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
+                { id: "D11 - ADM", serial: "4AH77NS0A", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
+                { id: "D20 - ADM", serial: "4AH759Q21", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
+                { id: "D04 - ADM", serial: "4AH74L29Q", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
+                { id: "D19 - ADM", serial: "4AH759M95", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
+                { id: "D03 - ADM", serial: "4AH76HM10", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
+                { id: "D12 - ADM", serial: "4AH75BB4X", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
+                { id: "D16 - ADM", serial: "4AH75B72B", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
+                { id: "D01 - ADM", serial: "4AH759S0E", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
+                { id: "D13 - ADM", serial: "4AH75BB9M", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
+                { id: "D14 - ADM", serial: "4AH759P89", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
+                { id: "D08 - ADM", serial: "4AH77LB0H", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
+                { id: "D06 - ADM", serial: "4AH75B83J", status: "Disponível", location: "Sala de aula", registrationDate: "2025-06-04", notes: "SALA DO ADM" },
+                { id: "NB-056", serial: "4AB41990T", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-05" },
+                { id: "NB-057", serial: "4AB419H7G", status: "Com avarias", location: "Sala de informática", registrationDate: "2025-06-05" }
+            ],
+
+            SMARTPHONE: [
+                { id: "Nº24", serial: "cc690772-c690772-c1c2f-a7cf-80ea4c3098ba", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "Nº02", serial: "e16a021c-021c-9a0d-41a7-bea3-125d221b3a7c", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "Nº15", serial: "11673c38-0e25-4c3d-83dc-fb7cdfdf70fd", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "Nº21", serial: "a672a99b-d0df-4bc8-a51b-5a5aftd0fbbe", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°25", serial: "4cd3bd2a-17b4-431e-acbe-9d157f274781", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°26", serial: "2c5eac4e-3013-4037-a8c0-1a966c1464fa", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°04", serial: "af5dd855-5620-439a-b530-cc438ff71934", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°18", serial: "13ba0da1-6ab9-487b-b941-7014aaf2bbd2", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°17", serial: "00a4c4d2-79d4-4269-937e-88ceaa8a3c21", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°01", serial: "e97eb205-3853-4cee-827e-15cfe140d2c1", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°09", serial: "89db2176-eea8-46fc-a599-adef3143c387", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°22", serial: "d141b387-321f41d1-8022-eae62c66bbde", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°03", serial: "dda7fdb6-333-4a71-bc39-923884a2c396", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°12", serial: "c57e37d0-ffbb-44e8-8d22-07f163433f23", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°06", serial: "37f06c15-f74b-4486-861a-8b5046afc08a", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N° 20", serial: "1ba0ab84-bf4e-4ac4-b3c1-36e61602ccd5", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°14", serial: "949720e7-b1af-4ed1-a1f5-a708afc858e9", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°10", serial: "d2df9145-90e9-424c-947e-12c00bc40861", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°11", serial: "1780a07f-5a86-4d6e-b08d-1a0ffcea9fb0", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°16", serial: "379cb945-353e-4820-891c-d39d598a4c06", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°19", serial: "0c4f8ec5-e2a2-4e82-99b4-2babb1b8e23e", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°13", serial: "3effb0ea02b-4561-9997-a7852901be84", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°05", serial: "5887c3ef-083d-4166-9a7a-57f0409b6806", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°08", serial: "2bae90c0-967a-4023-b95a-c60c5523da37", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°23", serial: "a3eb8e6f-023e-4cd3-800-3384d784f170", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" },
+                { id: "N°07", serial: "22c59d7f-f733-48f9-aac8-2885521737d3", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-06" }
+            ],
+
+            TABLET: [
+                { id: "TB-23", serial: "4AC14TO7V", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-22", serial: "4AC20415M", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-21", serial: "4AC18YDRE", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-20", serial: "4AC26GR3C", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-19", serial: "4AC16FW5Q", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-14", serial: "2023", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-15", serial: "4AC29HB3G", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-13", serial: "4AC14SZ7M", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-18", serial: "4AC21RT92", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-17", serial: "4AC14SS21", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-16", serial: "2023", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-12", serial: "4ACC16YM98", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-11", serial: "4ACC16N4P", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-10", serial: "4AC144L7S", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-09", serial: "4AC24XY32", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-08", serial: "4AC30Y46Y", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-07", serial: "4AC14CX7C", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-06", serial: "4AC18YSGE", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-05", serial: "4AC22H02Z", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-04", serial: "4AC258N3D", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-03", serial: "4ACC16MB8R", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-02", serial: "4AC21RT23", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" },
+                { id: "TB-01", serial: "4AC14KH45", status: "Disponível", location: "Sala de informática", registrationDate: "2025-06-03" }
+            ]
+        };
+
         const equipamentos = {
             "CHROMEBOOK": EQUIPAMENTOS.CHROMEBOOK,
             "NOTEBOOK": EQUIPAMENTOS.NOTEBOOK,
             "SMARTPHONE": EQUIPAMENTOS.SMARTPHONE,
             "TABLET": EQUIPAMENTOS.TABLET,
-            "HEAD SET": EQUIPAMENTOS["HEAD SET"],
-            "CAIXA DE SOM": EQUIPAMENTOS["CAIXA DE SOM"]
-        };
-
-        // Dados de equipamentos para dashboard
-        const equipmentData = {
-            "Notebook do aluno": {
-                "Disponível": 60,
-                "Em uso": 15,
-                "Em Manutenção": 3,
-                "Com avarias": 2
-            },
-            "Chromebooks": {
-                "Disponível": 120,
-                "Em uso": 30,
-                "Em Manutenção": 5,
-                "Com avarias": 3
-            },
-            "Smartphone": {
-                "Disponível": 25,
-                "Em uso": 8,
-                "Em Manutenção": 1,
-                "Com avarias": 1
-            },
-            "Tablets": {
-                "Disponível": 22,
-                "Em uso": 5,
-                "Em Manutenção": 1,
-                "Com avarias": 0
-            }
-        };
-
-        // Dados de reservas (exemplo)
-        let reservations = [
-            { id: "RES001", teacher: "RAUL PEREIRA VILERA JUNIOR", equipment: "Chromebooks", date: "2023-06-15", startTime: "08:00", endTime: "10:00" },
-            { id: "RES002", teacher: "JUAREZ GOMES DE MAGALHAES FILHO", equipment: "Notebook do aluno", date: "2023-06-15", startTime: "10:00", endTime: "12:00" },
-            { id: "RES003", teacher: "JÚLIO CÉSAR OLIVEIRA", equipment: "Tablets", date: "2023-06-16", startTime: "14:00", endTime: "16:00" }
-        ];
-
-        // Histórico de utilização
-        const equipmentHistory = {
-            "CB-001": [
-                { teacher: "RAUL PEREIRA VILERA JUNIOR", class: "8° ANO A TARDE", room: "Sala 13", date: "2023-06-10", startTime: "08:00", endTime: "10:00" },
-                { teacher: "JUAREZ GOMES DE MAGALHAES FILHO", class: "9° ANO B TARDE", room: "Sala 18", date: "2023-06-12", startTime: "10:00", endTime: "12:00" },
-                { teacher: "JÚLIO CÉSAR OLIVEIRA", class: "7° ANO C TARDE", room: "Sala 9", date: "2023-06-14", startTime: "14:00", endTime: "16:00" }
-            ],
-            "NB-002": [
-                { teacher: "VANIA PENHA DE BARROS", class: "1ª SERIE A MANHA", room: "Sala 21", date: "2023-06-11", startTime: "08:00", endTime: "10:00" },
-                { teacher: "FABIO CAMILO", class: "3ª SERIE C MANHA", room: "Sala 40", date: "2023-06-13", startTime: "10:00", endTime: "12:00" }
-            ]
+            "HEAD SET": [],
+            "CAIXA DE SOM": []
         };
 
         // Registros de equipamentos
@@ -2243,10 +1630,8 @@
 
         // Variáveis globais
         let currentUser = null;
-        let equipmentChart = null;
-        let reportChart = null;
-        let currentMonth = new Date().getMonth();
-        let currentYear = new Date().getFullYear();
+        let currentEquipmentRow = null;
+        let qrScanner = null;
 
         // Inicialização do sistema
         document.addEventListener('DOMContentLoaded', function() {
@@ -2255,7 +1640,6 @@
             document.getElementById('modal_registrationDate').value = today;
             document.getElementById('withdrawalDate').value = today;
             document.getElementById('returnDate').value = today;
-            document.getElementById('reservationDate').value = today;
             
             // Configura horário atual
             const now = new Date();
@@ -2263,39 +1647,24 @@
             const minutes = now.getMinutes().toString().padStart(2, '0');
             const time = `${hours}:${minutes}`;
             document.getElementById('withdrawalTime').value = time;
-            document.getElementById('reservationStartTime').value = time;
             
             // Calcula hora de término (1 hora depois)
             const endHours = (now.getHours() + 1) % 24;
             const endTime = `${endHours.toString().padStart(2, '0')}:${minutes}`;
             document.getElementById('returnTime').value = time;
-            document.getElementById('reservationEndTime').value = endTime;
             
             // Preenche dropdown de professores
             const teacherSelect = document.getElementById('teacherName');
-            const reservationTeacherSelect = document.getElementById('reservationTeacher');
-            const filterTeacherSelect = document.getElementById('reservationTeacherFilter');
             
             for (const nome in teacherEmails) {
                 const option = document.createElement('option');
                 option.value = nome;
                 option.textContent = nome;
                 teacherSelect.appendChild(option);
-                
-                const option2 = option.cloneNode(true);
-                reservationTeacherSelect.appendChild(option2);
-                
-                const option3 = option.cloneNode(true);
-                filterTeacherSelect.appendChild(option3);
             }
-            
-            // Inicializa o calendário
-            renderCalendar(currentMonth, currentYear);
             
             // Carrega dados iniciais
             updateDashboard();
-            generateReport();
-            loadReservationsList();
             loadHistory();
             updateRegistrosTable();
         });
@@ -2344,10 +1713,6 @@
             // Atualiza o conteúdo da aba se necessário
             if (tabId === 'dashboard') {
                 updateDashboard();
-            } else if (tabId === 'reservations') {
-                updateReservations();
-            } else if (tabId === 'reports') {
-                generateReport();
             } else if (tabId === 'history') {
                 loadHistory();
             } else if (tabId === 'registration') {
@@ -2357,24 +1722,16 @@
 
         // Funções para dashboard
         function updateDashboard() {
-            const equipmentFilter = document.getElementById('dashboardEquipmentFilter').value;
+            // Contagem de todos os equipamentos
             let inUse = 0, available = 0, maintenance = 0, damaged = 0;
             
-            if (equipmentFilter === 'all') {
-                // Contagem de todos os equipamentos
-                Object.values(equipmentData).forEach(type => {
-                    inUse += type['Em uso'] || 0;
-                    available += type['Disponível'] || 0;
-                    maintenance += type['Em Manutenção'] || 0;
-                    damaged += type['Com avarias'] || 0;
+            for (const tipo in equipamentos) {
+                equipamentos[tipo].forEach(eq => {
+                    if (eq.status === "Em uso") inUse++;
+                    else if (eq.status === "Disponível") available++;
+                    else if (eq.status === "Manutenção") maintenance++;
+                    else if (eq.status === "Com avarias") damaged++;
                 });
-            } else if (equipmentData[equipmentFilter]) {
-                // Contagem para o tipo específico
-                const type = equipmentData[equipmentFilter];
-                inUse = type['Em uso'] || 0;
-                available = type['Disponível'] || 0;
-                maintenance = type['Em Manutenção'] || 0;
-                damaged = type['Com avarias'] || 0;
             }
             
             // Atualizar os cards
@@ -2383,313 +1740,34 @@
             document.getElementById('maintenanceCount').textContent = maintenance;
             document.getElementById('damagedCount').textContent = damaged;
             
-            // Atualizar o gráfico
-            updateChart(inUse, available, maintenance, damaged);
+            // Atualizar a tabela de atividades recentes
+            updateRecentActivities();
         }
 
-        function updateChart(inUse, available, maintenance, damaged) {
-            const ctx = document.getElementById('equipmentStatusChart').getContext('2d');
-            
-            // Destrói o gráfico anterior se existir
-            if (window.equipmentChart) {
-                window.equipmentChart.destroy();
-            }
-            
-            window.equipmentChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Em Uso', 'Disponíveis', 'Em Manutenção', 'Com Avarias'],
-                    datasets: [{
-                        data: [inUse, available, maintenance, damaged],
-                        backgroundColor: [
-                            '#3498db', // Em uso (azul)
-                            '#27ae60', // Disponível (verde)
-                            '#f39c12', // Manutenção (amarelo)
-                            '#e74c3c'  // Com avarias (vermelho)
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                        },
-                        title: {
-                            display: true,
-                            text: 'Status dos Equipamentos',
-                            font: {
-                                size: 16
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // Funções para reservas
-        function prevMonth() {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            renderCalendar(currentMonth, currentYear);
-        }
-        
-        function nextMonth() {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            renderCalendar(currentMonth, currentYear);
-        }
-        
-        function renderCalendar(month, year) {
-            const calendarGrid = document.getElementById('calendarGrid');
-            calendarGrid.innerHTML = '';
-            
-            // Atualizar o cabeçalho com mês/ano
-            const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-            document.getElementById('currentMonthYear').textContent = `${monthNames[month]} ${year}`;
-            
-            // Criar cabeçalhos dos dias da semana
-            const daysOfWeek = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
-            daysOfWeek.forEach(day => {
-                const dayHeader = document.createElement('div');
-                dayHeader.className = 'calendar-day-header';
-                dayHeader.textContent = day;
-                calendarGrid.appendChild(dayHeader);
-            });
-            
-            // Obter primeiro dia do mês
-            const firstDay = new Date(year, month, 1);
-            // Obter último dia do mês
-            const lastDay = new Date(year, month + 1, 0);
-            // Dias no mês
-            const daysInMonth = lastDay.getDate();
-            // Dia da semana do primeiro dia (0 = Domingo, 1 = Segunda, etc.)
-            const firstDayOfWeek = firstDay.getDay();
-            
-            // Preencher espaços vazios antes do primeiro dia
-            for (let i = 0; i < firstDayOfWeek; i++) {
-                const emptyDay = document.createElement('div');
-                emptyDay.className = 'calendar-day empty';
-                calendarGrid.appendChild(emptyDay);
-            }
-            
-            // Preencher os dias do mês
-            const today = new Date();
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-                const calendarDay = document.createElement('div');
-                calendarDay.className = 'calendar-day';
-                
-                // Verificar se é hoje
-                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                    calendarDay.classList.add('today');
-                }
-                
-                // Verificar reservas para este dia
-                const dayReservations = reservations.filter(r => r.date === dateStr);
-                
-                const dayNumber = document.createElement('div');
-                dayNumber.className = 'calendar-day-number';
-                dayNumber.textContent = day;
-                calendarDay.appendChild(dayNumber);
-                
-                // Adicionar reservas
-                dayReservations.forEach(reservation => {
-                    const resElement = document.createElement('div');
-                    resElement.className = 'reservation-item';
-                    resElement.innerHTML = `
-                        <div><strong>${reservation.teacher}</strong></div>
-                        <div>${reservation.equipment}</div>
-                        <div>${reservation.startTime} - ${reservation.endTime}</div>
-                    `;
-                    resElement.setAttribute('data-id', reservation.id);
-                    resElement.addEventListener('click', () => showReservationDetails(reservation.id));
-                    calendarDay.appendChild(resElement);
-                });
-                
-                // Destacar dias com reservas
-                if (dayReservations.length > 0) {
-                    calendarDay.classList.add('reserved');
-                }
-                
-                calendarGrid.appendChild(calendarDay);
-            }
-        }
-        
-        function updateReservations() {
-            const equipmentFilter = document.getElementById('reservationEquipmentFilter').value;
-            const teacherFilter = document.getElementById('reservationTeacherFilter').value;
-            
-            // Aqui seria a implementação real para filtrar reservas
-            // Por enquanto, apenas recarregamos o calendário
-            renderCalendar(currentMonth, currentYear);
-            loadReservationsList();
-        }
-        
-        function showAddReservationModal() {
-            openModal('addReservationModal');
-        }
-        
-        function saveReservation() {
-            const teacher = document.getElementById('reservationTeacher').value;
-            const equipment = document.getElementById('reservationEquipment').value;
-            const date = document.getElementById('reservationDate').value;
-            const startTime = document.getElementById('reservationStartTime').value;
-            const endTime = document.getElementById('reservationEndTime').value;
-            
-            if (!teacher || !equipment || !date || !startTime || !endTime) {
-                alert("Por favor, preencha todos os campos");
-                return;
-            }
-            
-            // Adicionar a reserva (em um sistema real, seria salva no banco de dados)
-            const newReservation = {
-                id: "RES" + Date.now().toString().slice(-4),
-                teacher,
-                equipment,
-                date,
-                startTime,
-                endTime
-            };
-            
-            reservations.push(newReservation);
-            alert(`Reserva adicionada com sucesso para ${teacher} em ${date} das ${startTime} às ${endTime}`);
-            
-            // Atualizar o calendário e a lista
-            renderCalendar(currentMonth, currentYear);
-            loadReservationsList();
-            
-            closeModal('addReservationModal');
-        }
-        
-        function loadReservationsList() {
-            const tableBody = document.getElementById('reservationsList');
+        function updateRecentActivities() {
+            const tableBody = document.getElementById('recentActivitiesTable');
             tableBody.innerHTML = '';
             
-            const equipmentFilter = document.getElementById('reservationEquipmentFilter').value;
-            const teacherFilter = document.getElementById('reservationTeacherFilter').value;
+            // Adicionar os 5 registros mais recentes
+            const recentRegistros = [...registros].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0, 5);
             
-            // Filtrar reservas
-            const filteredReservations = reservations.filter(res => {
-                return (equipmentFilter === 'all' || res.equipment === equipmentFilter) &&
-                       (teacherFilter === 'all' || res.teacher === teacherFilter);
-            });
-            
-            // Adicionar reservas à tabela
-            filteredReservations.forEach(res => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${formatDate(res.date)}</td>
-                    <td>${res.teacher}</td>
-                    <td>${res.equipment}</td>
-                    <td>${res.startTime}</td>
-                    <td>${res.endTime}</td>
-                    <td class="action-buttons">
-                        <button class="action-btn delete-btn" onclick="deleteReservation('${res.id}')">
-                            <i class="fas fa-trash"></i> Excluir
-                        </button>
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-        
-        function showReservationDetails(id) {
-            const reservation = reservations.find(r => r.id === id);
-            if (!reservation) return;
-            
-            // Em um sistema real, abriríamos um modal com detalhes
-            alert(`Detalhes da Reserva:\n
-Professor: ${reservation.teacher}\n
-Equipamento: ${reservation.equipment}\n
-Data: ${formatDate(reservation.date)}\n
-Horário: ${reservation.startTime} - ${reservation.endTime}`);
-        }
-        
-        function deleteReservation(id) {
-            if (!confirm('Tem certeza que deseja excluir esta reserva?')) return;
-            
-            // Em um sistema real, removeríamos do banco de dados
-            reservations = reservations.filter(r => r.id !== id);
-            
-            // Atualizar a interface
-            renderCalendar(currentMonth, currentYear);
-            loadReservationsList();
-            
-            alert('Reserva excluída com sucesso!');
-        }
-
-        // Funções para relatórios
-        function generateReport() {
-            const tableBody = document.getElementById('reportTable');
-            tableBody.innerHTML = '';
-            
-            const equipmentFilter = document.getElementById('reportEquipmentFilter').value;
-            
-            // Adicionar todos os equipamentos ou filtrar por tipo
-            for (const [tipo, lista] of Object.entries(equipamentos)) {
-                if (equipmentFilter !== 'all' && equipmentFilter !== tipo) continue;
-                
-                lista.forEach(eq => {
+            recentRegistros.forEach(registro => {
+                if (registro.equipment && registro.equipment.length > 0) {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${eq.id}</td>
-                        <td>${tipo}</td>
-                        <td>${eq.serial}</td>
+                        <td>${formatDate(registro.timestamp)}</td>
+                        <td>${registro.equipment[0].type}</td>
+                        <td>${registro.equipment[0].serial}</td>
+                        <td>${registro.room}</td>
                         <td>
-                            <span class="badge ${getStatusBadgeClass(eq.status)}">
-                                ${eq.status}
+                            <span class="badge badge-success">
+                                Registrado
                             </span>
-                        </td>
-                        <td>${eq.location}</td>
-                        <td>${formatDate(eq.registrationDate)}</td>
-                        <td class="action-buttons">
-                            <button class="action-btn edit-btn" onclick="editEquipment('${eq.id}')">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="action-btn delete-btn" onclick="deleteEquipment('${eq.id}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
                         </td>
                     `;
                     tableBody.appendChild(row);
-                });
-            }
-        }
-        
-        function editEquipment(id) {
-            // Encontrar o equipamento pelo ID
-            for (const lista of Object.values(equipamentos)) {
-                const eq = lista.find(e => e.id === id);
-                if (eq) {
-                    alert(`Editando equipamento ${id}`);
-                    // Em um sistema real, abriríamos um modal de edição
-                    return;
                 }
-            }
-            alert('Equipamento não encontrado!');
-        }
-        
-        function deleteEquipment(id) {
-            if (!confirm('Tem certeza que deseja excluir este equipamento?')) return;
-            
-            // Em um sistema real, removeríamos do banco de dados
-            for (const tipo in equipamentos) {
-                equipamentos[tipo] = equipamentos[tipo].filter(eq => eq.id !== id);
-            }
-            
-            // Atualizar o relatório
-            generateReport();
-            
-            alert('Equipamento excluído com sucesso!');
+            });
         }
 
         // Funções para a aba de registro
@@ -2770,7 +1848,7 @@ Horário: ${reservation.startTime} - ${reservation.endTime}`);
                             <option value="HEAD SET">HEAD SET</option>
                             <option value="CAIXA DE SOM">CAIXA DE SOM</option>
                         </select>
-                        <button class="qr-button" onclick="readQRCode(this)">
+                        <button class="qr-button" onclick="openQRScanner(this)">
                             <i class="fas fa-qrcode"></i> Ler QR Code
                         </button>
                     </div>
@@ -2869,6 +1947,9 @@ Horário: ${reservation.startTime} - ${reservation.endTime}`);
             const container = document.getElementById('equipmentContainer');
             container.innerHTML = '';
             addEquipment(); // Adiciona um campo limpo
+            
+            // Esconder o termo
+            document.getElementById('termoContainer').style.display = 'none';
         }
         
         function fillRegistrantName() {
@@ -2954,38 +2035,6 @@ Horário: ${reservation.startTime} - ${reservation.endTime}`);
             
             // Mostrar o termo de responsabilidade
             document.getElementById('termoContainer').style.display = 'block';
-            
-            // Enviar para Google Sheets
-            sendToGoogleSheets(registro);
-        }
-        
-        function sendToGoogleSheets(registro) {
-            const SHEET_ID = '1f832KA3zaly5DnFU3MKLeg3J_L9xv4qb2AsfDrIrljo';
-            const SHEET_NAME = 'Registros';
-            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
-            
-            // Preparar dados para envio
-            const data = {
-                teacherName: registro.teacherName,
-                teacherEmail: registro.teacherEmail,
-                studentClass: registro.studentClass,
-                room: registro.room,
-                withdrawalDate: registro.withdrawalDate,
-                returnDate: registro.returnDate,
-                withdrawalTime: registro.withdrawalTime,
-                returnTime: registro.returnTime,
-                registrationCode: registro.registrationCode,
-                registrant: registro.registrant,
-                observation: registro.observation,
-                equipment: registro.equipment.map(eq => 
-                    `${eq.type} (${eq.id} - ${eq.serial} x ${eq.quantity})`
-                ).join('; '),
-                timestamp: registro.timestamp
-            };
-            
-            // Em um sistema real, aqui seria a implementação para enviar para Google Sheets
-            console.log('Dados enviados para Google Sheets:', data);
-            alert('Dados enviados para Google Sheets com sucesso!');
         }
         
         function updateTermo(registro) {
@@ -3113,35 +2162,113 @@ Horário: ${reservation.startTime} - ${reservation.endTime}`);
         }
 
         // Funções para QR Code
-        function readQRCode(button) {
-            // Em ambiente real, aqui seria a integração com leitor de QR Code
-            // Para demonstração, vamos simular a leitura de um equipamento aleatório
+        function openQRScanner(button) {
+            currentEquipmentRow = button.closest('.equipment-row');
+            document.getElementById('qrScannerContainer').style.display = 'flex';
             
-            const row = button ? button.closest('.equipment-row') : document.querySelector('.equipment-row');
-            const typeSelect = row.querySelector('select');
-            const idSelect = row.querySelector('.form-group:nth-child(2) select');
-            const serialInput = row.querySelector('.form-group:nth-child(3) input');
-            const quantityInput = row.querySelector('.form-group:nth-child(4) input');
+            if (!qrScanner) {
+                qrScanner = new Html5Qrcode("qr-reader");
+            }
             
-            // Selecionar um tipo aleatório
-            const types = Object.keys(equipamentos);
-            const randomType = types[Math.floor(Math.random() * types.length)];
+            qrScanner.start(
+                { facingMode: "environment" },
+                {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 }
+                },
+                onQRCodeScanned,
+                (errorMessage) => {
+                    // Código de erro ignorado intencionalmente
+                }
+            ).catch(err => {
+                console.error(err);
+                alert("Erro ao iniciar a câmera. Verifique as permissões.");
+            });
+        }
+        
+        function onQRCodeScanned(decodedText, decodedResult) {
+            // Processar o QR Code lido
+            processQRCode(decodedText, currentEquipmentRow);
             
-            // Selecionar um equipamento aleatório desse tipo
-            const randomEquipment = equipamentos[randomType][Math.floor(Math.random() * equipamentos[randomType].length)];
+            // Parar o scanner após a leitura
+            qrScanner.stop().then(() => {
+                closeQRScanner();
+            }).catch(err => {
+                console.error(err);
+                closeQRScanner();
+            });
+        }
+        
+        function closeQRScanner() {
+            document.getElementById('qrScannerContainer').style.display = 'none';
+            if (qrScanner) {
+                qrScanner.stop().catch(err => console.error(err));
+            }
+        }
+        
+        function processQRCode(qrData, row) {
+            // Tentar processar o QR Code de diferentes formas
+            // Formato esperado: "TIPO;ID;SERIAL" ou apenas o ID do equipamento
             
-            // Preencher os campos
-            typeSelect.value = randomType;
-            updateIdNumbers(typeSelect);
+            let type, id, serial;
             
-            // Aguardar um pouco para o dropdown ser preenchido
-            setTimeout(() => {
-                idSelect.value = randomEquipment.id;
-                fillSerial(idSelect);
+            if (qrData.includes(';')) {
+                // Formato: "TIPO;ID;SERIAL"
+                const parts = qrData.split(';');
+                if (parts.length >= 3) {
+                    type = parts[0];
+                    id = parts[1];
+                    serial = parts[2];
+                }
+            } else {
+                // Apenas ID fornecido, buscar nas listas de equipamentos
+                id = qrData;
                 
-                // Mostrar mensagem de sucesso
-                alert(`QR Code lido com sucesso! Equipamento: ${randomEquipment.id}`);
-            }, 100);
+                // Procurar o equipamento em todas as categorias
+                for (const tipo in equipamentos) {
+                    const equipment = equipamentos[tipo].find(eq => eq.id === id);
+                    if (equipment) {
+                        type = tipo;
+                        serial = equipment.serial;
+                        break;
+                    }
+                }
+            }
+            
+            if (type && id && serial) {
+                // Preencher os campos do equipment-row
+                const typeSelect = row.querySelector('select');
+                const idSelect = row.querySelector('.form-group:nth-child(2) select');
+                const serialInput = row.querySelector('.form-group:nth-child(3) input');
+                const quantityInput = row.querySelector('.form-group:nth-child(4) input');
+                
+                // Definir o tipo de equipamento
+                typeSelect.value = type;
+                // Disparar evento para atualizar as opções de ID
+                const event = new Event('change');
+                typeSelect.dispatchEvent(event);
+                
+                // Aguardar um pouco para o dropdown ser preenchido
+                setTimeout(() => {
+                    // Definir o ID do equipamento
+                    idSelect.value = id;
+                    // Disparar evento para preencher o número de série
+                    const event2 = new Event('change');
+                    idSelect.dispatchEvent(event2);
+                    
+                    // Verificar se o número de série foi preenchido, senão preencher manualmente
+                    if (serialInput.value === '') {
+                        serialInput.value = serial;
+                    }
+                    
+                    // Definir a quantidade como 1
+                    quantityInput.value = 1;
+                    
+                    alert(`Equipamento identificado: ${type} - ${id}`);
+                }, 500);
+            } else {
+                alert('QR Code não reconhecido. Formato esperado: "TIPO;ID;SERIAL" ou apenas o ID do equipamento.');
+            }
         }
 
         // Funções para histórico
@@ -3169,8 +2296,11 @@ Horário: ${reservation.startTime} - ${reservation.endTime}`);
                         <td>${eq.location}</td>
                         <td>${formatDate(eq.registrationDate)}</td>
                         <td>
-                            <button class="action-btn info-btn" onclick="showHistoryDetails('${eq.id}')">
-                                <i class="fas fa-info-circle"></i> Detalhes
+                            <button class="action-btn edit-btn" onclick="editEquipment('${eq.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete-btn" onclick="deleteEquipment('${eq.id}')">
+                                <i class="fas fa-trash"></i>
                             </button>
                         </td>
                     `;
@@ -3179,32 +2309,31 @@ Horário: ${reservation.startTime} - ${reservation.endTime}`);
             }
         }
         
-        function showHistoryDetails(id) {
-            const detailsContainer = document.getElementById('historyDetails');
-            const detailsContent = document.getElementById('historyDetailsContent');
+        function editEquipment(id) {
+            // Encontrar o equipamento pelo ID
+            for (const lista of Object.values(equipamentos)) {
+                const eq = lista.find(e => e.id === id);
+                if (eq) {
+                    alert(`Editando equipamento ${id}`);
+                    // Em um sistema real, abriríamos um modal de edição
+                    return;
+                }
+            }
+            alert('Equipamento não encontrado!');
+        }
+        
+        function deleteEquipment(id) {
+            if (!confirm('Tem certeza que deseja excluir este equipamento?')) return;
             
-            detailsContent.innerHTML = '';
-            
-            if (equipmentHistory[id] && equipmentHistory[id].length > 0) {
-                detailsContent.innerHTML = '<h4>Histórico de Agendamentos:</h4>';
-                
-                equipmentHistory[id].forEach(history => {
-                    const detailItem = document.createElement('div');
-                    detailItem.className = 'history-detail-item';
-                    detailItem.innerHTML = `
-                        <p><strong>Professor:</strong> ${history.teacher}</p>
-                        <p><strong>Turma:</strong> ${history.class}</p>
-                        <p><strong>Sala:</strong> ${history.room}</p>
-                        <p><strong>Data:</strong> ${formatDate(history.date)}</p>
-                        <p><strong>Horário:</strong> ${history.startTime} - ${history.endTime}</p>
-                    `;
-                    detailsContent.appendChild(detailItem);
-                });
-            } else {
-                detailsContent.innerHTML = '<p>Nenhum histórico de agendamento encontrado para este equipamento.</p>';
+            // Em um sistema real, removeríamos do banco de dados
+            for (const tipo in equipamentos) {
+                equipamentos[tipo] = equipamentos[tipo].filter(eq => eq.id !== id);
             }
             
-            detailsContainer.style.display = 'block';
+            // Atualizar o histórico
+            loadHistory();
+            
+            alert('Equipamento excluído com sucesso!');
         }
 
         // Funções auxiliares
