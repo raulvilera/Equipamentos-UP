@@ -1274,6 +1274,9 @@
                         <button class="btn btn-primary" onclick="showAddMaintenanceModal()">
                             <i class="fas fa-plus"></i> Nova Manutenção
                         </button>
+                        <button class="btn btn-info" onclick="showMaintenanceReportModal()">
+                            <i class="fas fa-clipboard-list"></i> Relatório Manutenção
+                        </button>
                     </div>
                 </div>
                 
@@ -1772,6 +1775,51 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Modal para Relatório de Manutenção -->
+            <div id="maintenanceReportModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Relatório de Manutenção</h3>
+                        <button class="modal-close" onclick="closeModal('maintenanceReportModal')">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="maintenanceReportForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="maintenanceEquipment">Equipamento</label>
+                                    <select id="maintenanceEquipment" class="form-control" required>
+                                        <option value="">Selecione o equipamento</option>
+                                        <!-- Opções preenchidas via JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="maintenanceType">Tipo de Manutenção</label>
+                                    <select id="maintenanceType" class="form-control" required>
+                                        <option value="">Selecione o tipo</option>
+                                        <option value="hardware">Hardware</option>
+                                        <option value="memoria">Memória</option>
+                                        <option value="software">Software</option>
+                                        <option value="outros">Outros</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="maintenanceDescription">Descrição do Problema</label>
+                                    <textarea id="maintenanceDescription" class="form-control" rows="3" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="maintenanceDate">Data do Relatório</label>
+                                    <input type="date" id="maintenanceDate" class="form-control" required>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="closeModal('maintenanceReportModal')">Cancelar</button>
+                        <button class="btn btn-primary" onclick="submitMaintenanceReport()">Enviar Relatório</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -2252,6 +2300,9 @@
         let currentMonth = new Date().getMonth();
         let currentYear = new Date().getFullYear();
 
+        // ID da planilha do Google Sheets
+        const SHEET_ID = '1k52bH_oUBoYGXC6Ec1lQUM8u6EyZWAmob6pHKhce5k';
+
         // Inicialização do sistema
         document.addEventListener('DOMContentLoaded', function() {
             // Configura data atual nos formulários
@@ -2260,6 +2311,7 @@
             document.getElementById('withdrawalDate').value = today;
             document.getElementById('returnDate').value = today;
             document.getElementById('reservationDate').value = today;
+            document.getElementById('maintenanceDate').value = today;
             
             // Configura horário atual
             const now = new Date();
@@ -3071,9 +3123,6 @@ Horário: ${reservation.startTime} - ${reservation.endTime}`);
         }
         
         function sendToGoogleSheets(registro) {
-            const SHEET_ID = '1Biv9BS7MnWMzv99U1PX97f_sRREIxvV8PakJ50gRpko';
-            const SHEET_NAME = 'Página1';
-            
             // Preparar dados para envio
             const data = {
                 teacherName: registro.teacherName,
@@ -3098,7 +3147,7 @@ Horário: ${reservation.startTime} - ${reservation.endTime}`);
             alert('Dados enviados para Google Sheets com sucesso!');
             
             // Simulação de envio para Google Sheets
-            simulateGoogleSheetsIntegration(data, SHEET_ID, SHEET_NAME);
+            simulateGoogleSheetsIntegration(data, SHEET_ID, 'Registros');
         }
         
         function simulateGoogleSheetsIntegration(data, sheetId, sheetName) {
@@ -3370,6 +3419,65 @@ Horário: ${reservation.startTime} - ${reservation.endTime}`);
             }
             
             detailsContainer.style.display = 'block';
+        }
+
+        // Funções para Manutenção
+        function showMaintenanceReportModal() {
+            // Preencher o select de equipamentos
+            const equipmentSelect = document.getElementById('maintenanceEquipment');
+            equipmentSelect.innerHTML = '<option value="">Selecione o equipamento</option>';
+            
+            // Preencher com os equipamentos disponíveis
+            for (const [tipo, lista] of Object.entries(equipamentos)) {
+                lista.forEach(eq => {
+                    const option = document.createElement('option');
+                    option.value = eq.id;
+                    option.textContent = `${tipo} - ${eq.id} (${eq.serial})`;
+                    equipmentSelect.appendChild(option);
+                });
+            }
+            
+            openModal('maintenanceReportModal');
+        }
+
+        function submitMaintenanceReport() {
+            const equipment = document.getElementById('maintenanceEquipment').value;
+            const type = document.getElementById('maintenanceType').value;
+            const description = document.getElementById('maintenanceDescription').value;
+            const date = document.getElementById('maintenanceDate').value;
+            
+            if (!equipment || !type || !description || !date) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+            
+            // Enviar os dados para o Google Sheets
+            sendMaintenanceReportToGoogleSheets({ equipment, type, description, date });
+            
+            // Fechar o modal
+            closeModal('maintenanceReportModal');
+            
+            // Limpar o formulário
+            document.getElementById('maintenanceReportForm').reset();
+            
+            alert('Relatório de manutenção enviado com sucesso!');
+        }
+
+        function sendMaintenanceReportToGoogleSheets(data) {
+            // Preparar dados para envio
+            const reportData = {
+                equipment: data.equipment,
+                type: data.type,
+                description: data.description,
+                date: data.date,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Em um sistema real, aqui seria a implementação para enviar para Google Sheets
+            console.log('Dados de manutenção enviados para Google Sheets:', reportData);
+            
+            // Simulação de envio para Google Sheets
+            simulateGoogleSheetsIntegration(reportData, SHEET_ID, 'Manutenção');
         }
 
         // Funções auxiliares
